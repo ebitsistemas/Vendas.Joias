@@ -1,0 +1,10 @@
+.navbar-menu .scanner-bg .scanner-btn {
+    width: 80px;
+    height: 80px;
+}
+.navbar-menu .scanner-bg {
+    width: 80px;
+    height: 80px;
+    left: 50%;
+    top: -40%;
+}

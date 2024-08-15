@@ -20,6 +20,7 @@
         <div class="custom-container">
             <div class="title">
                 <h2>Clientes</h2>
+                <img src="{{ url('assets/images/logo.png') }}">
             </div>
 
             <div class="row gy-3">

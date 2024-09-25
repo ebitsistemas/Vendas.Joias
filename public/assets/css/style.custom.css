@@ -8,3 +8,13 @@
     left: 50%;
     top: -40%;
 }
+.header-panel .logo{
+    height: 150px;
+    width: auto;
+}
+.sidebar-offcanvas .sidebar-header .sidebar-logo .logo{
+    width: 200px;
+}
+.text-theme{
+    color: var(--bs-indigo);
+}

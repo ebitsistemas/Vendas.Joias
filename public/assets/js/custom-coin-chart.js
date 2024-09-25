@@ -53,7 +53,7 @@ var optionsCoin = {
         },
     },
     labels: [
-        "21 May", "22 May", "23 May", "24 May", "25 May", "26 May", "27 May", "28 May",
+        "21 Ago", "22 Ago", "23 Ago", "24 Ago", "25 Ago", "26 Ago", "27 Ago", "28 Ago",
 
     ],
     markers: {

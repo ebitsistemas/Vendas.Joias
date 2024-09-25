@@ -3,156 +3,102 @@
 @section('title', 'Clientes')
 
 @section('content')
-    <section>
-        <div class="custom-container">
-            <form class="theme-form search-head" target="_blank">
-                <div class="form-group">
-                    <div class="form-input">
-                        <input type="text" class="form-control search" id="inputusername" placeholder="Pesquisar..." />
-                        <i class="search-icon" data-feather="search"></i>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </section>
-
     <section class="section-b-space">
-        <div class="custom-container">
-            <div class="title">
-                <h2>Clientes</h2>
-                <img src="{{ url('assets/images/logo.png') }}">
-            </div>
+        <div class="container">
+            <div class="card bg-white">
+                <div class="card-body">
+                    <div class="title">
+                        <h4>Clientes</h4>
+                        <a href="{{ url('cliente/cadastrar') }}" class="btn btn-primary text-white"><i class="fad fa-plus-circle"></i> Cadastrar</a>
+                    </div>
 
-            <div class="row gy-3">
-                <div class="col-12">
-                    <div class="transaction-box">
-                        <a href="#transaction-detail" data-bs-toggle="modal" class="d-flex gap-3">
-                            <div class="transaction-image">
-                                <img class="img-fluid transaction-icon" src="assets/images/person/p1.png" alt="p1" />
-                            </div>
-                            <div class="transaction-details">
-                                <div class="transaction-name">
-                                    <h5>João dos Santos</h5>
-                                    <h3 class="error-color">R$ 199,99</h3>
-                                </div>
-                                <div class="d-flex justify-content-between">
-                                    <h5 class="light-text">(45) 99999-9999</h5>
-                                    <h5 class="light-text">10/08/2024</h5>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-                <div class="col-12">
-                    <div class="transaction-box">
-                        <a href="#transaction-detail" data-bs-toggle="modal" class="d-flex gap-3">
-                            <div class="transaction-image">
-                                <img class="img-fluid transaction-icon" src="assets/images/person/p2.png" alt="p2" />
-                            </div>
-                            <div class="transaction-details">
-                                <div class="transaction-name">
-                                    <h5>Maria da Silva</h5>
-                                    <h3 class="success-color">R$ 60,30</h3>
-                                </div>
-                                <div class="d-flex justify-content-between">
-                                    <h5 class="light-text">(45) 99999-9999</h5>
-                                    <h5 class="light-text">10/09/2024</h5>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-                <div class="col-12">
-                    <div class="transaction-box">
-                        <a href="#transaction-detail" data-bs-toggle="modal" class="d-flex gap-3">
-                            <div class="transaction-image">
-                                <img class="img-fluid transaction-icon" src="assets/images/person/p4.png" alt="p2" />
-                            </div>
-                            <div class="transaction-details">
-                                <div class="transaction-name">
-                                    <h5>José de Souza</h5>
-                                    <h3 class="error-color">R$ 55,20</h3>
-                                </div>
-                                <div class="d-flex justify-content-between">
-                                    <h5 class="light-text">(45) 99999-9999</h5>
-                                    <h5 class="light-text">10/09/2024</h5>
-                                </div>
-                            </div>
-                        </a>
+                    <div class="row pt-3">
+                        <table class="table table-striped" id="table-clientes"></table>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+    @csrf
 
-    <!-- period modal start -->
-    <div class="modal add-money-modal fade" id="period" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2 class="modal-title">Select Period</h2>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="inputfromdate" class="form-label">From date</label>
-                        <input type="date" class="form-control" id="inputfromdate" />
-                    </div>
+    <script>
+        table = $("#table-clientes").DataTable({
+            order: [0, 'desc'],
+            processing: true,
+            serverSide: true,
+            ajax: {
+                "url": "{{ route('cliente.ajax') }}",
+                "type": "POST",
+                "datatype": "json",
+                "data": {
+                    _token: function () {
+                        return $("input[name*='_token']").val()
+                    },
+                }
+            },
+            columns: [
+                {
+                    title: 'Código',
+                    data: 'id',
+                    name: 'id',
+                    width: 50,
+                    className: 'ps-5'
+                },
+                {
+                    title: 'Tipo Ppessoa',
+                    data: 'tipo_pessoa',
+                    name: 'tipo_pessoa',
+                    render: (data, type, row) => {
+                        return row.tipo_pessoa == '1' ? 'Pessoa Física' : 'Pessoa Jurídica';
+                    }
+                },
+                {
+                    title: 'Nome',
+                    data: 'nome',
+                    name: 'nome',
+                    width: 250,
+                },
+                {
+                    title: 'Documento',
+                    data: 'documento',
+                    name: 'documento',
+                    className: 'text-center',
+                },
+                {
+                    title: 'Grupo',
+                    data: 'grupo_nome',
+                    name: 'grupo_nome'
+                },
+                {
+                    title: 'Status',
+                    data: 'status',
+                    name: 'status',
+                    render: (data, type, row) => {
+                        return row.status == '1' ? 'Ativo' : 'Desativado';
+                    }
+                },
+                {
+                    title: 'Operações',
+                    data: 'id',
+                    name: 'id',
+                    width: 175,
+                    className: 'text-center',
+                    render: (data, type, row) => {
+                        var button = '';
+                        button += '<div class="dropdown">';
+                        button += '     <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false"><i class="fad fa-cog"></i></button>';
+                        button += '     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">';
+                        button += '         <li><a href="{{ url('cliente/editar') }}" class="dropdown-item text-primary" href="#"><i class="fad fa-edit"></i> Editar </a></li>';
+                        button += '         <li><a href="{{ url('cliente/imprimir') }}" class="dropdown-item text-dark" href="#"><i class="fad fa-print"></i> Imprimir</a></li>';
+                        button += '         <li><a href="{{ url('cliente/compartilhar') }}" class="dropdown-item text-success" href="#"><i class="fad fa-share-nodes"></i> Compartilhar</a></li>';
+                        button += '         <li><a class="dropdown-item text-danger" href="#"><i class="fad fa-trash"></i> Remover</a></li>';
+                        button += '     </ul>';
+                        button += '</div>';
+                        return button;
+                    }
+                },
+            ]
+        });
+    </script>
 
-                    <div class="form-group">
-                        <label for="inputtodate" class="form-label">To date</label>
-                        <input type="date" class="form-control" id="inputtodate" />
-                    </div>
-
-                    <a href="crypto-view-transaction.html" class="btn theme-btn successfully w-100">View transaction</a>
-                </div>
-                <button type="button" class="btn close-btn" data-bs-dismiss="modal">
-                    <i class="icon" data-feather="x"></i>
-                </button>
-            </div>
-        </div>
-    </div>
-    <!--period modal end -->
-
-    <!-- transaction detail modal start -->
-    <div class="modal successful-modal transfer-details fade" id="transaction-detail" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2 class="modal-title">Transaction Detail</h2>
-                </div>
-                <div class="modal-body">
-                    <ul class="details-list">
-                        <li>
-                            <h3 class="fw-normal dark-text">Payment status</h3>
-                            <h3 class="fw-normal light-text">Success</h3>
-                        </li>
-                        <li>
-                            <h3 class="fw-normal dark-text">Date</h3>
-                            <h3 class="fw-normal light-text">18 May, 2023</h3>
-                        </li>
-                        <li>
-                            <h3 class="fw-normal dark-text">From</h3>
-                            <h3 class="fw-normal light-text">**** **** **** 2563</h3>
-                        </li>
-                        <li>
-                            <h3 class="fw-normal dark-text">To</h3>
-                            <h3 class="fw-normal light-text">Amazon prime</h3>
-                        </li>
-                        <li>
-                            <h3 class="fw-normal dark-text">Transaction category</h3>
-                            <h3 class="fw-normal light-text">Bill Pay</h3>
-                        </li>
-                        <li class="amount">
-                            <h3 class="fw-normal dark-text">Amount</h3>
-                            <h3 class="fw-semibold error-color">$199.99</h3>
-                        </li>
-                    </ul>
-                </div>
-                <button type="button" class="btn close-btn" data-bs-dismiss="modal">
-                    <i class="icon" data-feather="x"></i>
-                </button>
-            </div>
-        </div>
-    </div>
-    <!-- successful transfer modal end -->
 @endsection

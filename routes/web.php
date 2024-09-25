@@ -15,6 +15,9 @@ Route::prefix('dashboard')->group(function () {
 /* CLIENTES */
 Route::prefix('cliente')->group(function () {
     Route::get('', [\App\Http\Controllers\ClienteController::class, 'index'])->name('cliente.lista');
+    Route::get('cadastrar', [\App\Http\Controllers\ClienteController::class, 'create'])->name('cliente.cadastrar');
+    Route::post('store', [\App\Http\Controllers\ClienteController::class, 'store'])->name('cliente.store');
+    Route::post('ajax', [\App\Http\Controllers\ClienteController::class, 'ajax'])->name('cliente.ajax');
 });
 
 /* PRODUTOS */

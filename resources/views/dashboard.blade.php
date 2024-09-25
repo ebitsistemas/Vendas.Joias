@@ -3,14 +3,51 @@
 @section('title', 'Dashboard')
 
 @section('content')
+    <section>
+        <div class="accordion coin-chart-accordion" id="accordionExample">
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+                        Vendas | AGOSTO
+                    </button>
+                </h2>
+                <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                        <div class="transaction-box">
+                            <a href="transaction-history.html" class="d-flex gap-3">
+                                <div class="transaction-details">
+                                    <div class="transaction-name">
+                                        <h2 class="fw-bold dark-text">R$ 10.678,65</h2>
+                                        <h3 class="success-color">11%</h3>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <h5 class="light-text fw-semibold">Vendas | AGOSTO</h5>
+                                        <h5 class="light-text">-12.77 (8%)</h5>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+
+                        <div class="chart" class="overview-wrapper">
+                            <div class="coin-chart-wrapper" id="coin"></div>
+                            <div class="back-bar-container">
+                                <div id="order-bar"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- total saving section starts -->
     <section>
         <div class="custom-container">
             <div class="statistics-banner">
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="total-amount">
-                        <h3>Total Saving</h3>
-                        <h2>$9,21,908.89</h2>
+                        <h3>Total Mês</h3>
+                        <h2>R$ 10.678,65</h2>
                     </div>
                 </div>
                 <div class="saving-slider">
@@ -20,8 +57,8 @@
                 </div>
 
                 <div class="left-amount">
-                    <h5>Amount left</h5>
-                    <h5 class="text-white fw-semibold">$4,380.50</h5>
+                    <h5>A receber</h5>
+                    <h5 class="text-white fw-semibold">R$4.380,50</h5>
                 </div>
             </div>
         </div>
@@ -36,104 +73,39 @@
                     <div class="saving-plan-box">
                         <a href="#saving" data-bs-toggle="modal">
                             <div class="saving-plan-icon">
-                                <img class="img-fluid" src="assets/images/svg/10.svg" alt="p10" />
+                                <i class="fad fa-users text-theme"></i>
                             </div>
-                            <h3>New Car</h3>
-                            <h6>Amount left</h6>
-                            <div class="progress" role="progressbar" aria-label="progressbar" aria-valuenow="0" aria-valuemin="0"
-                                 aria-valuemax="100">
-                                <div class="progress-bar bar1"></div>
-                            </div>
+                            <h3>Clientes</h3>
                             <div class="d-flex justify-content-between align-items-center mt-2">
-                                <h5 class="theme-color">$2,000.00</h5>
+                                <h5 class="theme-color">258</h5>
                             </div>
                         </a>
                     </div>
                 </div>
+
                 <div class="col-6">
                     <div class="saving-plan-box">
                         <a href="#saving" data-bs-toggle="modal">
                             <div class="saving-plan-icon">
-                                <img class="img-fluid" src="assets/images/svg/11.svg" alt="p11" />
+                                <i class="fad fa-box text-theme"></i>
                             </div>
-                            <h3>Grand Home</h3>
-                            <h6>Amount left</h6>
-                            <div class="progress" role="progressbar" aria-label="progressbar" aria-valuenow="0" aria-valuemin="0"
-                                 aria-valuemax="100">
-                                <div class="progress-bar bar2"></div>
-                            </div>
+                            <h3>Produtos</h3>
                             <div class="d-flex justify-content-between align-items-center mt-2">
-                                <h5 class="theme-color">$2,000.00</h5>
+                                <h5 class="theme-color">1.369</h5>
                             </div>
                         </a>
                     </div>
                 </div>
-                <div class="col-6">
-                    <div class="saving-plan-box">
-                        <div class="saving-plan-icon">
-                            <img class="img-fluid" src="assets/images/svg/12.svg" alt="p12" />
-                        </div>
-                        <h3>Game Consoler</h3>
-                        <h6>Amount left</h6>
-                        <div class="progress" role="progressbar" aria-label="progressbar" aria-valuenow="0" aria-valuemin="0"
-                             aria-valuemax="100">
-                            <div class="progress-bar bar3"></div>
-                        </div>
-                        <div class="d-flex justify-content-between align-items-center mt-2">
-                            <h5 class="theme-color">$499.33</h5>
-                        </div>
-                    </div>
-                </div>
+
                 <div class="col-6">
                     <div class="saving-plan-box">
                         <a href="#saving" data-bs-toggle="modal">
                             <div class="saving-plan-icon">
-                                <img class="img-fluid" src="assets/images/svg/13.svg" alt="p13" />
+                                <i class="fad fa-cart-shopping text-theme"></i>
                             </div>
-                            <h3>Education</h3>
-                            <h6>Amount left</h6>
-                            <div class="progress" role="progressbar" aria-label="progressbar" aria-valuenow="0" aria-valuemin="0"
-                                 aria-valuemax="100">
-                                <div class="progress-bar bar4"></div>
-                            </div>
+                            <h3>Vendas</h3>
                             <div class="d-flex justify-content-between align-items-center mt-2">
-                                <h5 class="theme-color">$452.00</h5>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="saving-plan-box">
-                        <a href="#saving" data-bs-toggle="modal">
-                            <div class="saving-plan-icon">
-                                <img class="img-fluid" src="assets/images/svg/14.svg" alt="p14" />
-                            </div>
-                            <h3>Television</h3>
-                            <h6>Amount left</h6>
-                            <div class="progress" role="progressbar" aria-label="progressbar" aria-valuenow="0" aria-valuemin="0"
-                                 aria-valuemax="100">
-                                <div class="progress-bar bar5"></div>
-                            </div>
-                            <div class="d-flex justify-content-between align-items-center mt-2">
-                                <h5 class="theme-color">$1,062.00</h5>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="saving-plan-box">
-                        <a href="#saving" data-bs-toggle="modal">
-                            <div class="saving-plan-icon">
-                                <img class="img-fluid" src="assets/images/svg/15.svg" alt="p15" />
-                            </div>
-                            <h3>Birthday Gift</h3>
-                            <h6>Amount left</h6>
-                            <div class="progress" role="progressbar" aria-label="progressbar" aria-valuenow="0" aria-valuemin="0"
-                                 aria-valuemax="100">
-                                <div class="progress-bar bar6"></div>
-                            </div>
-                            <div class="d-flex justify-content-between align-items-center mt-2">
-                                <h5 class="theme-color">$100.00</h5>
+                                <h5 class="theme-color">2.561</h5>
                             </div>
                         </a>
                     </div>
@@ -237,4 +209,8 @@
             </div>
         </div>
     </div>
+
+    <!-- apexcharts js -->
+    <script src="assets/js/apexcharts.js"></script>
+    <script src="assets/js/custom-coin-chart.js"></script>
 @endsection

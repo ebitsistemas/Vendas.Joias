@@ -1,74 +1,97 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{{ env('APP_NAME') }}</title>
-    <link rel="icon" href="assets/images/logo/favicon.png" type="image/x-icon" />
-    <link rel="apple-touch-icon" href="assets/images/logo/favicon.png" />
-    <meta name="theme-color" content="#122636" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-    <meta name="apple-mobile-web-app-title" content="{{ env('APP_NAME') }}" />
-    <meta name="msapplication-TileImage" content="assets/images/logo/favicon.png" />
-    <meta name="msapplication-TileColor" content="#FFFFFF" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <base href=""/>
+    <meta charset="utf-8"/>
+    <title>{{ env('APP_NAME') }} - {{ env('APP_SLOGAN') }}</title>
+    <meta http-equiv="content-language" content="pt-br">
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta property="og:locale" content="pt-br"/>
+    <meta name="description" content="{{ env('APP_DESCRIPTION') }}"/>
+    <meta name="author" content="Jeferson Maciel - eBit Sistemas LTDA">
+    <meta name="creator" content="Jeferson Maciel">
+    <meta property="og:type" content="website">
+    <meta name="og:site_name" content="{{ env('APP_NAME') }} - {{ env('APP_SLOGAN') }}"/>
+    <meta name="og:title" content="{{ env('APP_NAME') }} - {{ env('APP_SLOGAN') }}"/>
+    <meta name="og:url" content="{{ url('') }}"/>
+    <meta name="robots" content="">
 
-    <!--Google font-->
-    <link rel="preconnect" href="https://fonts.googleapis.com/" />
-    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;300;400;700;900&amp;display=swap" rel="stylesheet" />
+    <meta name="theme-color" content="#0134d4">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <link rel="icon" href="{{ url(env('APP_FAVICON')) }}" type="image/png">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Dosis:wght@200..800&family=Libre+Barcode+EAN13+Text&display=swap"
+        rel="stylesheet">
+
+    <!-- Style CSS -->
+    <link href="{{ url('mobile/assets/style.css') }}" rel="stylesheet" type="text/css"/>
+    <link href="{{ url('mobile/assets/css/style.custom.css') }}" rel="stylesheet" type="text/css"/>
 
     <!-- ICONS -->
     <link href="{{ url('assets/fonts/css/all.css') }}" rel="stylesheet"/>
 
-    <!-- iconsax css -->
-    <link rel="stylesheet" type="text/css" href="{{ url('assets/css/vendors/iconsax.css') }}" />
+    <!-- Web App Manifest -->
+    {{--    <link href="{{ url('mobile/assets/manifest.json') }}" rel="manifest"/>--}}
 
-    <!-- bootstrap css -->
-    <link rel="stylesheet" id="rtl-link" type="text/css" href="{{ url('assets/css/vendors/bootstrap.min.css') }}" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="{{ url('mobile/assets/js/bootstrap.bundle.min.js') }}"></script>
 
-    <!-- swiper css -->
-    <link rel="stylesheet" type="text/css" href="{{ url('assets/css/vendors/swiper-bundle.min.css') }}" />
+    <!-- DATATABLE -->
+    <link href="https://cdn.datatables.net/2.1.7/css/dataTables.bootstrap5.css" rel="stylesheet" type="text/css"/>
+    <script src="https://cdn.datatables.net/2.1.7/js/dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/2.1.7/js/dataTables.bootstrap5.js"></script>
 
-    <!-- Theme css -->
-    <link rel="stylesheet" id="change-link" type="text/css" href="{{ url('assets/css/style.css') }}" />
-    <link rel="stylesheet" id="change-link" type="text/css" href="{{ url('assets/css/style.custom.css') }}" />
+    <script>
+        $(document).ready(function () {
+            $(':root').css('--primary-color', "#522bda");
+            $(':root').css('--primary-light-color', "rgba(82, 43, 218, 0.4)");
+        })
+    </script>
 </head>
 
 <body>
+<!-- Preloader
+<div id="preloader">
+    <div class="spinner-grow text-primary-color" role="status">
+        <span class="visually-hidden">Carregando...</span>
+    </div>
+</div> -->
 
-    @include('layout.sidebar')
+<!-- Internet Connection Status -->
+<div class="internet-connection-status" id="internetStatus"></div>
 
-    @include('layout.header')
+@include('layout.header')
 
-    @yield('content')
+@include('layout.menu')
 
-    <!-- panel-space start -->
-    <section class="panel-space"></section>
-    <!-- panel-space end -->
+<!-- Order/Payment Success -->
+<div class="page-content-wrapper py-1">
+    <div class="container">
+        @yield('content')
+    </div>
+</div>
 
-    @include('layout.footer')
+@include('layout.footer')
 
-<!-- swiper js -->
-<script src="{{ url('assets/js/swiper-bundle.min.js') }}"></script>
-<script src="{{ url('assets/js/custom-swiper.js') }}"></script>
+<!-- All JavaScript Files -->
+<script src="{{ url('mobile/assets/js/slideToggle.min.js') }}"></script>
+<script src="{{ url('mobile/assets/js/internet-status.js') }}"></script>
+<script src="{{ url('mobile/assets/js/tiny-slider.js') }}"></script>
+<script src="{{ url('mobile/assets/js/venobox.min.js') }}"></script>
+<script src="{{ url('mobile/assets/js/countdown.js') }}"></script>
+<script src="{{ url('mobile/assets/js/rangeslider.min.js') }}"></script>
+<script src="{{ url('mobile/assets/js/index.js') }}"></script>
+<script src="{{ url('mobile/assets/js/imagesloaded.pkgd.min.js') }}"></script>
+<script src="{{ url('mobile/assets/js/isotope.pkgd.min.js') }}"></script>
 
-<!-- feather js -->
-<script src="{{ url('assets/js/feather.min.js') }}"></script>
-<script src="{{ url('assets/js/custom-feather.js') }}"></script>
-
-<!-- iconsax js -->
-<script src="{{ url('assets/js/iconsax.js') }}"></script>
-
-<!-- bootstrap js -->
-<script src="{{ url('assets/js/bootstrap.bundle.min.js') }}"></script>
-
-<!-- PWA offcanvas popup js -->
-<script src="{{ url('assets/js/offcanvas-popup.js') }}"></script>
-
-<!-- script js -->
-<script src="{{ url('assets/js/script.js') }}"></script>
+<script src="{{ url('mobile/assets/js/functions.js') }}"></script>
+{{--<script src="{{ url('mobile/assets/js/pwa.js') }}"></script>--}}
 </body>
+
 </html>

@@ -1,46 +1,45 @@
-<div class="navbar-menu">
-    <div class="scanner-bg">
-        <a href="{{ url('venda/cadastrar') }}" class="scanner-btn">
-            <i class="fad fa-basket-shopping text-white fs-2"></i>
-        </a>
+<!-- Footer Nav -->
+<div class="footer-nav position-relative border-top shadow-sm footer-style-two position-fixed bottom-0">
+    <div class="container">
+        <ul class="h-100 d-flex align-items-center justify-content-between ps-0">
+            <li>
+                <a href="{{ url('') }}">
+                    <i class="fad fa-home text-primary-color"></i>
+                </a>
+            </li>
+
+            <li>
+                <a href="{{ url('cliente') }}">
+                    <i class="fad fa-user text-primary-color"></i>
+                </a>
+            </li>
+
+            <li class="active">
+                <a href="{{ url('cart') }}" class="badge-avater badge-avater-lg">
+                    <i class="fad fa-shopping-basket"></i>
+                </a>
+            </li>
+
+            <li>
+                <a href="{{ url('pedido') }}">
+                    <i class="fad fa-list text-primary-color"></i>
+                </a>
+            </li>
+
+            <li>
+                <a href="{{ url('config') }}">
+                    <i class="fad fa-gear text-primary-color"></i>
+                </a>
+            </li>
+        </ul>
     </div>
-    <ul>
-        <li class="active">
-            <a href="{{ url('') }}">
-                <div class="icon mb-2">
-                    <i class="fad fa-home"></i>
-                </div>
-                <h5 class="active">Home</h5>
-            </a>
-        </li>
-
-        <li>
-            <a href="{{ url('cliente') }}">
-                <div class="icon mb-2">
-                    <i class="fad fa-user"></i>
-                </div>
-                <h5>Clientes</h5>
-            </a>
-        </li>
-
-        <li></li>
-
-        <li>
-            <a href="{{ url('produto') }}">
-                <div class="icon mb-2">
-                    <i class="fad fa-box"></i>
-                </div>
-                <h5>Produtos</h5>
-            </a>
-        </li>
-
-        <li>
-            <a href="{{ url('venda') }}">
-                <div class="icon mb-2">
-                    <i class="fad fa-file-invoice"></i>
-                </div>
-                <h5>Vendas</h5>
-            </a>
-        </li>
-    </ul>
 </div>
+
+<script>
+    $(document).on('click', '.card-product', function () {
+        $('.bagde-cart').addClass('pulse').find('span').text('02');
+        setTimeout(function () {
+            $('.bagde-cart').removeClass('pulse');
+        }, 1500);
+    });
+</script>

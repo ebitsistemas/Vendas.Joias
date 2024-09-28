@@ -48,7 +48,9 @@ class ClienteController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $cliente = Cliente::find($id);
+
+        return view('cliente.gerenciar')->with(['method' => 'view', 'cliente' => $cliente]);
     }
 
     /**
@@ -56,23 +58,38 @@ class ClienteController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $cliente = Cliente::find($id);
+
+        return view('cliente.gerenciar')->with(['method' => 'update', 'cliente' => $cliente]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request)
     {
-        //
+        $cliente = Cliente::find($request->id);
+        $response = $cliente->update($request->all());
+
+        if ($response) {
+            toastr()->success('Registro alterado com sucesso!');
+            return redirect()->to('cliente');
+        }
+
+        toastr()->error('Erro ao cadastrar registro!');
+        return back();
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request)
     {
-        //
+        $result = Cliente::destroy($request->id);
+
+        return response()->json([
+            'success' => $result
+        ]);
     }
 
     public function ajax(Request $request)

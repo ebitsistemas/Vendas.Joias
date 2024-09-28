@@ -35,6 +35,7 @@
 
     <!-- ICONS -->
     <link href="{{ url('assets/fonts/css/all.css') }}" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet"/>
 
     <!-- Web App Manifest -->
     {{--    <link href="{{ url('mobile/assets/manifest.json') }}" rel="manifest"/>--}}
@@ -46,6 +47,8 @@
     <link href="https://cdn.datatables.net/2.1.7/css/dataTables.bootstrap5.css" rel="stylesheet" type="text/css"/>
     <script src="https://cdn.datatables.net/2.1.7/js/dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/2.1.7/js/dataTables.bootstrap5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
         $(document).ready(function () {
@@ -55,7 +58,7 @@
     </script>
 </head>
 
-<body>
+<body data-url="{{ url('') }}">
 <!-- Preloader
 <div id="preloader">
     <div class="spinner-grow text-primary-color" role="status">

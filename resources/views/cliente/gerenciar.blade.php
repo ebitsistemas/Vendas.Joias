@@ -7,12 +7,13 @@
         <div class="card-body card-scroll h100p">
             <h5 class="text-theme text-uppercase">Cadastro Cliente</h5>
             <form id="cliente" action="{{ url('cliente/'.$method) }}" method="POST">
+                <input type="hidden" name="id" id="id" value="{{ $cliente->id ?? '' }}">
                 @csrf
                 {{-- DADOS GERAIS --}}
                 <div class="row mb-2">
                     <div class="col-md-6">
                         <label class="form-label required" for="tipo_pessoa">Tipo Pessoa</label>
-                        <select class="form-select form-select-lg fn-show" id="tipo_pessoa" name="tipo_pessoa" required>
+                        <select class="form-select form-select-lg fn-show" id="tipo_pessoa" name="tipo_pessoa" data-selected="{{ $cliente->tipo_pessoa ?? '' }}" required>
                             <option value="1" selected="">Pessoa Física</option>
                             <option value="2">Pessoa Jurídica</option>
                         </select>
@@ -20,24 +21,24 @@
                     <div class="col-md-6">
                         <label class="form-label required" for="documento" data-show="tipo_pessoa-1">CPF</label>
                         <label class="form-label required d-none" for="documento" data-show="tipo_pessoa-2">CNPJ</label>
-                        <input type="text" class="form-control form-control-lg" id="documento" name="documento" required>
+                        <input type="text" class="form-control form-control-lg" id="documento" name="documento" value="{{ $cliente->documento ?? '' }}" required>
                     </div>
                 </div>
 
                 <div class="row mb-2">
                     <div class="col-md-12">
                         <label class="form-label required" for="nome">Nome Completo</label>
-                        <input type="text" class="form-control form-control-lg" id="nome" name="nome" required>
+                        <input type="text" class="form-control form-control-lg" id="nome" name="nome" value="{{ $cliente->nome ?? '' }}" required>
                     </div>
                 </div>
                 <div class="row mb-2">
                     <div class="col-md-6">
                         <label class="form-label" for="rg">RG</label>
-                        <input type="text" class="form-control form-control-lg" id="rg" name="rg">
+                        <input type="text" class="form-control form-control-lg" id="rg" name="rg" value="{{ $cliente->rg ?? '' }}">
                     </div>
                     <div class="col-md-6">
                         <label class="form-label" for="grupo_id">Grupo</label>
-                        <select class="form-select form-select-lg" id="grupo_id" name="grupo_id">
+                        <select class="form-select form-select-lg" id="grupo_id" name="grupo_id" data-selected="{{ $cliente->grupo_id ?? '' }}">
                             <option value="0">Selecione...</option>
                         </select>
                     </div>
@@ -46,7 +47,7 @@
                 <div class="row mb-2">
                     <div class="col-md-6">
                         <label class="form-label" for="sexo">Sexo</label>
-                        <select class="form-select form-select-lg" id="sexo" name="sexo">
+                        <select class="form-select form-select-lg" id="sexo" name="sexo" data-selected="{{ $cliente->sexo ?? '' }}">
                             <option value="0">Selecione...</option>
                             <option value="1">Feminino</option>
                             <option value="2">Masculino</option>
@@ -54,7 +55,7 @@
                     </div>
                     <div class="col-md-6">
                         <label class="form-label" for="data_nascimento">Data de Nascimento</label>
-                        <input type="date" class="form-control form-control-lg" id="data_nascimento" name="data_nascimento">
+                        <input type="date" class="form-control form-control-lg" id="data_nascimento" name="data_nascimento" value="{{ $cliente->data_nascimento ?? '' }}">
                     </div>
                 </div>
 
@@ -63,14 +64,14 @@
                         <label class="form-label" for="renda">Renda Mensal</label>
                         <div class="input-group mb-3">
                             <span class="input-group-text">R$</span>
-                            <input type="text" class="form-control form-control-lg" id="faturamento_mensal" name="faturamento_mensal">
+                            <input type="text" class="form-control form-control-lg" id="faturamento_mensal" name="faturamento_mensal" value="{{ $cliente->faturamento_mensal ?? '' }}">
                         </div>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label" for="limite_credito">Limite Crédito</label>
                         <div class="input-group mb-3">
                             <span class="input-group-text">R$</span>
-                            <input type="text" class="form-control form-control-lg" id="limite_credito" name="limite_credito">
+                            <input type="text" class="form-control form-control-lg" id="limite_credito" name="limite_credito" value="{{ $cliente->limite_credito ?? '' }}">
                         </div>
                     </div>
                 </div>
@@ -82,35 +83,35 @@
                     <div class="col-md-3">
                         <label class="form-label" for="cep">CEP</label>
                         <div class="input-group mb-3">
-                            <input type="text" class="form-control form-control-lg" id="cep" name="cep">
+                            <input type="text" class="form-control form-control-lg fn-cep" id="cep" name="cep" value="{{ $cliente->cep ?? '' }}">
                             <a href="#" class="input-group-text"><i class="fa fa-search"></i></a>
                         </div>
                     </div>
                     <div class="col-md-9">
                         <label class="form-label" for="logradouro">Logradouro</label>
-                        <input type="text" class="form-control form-control-lg" id="logradouro" name="logradouro">
+                        <input type="text" class="form-control form-control-lg" id="logradouro" name="logradouro" value="{{ $cliente->logradouro ?? '' }}">
                     </div>
                 </div>
 
                 <div class="row mb-2">
                     <div class="col-md-3">
                         <label class="form-label" for="numero">Número</label>
-                        <input type="text" class="form-control form-control-lg" id="numero" name="numero">
+                        <input type="text" class="form-control form-control-lg" id="numero" name="numero" value="{{ $cliente->numero ?? '' }}">
                     </div>
                     <div class="col-md-9">
                         <label class="form-label" for="bairro">Bairro</label>
-                        <input type="text" class="form-control form-control-lg" id="bairro" name="bairro">
+                        <input type="text" class="form-control form-control-lg" id="bairro" name="bairro" value="{{ $cliente->bairro ?? '' }}">
                     </div>
                 </div>
 
                 <div class="row mb-2">
                     <div class="col-md-9">
                         <label class="form-label" for="cidade">Cidade</label>
-                        <input type="text" class="form-control form-control-lg" id="cidade" name="cidade">
+                        <input type="text" class="form-control form-control-lg" id="cidade" name="cidade" value="{{ $cliente->cidade ?? '' }}">
                     </div>
                     <div class="col-md-3">
                         <label class="form-label" for="uf">UF</label>
-                        <input type="text" class="form-control form-control-lg" id="uf" name="uf">
+                        <input type="text" class="form-control form-control-lg" id="uf" name="uf" value="{{ $cliente->uf ?? '' }}">
                     </div>
                 </div>
 
@@ -121,22 +122,22 @@
                 <div class="row mb-2">
                     <div class="col-md-8">
                         <label class="form-label" for="exampleInputText2">E-mail</label>
-                        <input type="email" class="form-control form-control-lg" id="email" name="email">
+                        <input type="email" class="form-control form-control-lg" id="email" name="email" value="{{ $cliente->email ?? '' }}">
                     </div>
                     <div class="col-md-4">
                         <label class="form-label" for="exampleInputText2">Celular</label>
-                        <input type="text" class="form-control form-control-lg" id="celular" name="celular">
+                        <input type="text" class="form-control form-control-lg" id="celular" name="celular" value="{{ $cliente->celular ?? '' }}">
                     </div>
                 </div>
 
                 <div class="row mb-2">
                     <div class="col-md-8">
                         <label class="form-label" for="exampleInputText2">Rede Social</label>
-                        <input type="text" class="form-control form-control-lg" id="rede_social" name="rede_social">
+                        <input type="text" class="form-control form-control-lg" id="rede_social" name="rede_social" value="{{ $cliente->rede_social ?? '' }}">
                     </div>
                     <div class="col-md-4">
                         <label class="form-label" for="exampleInputText2">Telefone</label>
-                        <input type="text" class="form-control form-control-lg" id="telefone" name="telefone">
+                        <input type="text" class="form-control form-control-lg" id="telefone" name="telefone" value="{{ $cliente->telefone ?? '' }}">
                     </div>
                 </div>
 
@@ -145,7 +146,7 @@
                 <div class="row mb-2">
                     <div class="col-md-12">
                         <label class="form-label" for="anotacoes">Anotações</label>
-                        <textarea class="form-control" id="anotacoes" name="anotacoes" cols="3" rows="5"></textarea>
+                        <textarea class="form-control" id="anotacoes" name="anotacoes" cols="3" rows="5">{{ $cliente->anotacoes ?? '' }}</textarea>
                     </div>
                 </div>
 

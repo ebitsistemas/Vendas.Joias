@@ -1,3 +1,5 @@
+var BASE_URL = $('body').data('url');
+
 var TEXT_SUCCESS = 'text-success';
 var TEXT_PRIMARY = 'text-primary';
 var TEXT_SECUNDARY = 'text-secundary';
@@ -352,6 +354,84 @@ FormSelect = function () {
     });
 }
 FormSelect();
+
+
+$(document).on('click', '.fn-remover', function () {
+    var $form = $(this);
+    var id = $form.data('id');
+    var method = $form.data('method');
+    var content = $form.data('content');
+
+    Swal.fire({
+        html: 'Realmente deseja remover o(a): <b>' + content + '</b>',
+        icon: "warning",
+        buttonsStyling: false,
+        showCancelButton: true,
+        confirmButtonText: "<i class='fad fa-circle-check'></i> Confirmar",
+        cancelButtonText: "<i class='fad fa-circle-xmark'></i> Cancelar",
+        customClass: {
+            confirmButton: "btn btn-success py-2 me-2",
+            cancelButton: 'btn btn-danger py-2'
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: BASE_URL + '/' + method + '/delete',
+                type: 'POST',
+                data: {'id': id},
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                cache: false,
+                timeout: 5000,
+                beforeSend:function () {
+                    toastr.info("Removendo, aguarde...");
+                },
+                error: function () {
+                    toastr.clear()
+                    toastr.warning("Erro ao remover registro.");
+                    return false;
+                },
+                success: function (response) {
+                    toastr.clear()
+                    if (response.success) {
+                        toastr.success("Registro removido com sucesso!");
+                    } else {
+                        erros = jQuery.parseJSON(response.erro);
+                        toastr.warning("Erro ao remover registro: " + response.erro);
+                    }
+                }
+            });
+        }
+    });
+});
+
+$(document).on('blur', ".fn-cep", function(){
+    var cep = $(this).val();
+    cep = cep.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi,'');
+
+    if (!empty(cep)) {
+        $.ajax({
+            url: BASE_URL + '/cep/' + cep,
+            method: 'get',
+            error: function () {
+                toastr.error("Erro ao consultar CEP!");
+            },
+            success: function (data) {
+                response = data.item;
+                if (data.success) {
+                    $('input[name=logradouro]').val(response.logradouro);
+                    $('input[name=bairro]').val(response.bairro);
+                    $('input[name=cidade]').val(response.localidade);
+                    $('input[name=codigo_ibge]').val(response.ibge);
+                    $('input[name=uf]').val(response.uf);
+                } else {
+                    toastr.warning("CEP não encontrado e/ou incorreto!");
+                }
+            }
+        });
+    }
+});
 
 $(document).on('click', '.vibrar', function () {
     window.navigator.vibrate(100);

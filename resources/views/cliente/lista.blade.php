@@ -88,10 +88,10 @@
                         button += '<div class="dropdown">';
                         button += '     <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false"><i class="fad fa-cog"></i></button>';
                         button += '     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">';
-                        button += '         <li><a href="{{ url('cliente/editar') }}" class="dropdown-item text-primary" href="#"><i class="fad fa-edit"></i> Editar </a></li>';
-                        button += '         <li><a href="{{ url('cliente/imprimir') }}" class="dropdown-item text-dark" href="#"><i class="fad fa-print"></i> Imprimir</a></li>';
-                        button += '         <li><a href="{{ url('cliente/compartilhar') }}" class="dropdown-item text-success" href="#"><i class="fad fa-share-nodes"></i> Compartilhar</a></li>';
-                        button += '         <li><a class="dropdown-item text-danger" href="#"><i class="fad fa-trash"></i> Remover</a></li>';
+                        button += '         <li><a href="cliente/editar/' + data + '" class="dropdown-item text-primary" href="#"><i class="fad fa-edit"></i> Editar </a></li>';
+                        button += '         <li><a href="cliente/imprimir/' + data + '" class="dropdown-item text-dark" href="#"><i class="fad fa-print"></i> Imprimir</a></li>';
+                        button += '         <li><a href="cliente/compartilhar/' + data + '" class="dropdown-item text-success" href="#"><i class="fad fa-share-nodes"></i> Compartilhar</a></li>';
+                        button += '         <li><a class="dropdown-item text-danger fn-remover" href="javascript:void(0);" data-content="'+row.nome+'" data-method="cliente" data-id="'+row.id+'"><i class="fad fa-trash"></i> Remover</a></li>';
                         button += '     </ul>';
                         button += '</div>';
                         return button;
@@ -100,5 +100,4 @@
             ]
         });
     </script>
-
 @endsection

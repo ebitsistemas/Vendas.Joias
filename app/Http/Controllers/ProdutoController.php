@@ -26,9 +26,9 @@ class ProdutoController extends Controller
      */
     public function create()
     {
-        $unidade = Unidade::all();
+        $unidades = Unidade::all();
         $categorias = Categoria::all();
-        return view('produto.gerenciar')->with(['method' => 'store', 'categorias' => $categorias, 'unidade' => $unidade]);
+        return view('produto.gerenciar')->with(['method' => 'store', 'categorias' => $categorias, 'unidades' => $unidades]);
     }
 
     /**
@@ -53,8 +53,9 @@ class ProdutoController extends Controller
     public function show(string $id)
     {
         $produto = Produto::find($id);
-
-        return view('produto.gerenciar')->with(['method' => 'view', 'produto' => $produto]);
+        $unidades = Unidade::all();
+        $categorias = Categoria::all();
+        return view('produto.gerenciar')->with(['method' => 'view', 'produto' => $produto, 'categorias' => $categorias, 'unidades' => $unidades]);
     }
 
     /**
@@ -63,8 +64,9 @@ class ProdutoController extends Controller
     public function edit(string $id)
     {
         $produto = Produto::find($id);
-
-        return view('produto.gerenciar')->with(['method' => 'update', 'produto' => $produto]);
+        $unidades = Unidade::all();
+        $categorias = Categoria::all();
+        return view('produto.gerenciar')->with(['method' => 'update', 'produto' => $produto, 'categorias' => $categorias, 'unidades' => $unidades]);
     }
 
     /**

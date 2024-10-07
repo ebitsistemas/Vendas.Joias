@@ -8,8 +8,8 @@
             <div class="card bg-white">
                 <div class="card-body">
                     <div class="title">
-                        <h4>Produtos</h4>
-                        <a href="{{ url('produto/cadastrar') }}" class="btn btn-primary text-white"><i class="fad fa-plus-circle"></i> Cadastrar</a>
+                        <h4 class="text-theme">Produtos</h4>
+                        <a href="{{ url('produto/cadastrar') }}" class="btn btn-theme"><i class="fad fa-plus-circle"></i> Cadastrar</a>
                     </div>
 
                     <div class="row pt-3">

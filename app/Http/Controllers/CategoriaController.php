@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Produto;
-use App\Models\Grupo;
+use App\Models\Categoria;
 use App\Traits\TraitDatatables;
 use Illuminate\Http\Request;
 
-class ProdutoController extends Controller
+class CategoriaController extends Controller
 {
     use TraitDatatables;
 
@@ -16,8 +15,8 @@ class ProdutoController extends Controller
      */
     public function index(Request $request)
     {
-        $produtos = Produto::all();
-        return view('produto.lista')->with('produtos', $produtos);
+        $categorias = Categoria::all();
+        return view('categoria.lista')->with('categorias', $categorias);
     }
 
     /**
@@ -25,8 +24,8 @@ class ProdutoController extends Controller
      */
     public function create()
     {
-        $grupos = Grupo::all();
-        return view('produto.gerenciar')->with(['method' => 'store', 'grupos' => $grupos]);
+        $categorias = Categoria::all();
+        return view('categoria.gerenciar')->with(['method' => 'store', 'categorias' => $categorias]);
     }
 
     /**
@@ -34,11 +33,11 @@ class ProdutoController extends Controller
      */
     public function store(Request $request)
     {
-        $response = Produto::create($request->all());
+        $response = Categoria::create($request->all());
 
         if ($response) {
             toastr()->success('Registro cadastrado com sucesso!');
-            return redirect()->to('produto');
+            return redirect()->to('categoria');
         }
 
         toastr()->error('Erro ao cadastrar registro!');
@@ -46,23 +45,14 @@ class ProdutoController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        $produto = Produto::find($id);
-
-        return view('produto.gerenciar')->with(['method' => 'view', 'produto' => $produto]);
-    }
-
-    /**
      * Show the form for editing the specified resource.
      */
     public function edit(string $id)
     {
-        $produto = Produto::find($id);
+        $categoria = Categoria::find($id);
+        $categorias = Categoria::all();
 
-        return view('produto.gerenciar')->with(['method' => 'update', 'produto' => $produto]);
+        return view('categoria.gerenciar')->with(['method' => 'update', 'categoria' => $categoria, 'categorias' => $categorias]);
     }
 
     /**
@@ -70,12 +60,12 @@ class ProdutoController extends Controller
      */
     public function update(Request $request)
     {
-        $produto = Produto::find($request->id);
-        $response = $produto->update($request->all());
+        $categoria = Categoria::find($request->id);
+        $response = $categoria->update($request->all());
 
         if ($response) {
             toastr()->success('Registro alterado com sucesso!');
-            return redirect()->to('produto');
+            return redirect()->to('categoria');
         }
 
         toastr()->error('Erro ao cadastrar registro!');
@@ -87,7 +77,7 @@ class ProdutoController extends Controller
      */
     public function destroy(Request $request)
     {
-        $result = Produto::destroy($request->id);
+        $result = Categoria::destroy($request->id);
 
         return response()->json([
             'success' => $result
@@ -96,30 +86,25 @@ class ProdutoController extends Controller
 
     public function ajax(Request $request)
     {
-        $model = Produto::select([
-            'produtos.id',
-            'produtos.nome',
-            'produtos.documento',
-            'produtos.tipo_pessoa',
-            'grupos.nome AS grupo_nome',
-            'produtos.status'
+        $model = Categoria::select([
+            'categorias.id',
+            'categorias.nome',
+            'categorias_pai.nome AS categoria_pai',
+            'categorias.status'
         ])
-            ->leftjoin('grupos', 'grupos.id', 'produtos.grupo_id');
+            ->leftjoin('categorias AS categorias_pai', 'categorias_pai.id', 'categorias.categoria_id');
 
         $properties = [
             'id' => 'id',
             'nome' => 'string',
-            'documento' => 'string',
-            'tipo_pessoa' => 'integer',
-            'grupo_nome' => 'string',
+            'categoria_pai' => 'string',
             'status' => 'string'
         ];
 
         $filters = [
-            'produtos.id' => 'id',
-            'produtos.nome' => 'string',
-            'produtos.documento' => 'string',
-            'grupos.nome' => 'string',
+            'categorias.id' => 'id',
+            'categorias.nome' => 'string',
+            'categorias.documento' => 'string',
         ];
 
         $response = $this->dtable($request, $model, $properties, $filters);

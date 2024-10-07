@@ -437,6 +437,8 @@ $(document).on('click', '.vibrar', function () {
     window.navigator.vibrate(100);
 });
 
+$(".money").maskMoney({thousands:'.', decimal:',', allowZero:true, suffix: ''});
+
 ToggleFullScreen = function () {
     if ((document.fullScreenElement && document.fullScreenElement !== null) ||
         (!document.mozFullScreen && !document.webkitIsFullScreen)) {

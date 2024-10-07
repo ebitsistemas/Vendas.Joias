@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cliente;
+use App\Models\Grupo;
 use App\Traits\TraitDatatables;
 use Illuminate\Http\Request;
 
@@ -24,7 +25,8 @@ class ClienteController extends Controller
      */
     public function create()
     {
-        return view('cliente.gerenciar')->with(['method' => 'store']);
+        $grupos = Grupo::all();
+        return view('cliente.gerenciar')->with(['method' => 'store', 'grupos' => $grupos]);
     }
 
     /**

@@ -314,3 +314,8 @@ div.dt-container div.dt-length select{
 table.table{
     font-size: 16px;
 }
+
+.btn-theme:hover{
+    color: var(--bs-indigo);
+    border:2px solid var(--bs-indigo) !important;
+}

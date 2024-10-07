@@ -45,6 +45,7 @@
 
     <!-- DATATABLE -->
     <link href="https://cdn.datatables.net/2.1.7/css/dataTables.bootstrap5.css" rel="stylesheet" type="text/css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-maskmoney/3.0.2/jquery.maskMoney.min.js"></script>
     <script src="https://cdn.datatables.net/2.1.7/js/dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/2.1.7/js/dataTables.bootstrap5.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>

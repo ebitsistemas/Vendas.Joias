@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Produto;
 use App\Models\Grupo;
 use App\Traits\TraitDatatables;
 use Illuminate\Http\Request;
 
-class ProdutoController extends Controller
+class GrupoController extends Controller
 {
     use TraitDatatables;
 
@@ -16,8 +15,8 @@ class ProdutoController extends Controller
      */
     public function index(Request $request)
     {
-        $produtos = Produto::all();
-        return view('produto.lista')->with('produtos', $produtos);
+        $grupos = Grupo::all();
+        return view('grupo.lista')->with('grupos', $grupos);
     }
 
     /**
@@ -26,7 +25,7 @@ class ProdutoController extends Controller
     public function create()
     {
         $grupos = Grupo::all();
-        return view('produto.gerenciar')->with(['method' => 'store', 'grupos' => $grupos]);
+        return view('grupo.gerenciar')->with(['method' => 'store', 'grupos' => $grupos]);
     }
 
     /**
@@ -34,11 +33,11 @@ class ProdutoController extends Controller
      */
     public function store(Request $request)
     {
-        $response = Produto::create($request->all());
+        $response = Grupo::create($request->all());
 
         if ($response) {
             toastr()->success('Registro cadastrado com sucesso!');
-            return redirect()->to('produto');
+            return redirect()->to('grupo');
         }
 
         toastr()->error('Erro ao cadastrar registro!');
@@ -46,23 +45,14 @@ class ProdutoController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        $produto = Produto::find($id);
-
-        return view('produto.gerenciar')->with(['method' => 'view', 'produto' => $produto]);
-    }
-
-    /**
      * Show the form for editing the specified resource.
      */
     public function edit(string $id)
     {
-        $produto = Produto::find($id);
+        $grupo = Grupo::find($id);
+        $grupos = Grupo::all();
 
-        return view('produto.gerenciar')->with(['method' => 'update', 'produto' => $produto]);
+        return view('grupo.gerenciar')->with(['method' => 'update', 'grupo' => $grupo, 'grupos' => $grupos]);
     }
 
     /**
@@ -70,12 +60,12 @@ class ProdutoController extends Controller
      */
     public function update(Request $request)
     {
-        $produto = Produto::find($request->id);
-        $response = $produto->update($request->all());
+        $grupo = Grupo::find($request->id);
+        $response = $grupo->update($request->all());
 
         if ($response) {
             toastr()->success('Registro alterado com sucesso!');
-            return redirect()->to('produto');
+            return redirect()->to('grupo');
         }
 
         toastr()->error('Erro ao cadastrar registro!');
@@ -87,7 +77,7 @@ class ProdutoController extends Controller
      */
     public function destroy(Request $request)
     {
-        $result = Produto::destroy($request->id);
+        $result = Grupo::destroy($request->id);
 
         return response()->json([
             'success' => $result
@@ -96,30 +86,25 @@ class ProdutoController extends Controller
 
     public function ajax(Request $request)
     {
-        $model = Produto::select([
-            'produtos.id',
-            'produtos.nome',
-            'produtos.documento',
-            'produtos.tipo_pessoa',
-            'grupos.nome AS grupo_nome',
-            'produtos.status'
+        $model = Grupo::select([
+            'grupos.id',
+            'grupos.nome',
+            'grupos_pai.nome AS grupo_pai',
+            'grupos.status'
         ])
-            ->leftjoin('grupos', 'grupos.id', 'produtos.grupo_id');
+            ->leftjoin('grupos AS grupos_pai', 'grupos_pai.id', 'grupos.grupo_id');
 
         $properties = [
             'id' => 'id',
             'nome' => 'string',
-            'documento' => 'string',
-            'tipo_pessoa' => 'integer',
-            'grupo_nome' => 'string',
+            'grupo_pai' => 'string',
             'status' => 'string'
         ];
 
         $filters = [
-            'produtos.id' => 'id',
-            'produtos.nome' => 'string',
-            'produtos.documento' => 'string',
+            'grupos.id' => 'id',
             'grupos.nome' => 'string',
+            'grupos.documento' => 'string',
         ];
 
         $response = $this->dtable($request, $model, $properties, $filters);

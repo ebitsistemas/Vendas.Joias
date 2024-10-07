@@ -13,15 +13,16 @@ class Produto extends Model
     protected $fillable = [
         'nome',
         'slug',
+        'grupo_id',
         'unidade_id',
         'categoria_id',
+        'codigo_interno',
         'codigo_barras',
         'descricao',
         'descricao_curta',
         'preco_custo',
         'custos_adicionais',
         'margem_lucro',
-        'tributos',
         'comissao_venda',
         'descontos',
         'preco_venda_sugerido',
@@ -29,4 +30,14 @@ class Produto extends Model
         'imagem',
         'status',
     ];
+
+    public function categoria()
+    {
+        return $this->hasOne(Categoria::class, 'id', 'categoria_id');
+    }
+
+    public function unidade()
+    {
+        return $this->hasOne(Unidade::class, 'id', 'unidade_id');
+    }
 }

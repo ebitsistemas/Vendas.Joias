@@ -40,6 +40,9 @@
                         <label class="form-label" for="grupo_id">Grupo</label>
                         <select class="form-select form-select-lg" id="grupo_id" name="grupo_id" data-selected="{{ $cliente->grupo_id ?? '' }}">
                             <option value="0">Selecione...</option>
+                            @foreach($grupos as $item)
+                                <option value="{{ $item->id }}">{{ $item->nome }}</option>
+                            @endforeach
                         </select>
                     </div>
                 </div>
@@ -64,14 +67,14 @@
                         <label class="form-label" for="renda">Renda Mensal</label>
                         <div class="input-group mb-3">
                             <span class="input-group-text">R$</span>
-                            <input type="text" class="form-control form-control-lg" id="faturamento_mensal" name="faturamento_mensal" value="{{ $cliente->faturamento_mensal ?? '' }}">
+                            <input type="text" class="form-control form-control-lg money" id="faturamento_mensal" name="faturamento_mensal" value="{{ $cliente->faturamento_mensal ?? '' }}">
                         </div>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label" for="limite_credito">Limite Crédito</label>
                         <div class="input-group mb-3">
                             <span class="input-group-text">R$</span>
-                            <input type="text" class="form-control form-control-lg" id="limite_credito" name="limite_credito" value="{{ $cliente->limite_credito ?? '' }}">
+                            <input type="text" class="form-control form-control-lg money" id="limite_credito" name="limite_credito" value="{{ $cliente->limite_credito ?? '' }}">
                         </div>
                     </div>
                 </div>

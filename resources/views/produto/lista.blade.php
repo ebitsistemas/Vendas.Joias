@@ -1,6 +1,6 @@
 @extends('layout.template')
 
-@section('title', 'Clientes')
+@section('title', 'Produtos')
 
 @section('content')
     <section class="section-b-space">
@@ -51,9 +51,14 @@
                     width: 250,
                 },
                 {
-                    title: 'Produto Pai',
-                    data: 'produto_pai',
-                    name: 'produto_pai'
+                    title: 'Categoria',
+                    data: 'categorias_nome',
+                    name: 'categorias_nome'
+                },
+                {
+                    title: 'Preço',
+                    data: 'preco_venda',
+                    name: 'preco_venda'
                 },
                 {
                     title: 'Status',

@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Produto;
-use App\Models\Grupo;
+use App\Models\Categoria;
+use App\Models\Unidade;
 use App\Traits\TraitDatatables;
 use Illuminate\Http\Request;
 
@@ -25,8 +26,9 @@ class ProdutoController extends Controller
      */
     public function create()
     {
-        $grupos = Grupo::all();
-        return view('produto.gerenciar')->with(['method' => 'store', 'grupos' => $grupos]);
+        $unidade = Unidade::all();
+        $categorias = Categoria::all();
+        return view('produto.gerenciar')->with(['method' => 'store', 'categorias' => $categorias, 'unidade' => $unidade]);
     }
 
     /**
@@ -99,27 +101,33 @@ class ProdutoController extends Controller
         $model = Produto::select([
             'produtos.id',
             'produtos.nome',
-            'produtos.documento',
-            'produtos.tipo_pessoa',
-            'grupos.nome AS grupo_nome',
+            'produtos.codigo_barras',
+            'produtos.codigo_interno',
+            'categorias.nome AS categorias_nome',
+            'produtos.preco_venda',
+            'unidades.sigla AS sigla_unidade',
             'produtos.status'
         ])
-            ->leftjoin('grupos', 'grupos.id', 'produtos.grupo_id');
+            ->leftjoin('unidades', 'unidades.id', 'produtos.unidade_id')
+            ->leftjoin('categorias', 'categorias.id', 'produtos.categoria_id');
 
         $properties = [
             'id' => 'id',
             'nome' => 'string',
             'documento' => 'string',
             'tipo_pessoa' => 'integer',
-            'grupo_nome' => 'string',
+            'categoria_nome' => 'string',
             'status' => 'string'
         ];
 
         $filters = [
             'produtos.id' => 'id',
             'produtos.nome' => 'string',
-            'produtos.documento' => 'string',
-            'grupos.nome' => 'string',
+            'produtos.codigo_barras' => 'string',
+            'produtos.codigo_interno' => 'string',
+            'produtos.preco_venda' => 'string',
+            'categorias.nome' => 'string',
+            'unidades.sigla' => 'string',
         ];
 
         $response = $this->dtable($request, $model, $properties, $filters);

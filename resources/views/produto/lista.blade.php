@@ -52,8 +52,8 @@
                 },
                 {
                     title: 'Categoria',
-                    data: 'categorias_nome',
-                    name: 'categorias_nome'
+                    data: 'categoria_nome',
+                    name: 'categoria_nome'
                 },
                 {
                     title: 'Preço',
@@ -80,6 +80,8 @@
                         button += '     <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false"><i class="fad fa-cog"></i></button>';
                         button += '     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">';
                         button += '         <li><a href="produto/editar/' + data + '" class="dropdown-item text-primary" href="#"><i class="fad fa-edit"></i> Editar </a></li>';
+                        button += '         <li><a href="produto/imprimir/' + data + '" class="dropdown-item text-dark" href="#"><i class="fad fa-print"></i> Imprimir</a></li>';
+                        button += '         <li><a href="produto/compartilhar/' + data + '" class="dropdown-item text-success" href="#"><i class="fad fa-share-nodes"></i> Compartilhar</a></li>';
                         button += '         <li><a class="dropdown-item text-danger fn-remover" href="javascript:void(0);" data-content="'+row.nome+'" data-method="produto" data-id="'+row.id+'"><i class="fad fa-trash"></i> Remover</a></li>';
                         button += '     </ul>';
                         button += '</div>';

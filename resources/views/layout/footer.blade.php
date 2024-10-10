@@ -15,7 +15,7 @@
             </li>
 
             <li class="active">
-                <a href="{{ url('cart') }}" class="badge-avater badge-avater-lg">
+                <a href="{{ url('venda/cadastrar') }}" class="badge-avater badge-avater-lg">
                     <i class="fad fa-shopping-basket"></i>
                 </a>
             </li>

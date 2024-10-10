@@ -63,4 +63,11 @@ Route::prefix('produto')->group(function () {
 /* VENDAS */
 Route::prefix('venda')->group(function () {
     Route::get('', [\App\Http\Controllers\VendaController::class, 'index'])->name('venda.lista');
+    Route::get('cadastrar', [\App\Http\Controllers\VendaController::class, 'create'])->name('venda.cadastrar');
+    Route::get('editar/{id}', [\App\Http\Controllers\VendaController::class, 'edit'])->name('venda.editar');
+    Route::get('show/{id}', [\App\Http\Controllers\VendaController::class, 'show'])->name('venda.visualizar');
+    Route::post('store', [\App\Http\Controllers\VendaController::class, 'store'])->name('venda.store');
+    Route::post('update', [\App\Http\Controllers\VendaController::class, 'update'])->name('venda.update');
+    Route::post('delete', [\App\Http\Controllers\VendaController::class, 'destroy'])->name('venda.delete');
+    Route::post('ajax', [\App\Http\Controllers\VendaController::class, 'ajax'])->name('venda.ajax');
 });

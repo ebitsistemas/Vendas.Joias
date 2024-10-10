@@ -127,9 +127,7 @@ body{
 .single-product-card .sale-price {
     font-size: 22px;
 }
-.single-product-card .product-thumbnail > img {
-    max-height: 100px;
-}
+
 .bagde-cart{
     right: 0 !important;
     top: -10px !important;

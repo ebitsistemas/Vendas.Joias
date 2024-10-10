@@ -7,6 +7,8 @@ use App\Models\Categoria;
 use App\Models\Unidade;
 use App\Traits\TraitDatatables;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class ProdutoController extends Controller
 {
@@ -36,7 +38,10 @@ class ProdutoController extends Controller
      */
     public function store(Request $request)
     {
-        $response = Produto::create($request->all());
+        $data = $request->all();
+        $data['preco_custo'] = str_replace(',', '.', $data['preco_custo']);
+        $data['preco_venda'] = str_replace(',', '.', $data['preco_venda']);
+        $response = Produto::create($data);
 
         if ($response) {
             toastr()->success('Registro cadastrado com sucesso!');
@@ -74,8 +79,21 @@ class ProdutoController extends Controller
      */
     public function update(Request $request)
     {
+        $data = $request->all();
         $produto = Produto::find($request->id);
-        $response = $produto->update($request->all());
+        $data['preco_custo'] = str_replace(',', '.', $data['preco_custo']);
+        $data['preco_venda'] = str_replace(',', '.', $data['preco_venda']);
+        if($request->hasFile('imagem')) {
+
+            $file = $request->file('imagem');
+            $imagem = $file->get();
+            $extension = $file->getClientOriginalExtension();
+            $name = Auth::id().date('YmdHis').rand(1, 9999);
+            $pathImg = "imagem/{$name}.{$extension}";
+            Storage::disk('public')->put($pathImg, $imagem);
+            $data['imagem'] = $pathImg;
+        }
+        $response = $produto->update($data);
 
         if ($response) {
             toastr()->success('Registro alterado com sucesso!');
@@ -103,33 +121,28 @@ class ProdutoController extends Controller
         $model = Produto::select([
             'produtos.id',
             'produtos.nome',
-            'produtos.codigo_barras',
             'produtos.codigo_interno',
-            'categorias.nome AS categorias_nome',
+            'categorias.nome AS categoria_nome',
             'produtos.preco_venda',
-            'unidades.sigla AS sigla_unidade',
             'produtos.status'
         ])
-            ->leftjoin('unidades', 'unidades.id', 'produtos.unidade_id')
             ->leftjoin('categorias', 'categorias.id', 'produtos.categoria_id');
 
         $properties = [
             'id' => 'id',
             'nome' => 'string',
-            'documento' => 'string',
-            'tipo_pessoa' => 'integer',
+            'codigo_interno' => 'string',
             'categoria_nome' => 'string',
+            'preco_venda' => 'money',
             'status' => 'string'
         ];
 
         $filters = [
             'produtos.id' => 'id',
             'produtos.nome' => 'string',
-            'produtos.codigo_barras' => 'string',
             'produtos.codigo_interno' => 'string',
-            'produtos.preco_venda' => 'string',
+            'produtos.preco_venda' => 'money',
             'categorias.nome' => 'string',
-            'unidades.sigla' => 'string',
         ];
 
         $response = $this->dtable($request, $model, $properties, $filters);

@@ -6,7 +6,7 @@
     <div class="card direction-rtl">
         <div class="card-body card-scroll h100p">
             <h5 class="text-theme text-uppercase">Cadastro Produto</h5>
-            <form id="produto" action="{{ url('produto/'.$method) }}" method="POST">
+            <form id="produto" action="{{ url('produto/'.$method) }}" method="POST" enctype="multipart/form-data">
                 <input type="hidden" name="id" id="id" value="{{ $produto->id ?? '' }}">
                 @csrf
                 {{-- DADOS GERAIS --}}
@@ -28,15 +28,6 @@
                 </div>
                 <div class="row mb-2">
                     <div class="col-md-6">
-                        <label class="form-label required" for="produto_id">Unidade</label>
-                        <select class="form-select form-select-lg" id="unidade_id" name="unidade_id" data-selected="{{ $produto->unidade_id ?? '' }}" required>
-                            <option value="0">Selecione...</option>
-                            @foreach($unidades as $unidade)
-                                <option value="{{ $unidade->id }}">{{ $unidade->nome }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="col-md-6">
                         <label class="form-label required" for="produto_id">Categoria</label>
                         <select class="form-select form-select-lg" id="categoria_id" name="categoria_id" data-selected="{{ $produto->categoria_id ?? '' }}" required>
                             <option value="0">Selecione...</option>
@@ -54,48 +45,14 @@
                         <label class="form-label" for="preco_custo">Preço de Custo</label>
                         <div class="input-group mb-3">
                             <span class="input-group-text">R$</span>
-                            <input type="text" class="form-control form-control-lg money" id="preco_custo" name="preco_custo" value="{{ $cliente->preco_custo ?? '' }}">
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label" for="limite_credito">Custos Adicionais</label>
-                        <div class="input-group mb-3">
-                            <span class="input-group-text">R$</span>
-                            <input type="text" class="form-control form-control-lg money" id="limite_credito" name="limite_credito" value="{{ $cliente->limite_credito ?? '' }}">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row mb-2">
-                    <div class="col-md-6">
-                        <label class="form-label" for="margem_lucro">Margem de Lucro</label>
-                        <div class="input-group mb-3">
-                            <input type="text" class="form-control form-control-lg money" id="margem_lucro" name="margem_lucro" value="{{ $cliente->margem_lucro ?? '' }}">
-                            <span class="input-group-text"> % </span>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label" for="comissao_venda">Comissão de Venda</label>
-                        <div class="input-group mb-3">
-                            <input type="text" class="form-control form-control-lg money" id="comissao_venda" name="comissao_venda" value="{{ $cliente->comissao_venda ?? '' }}">
-                            <span class="input-group-text"> % </span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row mb-2">
-                    <div class="col-md-6">
-                        <label class="form-label" for="preco_venda_sugerido">Preço Venda Sugerido</label>
-                        <div class="input-group mb-3">
-                            <span class="input-group-text">R$</span>
-                            <input type="text" class="form-control form-control-lg money" id="preco_venda_sugerido" name="preco_venda_sugerido" value="{{ $cliente->preco_venda_sugerido ?? '' }}" readonly>
+                            <input type="text" class="form-control form-control-lg money" id="preco_custo" name="preco_custo" @if (!empty($produto)) value="{{ number_format($produto->preco_custo, 2, ',', '.') ?? '' }}" @endif>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label required" for="preco_venda">Preço Venda</label>
                         <div class="input-group mb-3">
                             <span class="input-group-text">R$</span>
-                            <input type="text" class="form-control form-control-lg money" id="preco_venda" name="preco_venda" value="{{ $cliente->preco_venda ?? '' }}" required>
+                            <input type="text" class="form-control form-control-lg money" id="preco_venda" name="preco_venda" @if (!empty($produto)) value="{{ number_format($produto->preco_venda, 2, ',', '.') ?? '' }}" @endif required>
                         </div>
                     </div>
                 </div>
@@ -111,6 +68,24 @@
 
                 <hr>
 
+                <!-- -->
+                <div class="row mb-2">
+                    <div class="col-md-4 col-sm-12">
+                        <img class="img-thumbnail mb-2" src="{{ url('mobile/assets/img/bg-img/2.jpg') }}" alt="">
+                        <div class="form-file">
+                            <input class="form-control d-none form-control-clicked" name="imagem" id="imagem" type="file">
+                            <label class="form-file-label justify-content-center" for="imagem">
+                                <span class="form-file-button btn btn-primary d-flex align-items-center justify-content-center shadow-lg">
+                                  <i class="fa fa-plus-circle me-2"></i> Upload Imagem
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <!-- -->
+
+                <hr>
+
                 <div class="row mb-2">
                     <div class="col-md-12">
                         <button type="submit" class="btn btn-theme w-100 d-flex align-items-center justify-content-center submit">
@@ -121,28 +96,5 @@
             </form>
         </div>
     </div>
-
-    <script>
-        /*$(document).on('click', '.submit', function () {
-            var data = [];
-            var $form = $('form#produto');
-            var dataSerialize = $form.serialize();
-
-            $.ajax({
-                type: 'POST',
-                url: $form.attr('action'),
-                data: dataSerialize,
-                beforeSend: function () {
-                    toastr.info('Aguarde, salvando...!');
-                },
-                success: function (data) {
-
-                },
-                error: function (data) {
-
-                }
-            });
-        })*/
-    </script>
 @endsection
 

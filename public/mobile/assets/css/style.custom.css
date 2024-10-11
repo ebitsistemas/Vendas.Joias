@@ -317,3 +317,6 @@ table.table{
     color: var(--bs-indigo);
     border:2px solid var(--bs-indigo) !important;
 }
+.sidenav-profile{
+    background-color: rgba(102, 16, 242, 0.4);
+}

@@ -18,7 +18,7 @@ class VendaController extends Controller
     public function index()
     {
         $vendas = Venda::all();
-        return view('venda.lista')->with('vendas', $vendas);
+        return view('venda.cart')->with('vendas', $vendas);
     }
 
     /**
@@ -99,6 +99,10 @@ class VendaController extends Controller
 
         toastr()->error('Erro ao cadastrar registro!');
         return back();
+    }
+
+    public function add(Request $request)
+    {
     }
 
     /**

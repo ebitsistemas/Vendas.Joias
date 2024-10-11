@@ -11,20 +11,22 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('vendas_itens', function (Blueprint $table) {
-            $table->id();
-            $table->integer('venda_id')->nullable();
-            $table->integer('produto_id')->nullable();
-            $table->double('valor_unitario', 10, 2)->nullable();
-            $table->double('quantidade', 10, 2)->nullable();
-            $table->integer('tipo_desconto')->nullable();
-            $table->double('valor_desconto_real', 10, 2)->nullable();
-            $table->double('valor_desconto_percentual', 10, 2)->nullable();
-            $table->double('valor_total', 10, 2)->nullable();
-            $table->boolean('status')->default(1)->comment('2 - Bloqueado; 1 - Ativo; 0 - Inativo;');
-            $table->timestamps();
-            $table->softDeletes();
-        });
+        if (!Schema::hasTable('vendas_itens')) {
+            Schema::create('vendas_itens', function (Blueprint $table) {
+                $table->id();
+                $table->integer('venda_id')->nullable();
+                $table->integer('produto_id')->nullable();
+                $table->double('valor_unitario', 10, 2)->nullable();
+                $table->double('quantidade', 10, 2)->nullable();
+                $table->integer('tipo_desconto')->nullable();
+                $table->double('valor_desconto_real', 10, 2)->nullable();
+                $table->double('valor_desconto_percentual', 10, 2)->nullable();
+                $table->double('valor_total', 10, 2)->nullable();
+                $table->boolean('status')->default(1)->comment('2 - Bloqueado; 1 - Ativo; 0 - Inativo;');
+                $table->timestamps();
+                $table->softDeletes();
+            });
+        }
     }
 
     /**

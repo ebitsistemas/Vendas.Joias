@@ -11,6 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (!Schema::hasTable('vendas')) {
         Schema::create('vendas', function (Blueprint $table) {
             $table->id();
             $table->timestamp('data_venda')->nullable();
@@ -29,6 +30,7 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
         });
+        }
     }
 
     /**

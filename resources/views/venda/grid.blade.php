@@ -31,12 +31,12 @@
             <div class="col-6 col-sm-4 col-lg-3">
                 <div class="card single-product-card">
                     <div class="card-body p-3">
-                        <a class="product-thumbnail d-block" href="#">
-                            <img src="{{ url('storage/'.$produto->imagem) }}" alt="">
+                        <a class="product-thumbnail d-block" href="javascript:void(0);">
+                            <img src="{{ url('storage/'.$produto->imagem) }}">
                         </a>
-                        <a class="product-title d-block text-truncate" href="#">{{ $produto->nome }}</a>
+                        <a class="product-title d-block text-truncate" href="javascript:void(0);">{{ $produto->nome }}</a>
                         <p class="sale-price">{{ number_format($produto->preco_venda, 2, ',', '.') }}</p>
-                        <a class="btn btn-primary rounded-pill btn-sm" href="#">Adicionar</a>
+                        <a class="btn btn-primary rounded-pill btn-sm add" data-id="{{ $produto->id }}" href="javascript:void(0);">Adicionar</a>
                     </div>
                 </div>
             </div>
@@ -44,4 +44,54 @@
         </div>
     </div>
 </div>
+
+<script>
+    $(document).on('click', '.add', function () {
+        var id = $(this).data('id');
+        var venda_id = null;
+        if (localStorage.getItem("venda_id") !== null) {
+            venda_id = localStorage.getItem("venda_id");
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: 'venda/add',
+            data: {
+                id: id,
+                venda_id: venda_id,
+                _token: $("input[name*='_token']").val(),
+            },
+            beforeSend: function () {
+                toastr.info('Aguarde, salvando...!');
+            },
+            success: function (data) {
+
+            },
+            error: function (data) {
+
+            }
+        });
+    });
+
+    function addVenda() {
+        $.ajax({
+            type: 'POST',
+            url: 'venda/add',
+            data: {
+                id: id,
+                venda_id: venda_id,
+                _token: $("input[name*='_token']").val(),
+            },
+            beforeSend: function () {
+                toastr.info('Aguarde, salvando...!');
+            },
+            success: function (data) {
+
+            },
+            error: function (data) {
+
+            }
+        });
+    }
+</script>
 @endsection

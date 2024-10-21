@@ -35,8 +35,8 @@
                             <img src="{{ url('storage/'.$produto->imagem) }}">
                         </a>
                         <a class="product-title d-block text-truncate" href="javascript:void(0);">{{ $produto->nome }}</a>
-                        <p class="sale-price">{{ number_format($produto->preco_venda, 2, ',', '.') }}</p>
-                        <a class="btn btn-primary rounded-pill btn-sm add" data-id="{{ $produto->id }}" href="javascript:void(0);">Adicionar</a>
+                        <p class="sale-price">R$ {{ number_format($produto->preco_venda, 2, ',', '.') }}</p>
+                        <a class="btn btn-primary rounded-pill btn-sm add" data-id="{{ $produto->id }}" href="javascript:void(0);"><i class="fa fa-plus fw-bold"></i> Adicionar</a>
                     </div>
                 </div>
             </div>

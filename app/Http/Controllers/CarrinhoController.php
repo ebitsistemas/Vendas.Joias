@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cliente;
 use App\Models\Venda;
 use App\Models\Produto;
 use App\Traits\TraitDatatables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
-class VendaController extends Controller
+class CarrinhoController extends Controller
 {
     use TraitDatatables;
 
@@ -17,30 +18,62 @@ class VendaController extends Controller
      */
     public function index()
     {
-        $vendas = Venda::all();
-        $produtos = Produto::all();
-        return view('venda.cart')->with(['vendas' => $vendas, 'produtos' => $produtos]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        $produtos = Produto::all();
-        return view('venda.grid')->with(['method' => 'store', 'produtos' => $produtos]);
-    }
-
-    public function cart()
-    {
         $venda = Venda::orderBy('created_at', 'desc')->first();
 
         if (isset($venda->status) AND $venda->status == 0) {
-            return redirect()->to('venda/edit/' . $venda->id);
+            return redirect()->to('carrinho/' . $venda->id);
         } else {
             $produtos = Produto::all();
-            return view('venda.cart')->with(['method' => 'store', 'produtos' => $produtos]);
+            return view('carrinho.index')->with(['method' => 'store', 'produtos' => $produtos]);
         }
+    }
+
+    /**
+     * Add the client.
+     */
+    public function clienteAdicionar(Request $request)
+    {
+        $venda = Venda::find($request->venda_id);
+        $venda->cliente_id = $request->cliente_id;
+        $response = $venda->save();
+
+        if ($response) {
+            toastr()->success('Cliente adicionado com sucesso!');
+            return redirect()->to('carrinho/' . $venda->id);
+        }
+    }
+
+    /**
+     * Add the product.
+     */
+    public function produtoAdicionar(Request $request)
+    {
+        $venda = Venda::find($request->venda_id);
+        $venda->produto_id = $request->produto_id;
+        $response = $venda->save();
+
+        if ($response) {
+            toastr()->success('Produto adicionado com sucesso!');
+            return redirect()->to('carrinho/' . $venda->id);
+        }
+    }
+
+    /**
+     * Display the products.
+     */
+    public function produtos()
+    {
+        $produtos = Produto::all();
+        return view('carrinho.produtos')->with(['method' => 'view', 'produtos' => $produtos]);
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function checkout(Request $request)
+    {
+        $venda = Venda::find($request->id);
+        return view('carrinho.produtos')->with(['method' => 'view', 'venda' => $venda]);
     }
 
     /**
@@ -66,15 +99,6 @@ class VendaController extends Controller
 
         toastr()->error('Erro ao cadastrar registro!');
         return back();
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        $produto = Produto::find($id);
-        return view('venda.gerenciar')->with(['method' => 'view', 'produto' => $produto]);
     }
 
     /**

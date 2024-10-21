@@ -21,6 +21,30 @@ class ClienteController extends Controller
     }
 
     /**
+     * Search client.
+     */
+    public function buscar(Request $request)
+    {
+        if (empty($request->pesquisa)) {
+            $clientes = Cliente::where('status', 1)->paginate(2);
+        } else {
+            $model = Cliente::where('status', 1);
+
+            $pesquisa = $request->pesquisa;
+            $model->where(function($query) use ($pesquisa) {
+                $query->orWhere('id', 'like', "%{$pesquisa}")
+                    ->orWhere('nome', 'like', "%{$pesquisa}%")
+                    ->orWhere('documento', 'like', "%{$pesquisa}%")
+                    ->orWhere('celular', 'like', "%{$pesquisa}%")
+                    ->orWhere('telefone', 'like', "%{$pesquisa}%")
+                    ->orWhere('email', 'like', "%{$pesquisa}%");
+            });
+            $clientes = $model->paginate(2);
+        }
+        return view('cliente.buscar')->with(['method' => 'view', 'clientes' => $clientes, 'pesquisa' => $pesquisa ?? '']);
+    }
+
+    /**
      * Show the form for creating a new resource.
      */
     public function create()
@@ -51,8 +75,9 @@ class ClienteController extends Controller
     public function show(string $id)
     {
         $cliente = Cliente::find($id);
+        $grupos = Grupo::all();
 
-        return view('cliente.gerenciar')->with(['method' => 'view', 'cliente' => $cliente]);
+        return view('cliente.gerenciar')->with(['method' => 'view', 'cliente' => $cliente, 'grupos' => $grupos]);
     }
 
     /**
@@ -61,8 +86,9 @@ class ClienteController extends Controller
     public function edit(string $id)
     {
         $cliente = Cliente::find($id);
+        $grupos = Grupo::all();
 
-        return view('cliente.gerenciar')->with(['method' => 'update', 'cliente' => $cliente]);
+        return view('cliente.gerenciar')->with(['method' => 'update', 'cliente' => $cliente, 'grupos' => $grupos]);
     }
 
     /**

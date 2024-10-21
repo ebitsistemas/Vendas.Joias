@@ -20,6 +20,8 @@ Route::prefix('cliente')->group(function () {
     Route::get('cadastrar', [\App\Http\Controllers\ClienteController::class, 'create'])->name('cliente.cadastrar');
     Route::get('editar/{id}', [\App\Http\Controllers\ClienteController::class, 'edit'])->name('cliente.editar');
     Route::get('show/{id}', [\App\Http\Controllers\ClienteController::class, 'show'])->name('cliente.visualizar');
+    Route::get('buscar', [\App\Http\Controllers\ClienteController::class, 'buscar'])->name('cliente.buscar');
+    Route::post('buscar', [\App\Http\Controllers\ClienteController::class, 'buscar'])->name('cliente.buscar');
     Route::post('store', [\App\Http\Controllers\ClienteController::class, 'store'])->name('cliente.store');
     Route::post('update', [\App\Http\Controllers\ClienteController::class, 'update'])->name('cliente.update');
     Route::post('delete', [\App\Http\Controllers\ClienteController::class, 'destroy'])->name('cliente.delete');
@@ -54,6 +56,7 @@ Route::prefix('produto')->group(function () {
     Route::get('cadastrar', [\App\Http\Controllers\ProdutoController::class, 'create'])->name('produto.cadastrar');
     Route::get('editar/{id}', [\App\Http\Controllers\ProdutoController::class, 'edit'])->name('produto.editar');
     Route::get('show/{id}', [\App\Http\Controllers\ProdutoController::class, 'show'])->name('produto.visualizar');
+    Route::get('buscar', [\App\Http\Controllers\ProdutoController::class, 'buscar'])->name('produto.buscar');
     Route::post('store', [\App\Http\Controllers\ProdutoController::class, 'store'])->name('produto.store');
     Route::post('update', [\App\Http\Controllers\ProdutoController::class, 'update'])->name('produto.update');
     Route::post('delete', [\App\Http\Controllers\ProdutoController::class, 'destroy'])->name('produto.delete');
@@ -63,11 +66,28 @@ Route::prefix('produto')->group(function () {
 /* VENDAS */
 Route::prefix('venda')->group(function () {
     Route::get('', [\App\Http\Controllers\VendaController::class, 'index'])->name('venda.lista');
-    Route::get('cadastrar', [\App\Http\Controllers\VendaController::class, 'create'])->name('venda.cadastrar');
+    Route::get('cart', [\App\Http\Controllers\VendaController::class, 'cart'])->name('venda.cart');
+    Route::get('nova', [\App\Http\Controllers\VendaController::class, 'create'])->name('venda.nova');
     Route::get('editar/{id}', [\App\Http\Controllers\VendaController::class, 'edit'])->name('venda.editar');
     Route::get('show/{id}', [\App\Http\Controllers\VendaController::class, 'show'])->name('venda.visualizar');
     Route::post('store', [\App\Http\Controllers\VendaController::class, 'store'])->name('venda.store');
     Route::post('update', [\App\Http\Controllers\VendaController::class, 'update'])->name('venda.update');
     Route::post('delete', [\App\Http\Controllers\VendaController::class, 'destroy'])->name('venda.delete');
     Route::post('ajax', [\App\Http\Controllers\VendaController::class, 'ajax'])->name('venda.ajax');
+});
+
+/* VENDAS */
+Route::prefix('carrinho')->group(function () {
+    Route::get('', [\App\Http\Controllers\CarrinhoController::class, 'index'])->name('carrinho.index');
+    Route::get('cliente/adicionar/{id}', [\App\Http\Controllers\CarrinhoController::class, 'clienteAdicionar'])->name('carrinho.cliente.adicionar');
+    Route::get('produto/adicionar/{id}', [\App\Http\Controllers\CarrinhoController::class, 'produtoAdicionar'])->name('carrinho.produto.adicionar');
+
+    Route::get('checkout/{id}', [\App\Http\Controllers\CarrinhoController::class, 'checkout'])->name('carrinho.checkout');
+
+    Route::get('editar/{id}', [\App\Http\Controllers\CarrinhoController::class, 'edit'])->name('venda.editar');
+    Route::get('show/{id}', [\App\Http\Controllers\CarrinhoController::class, 'show'])->name('venda.visualizar');
+    Route::post('store', [\App\Http\Controllers\CarrinhoController::class, 'store'])->name('venda.store');
+    Route::post('update', [\App\Http\Controllers\CarrinhoController::class, 'update'])->name('venda.update');
+    Route::post('delete', [\App\Http\Controllers\CarrinhoController::class, 'destroy'])->name('venda.delete');
+    Route::post('ajax', [\App\Http\Controllers\CarrinhoController::class, 'ajax'])->name('venda.ajax');
 });

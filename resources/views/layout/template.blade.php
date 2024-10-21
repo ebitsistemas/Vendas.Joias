@@ -18,7 +18,6 @@
     <meta name="robots" content="">
 
     <meta name="theme-color" content="#0134d4">
-    <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
 
     <link rel="icon" href="{{ url(env('APP_FAVICON')) }}" type="image/png">
@@ -94,6 +93,7 @@
 <script src="{{ url('mobile/assets/js/isotope.pkgd.min.js') }}"></script>
 
 <script src="{{ url('mobile/assets/js/functions.js') }}"></script>
+<script src="{{ url('assets/vendor/vendas.js') }}"></script>
 {{--<script src="{{ url('mobile/assets/js/pwa.js') }}"></script>--}}
 </body>
 

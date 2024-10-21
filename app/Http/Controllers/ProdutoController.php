@@ -17,10 +17,33 @@ class ProdutoController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index()
     {
         $produtos = Produto::all();
         return view('produto.lista')->with('produtos', $produtos);
+    }
+
+    /**
+     * Search product.
+     */
+    public function buscar(Request $request)
+    {
+        if (empty($request->pesquisa)) {
+            $produtos = Produto::where('status', 1)->paginate(12);
+        } else {
+            $model = Produto::where('status', 1);
+
+            $pesquisa = $request->pesquisa;
+            $model->where(function($query) use ($pesquisa) {
+                $query->orWhere('id', 'like', "%{$pesquisa}")
+                    ->orWhere('nome', 'like', "%{$pesquisa}%")
+                    ->orWhere('codido_interno', 'like', "%{$pesquisa}%")
+                    ->orWhere('descricao_curta', 'like', "%{$pesquisa}%")
+                    ->orWhere('preco_venda', 'like', "%{$pesquisa}%");
+            });
+            $produtos = $model->paginate(12);
+        }
+        return view('produto.buscar')->with(['method' => 'view', 'produtos' => $produtos, 'pesquisa' => $pesquisa ?? '']);
     }
 
     /**
@@ -41,6 +64,15 @@ class ProdutoController extends Controller
         $data = $request->all();
         $data['preco_custo'] = str_replace(',', '.', $data['preco_custo']);
         $data['preco_venda'] = str_replace(',', '.', $data['preco_venda']);
+        if($request->hasFile('imagem')) {
+            $file = $request->file('imagem');
+            $imagem = $file->get();
+            $extension = $file->getClientOriginalExtension();
+            $name = Auth::id().date('YmdHis').rand(1, 9999);
+            $pathImg = "imagem/{$name}.{$extension}";
+            Storage::disk('public')->put($pathImg, $imagem);
+            $data['imagem'] = $pathImg;
+        }
         $response = Produto::create($data);
 
         if ($response) {
@@ -84,7 +116,6 @@ class ProdutoController extends Controller
         $data['preco_custo'] = str_replace(',', '.', $data['preco_custo']);
         $data['preco_venda'] = str_replace(',', '.', $data['preco_venda']);
         if($request->hasFile('imagem')) {
-
             $file = $request->file('imagem');
             $imagem = $file->get();
             $extension = $file->getClientOriginalExtension();

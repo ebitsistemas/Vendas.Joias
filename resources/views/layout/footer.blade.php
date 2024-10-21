@@ -15,20 +15,20 @@
             </li>
 
             <li class="active">
-                <a href="{{ url('venda/cadastrar') }}" class="badge-avater badge-avater-lg">
+                <a href="{{ url('carrinho') }}" class="badge-avater badge-avater-lg">
                     <i class="fad fa-shopping-basket"></i>
+                </a>
+            </li>
+
+            <li>
+                <a href="{{ url('produto') }}">
+                    <i class="fad fa-box text-primary-color"></i>
                 </a>
             </li>
 
             <li>
                 <a href="{{ url('pedido') }}">
                     <i class="fad fa-list text-primary-color"></i>
-                </a>
-            </li>
-
-            <li>
-                <a href="{{ url('config') }}">
-                    <i class="fad fa-gear text-primary-color"></i>
                 </a>
             </li>
         </ul>

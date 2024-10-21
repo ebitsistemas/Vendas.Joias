@@ -120,6 +120,10 @@ body{
     color: var(--bs-gray-600);
     margin-top: unset;
 }
+.single-product-card .product-thumbnail{
+    width: 190px;
+    height: 150px;
+}
 .single-product-card .product-thumbnail .badge{
     right: 2px;
     bottom: 2px;
@@ -168,7 +172,6 @@ body{
 }
 
 /* CART */
-
 .list-group-item.primary {
     background-color: var(--white);
     color: var(--bs-primary);
@@ -319,4 +322,21 @@ table.table{
 }
 .sidenav-profile{
     background-color: rgba(102, 16, 242, 0.4);
+}
+.cart-table .qty-text {
+    width: 4rem;
+}
+.cart-table table .remove-product:hover,
+.cart-table table .remove-product:focus {
+    background-color: rgba(102, 16, 242, 1);
+}
+li.page-item.active > span{
+    border-color: var(--bs-indigo) !important;
+    background-color: var(--bs-indigo) !important;
+}
+li.page-item > a,
+li.page-item > span,
+li.page-link > span{
+    color: var(--bs-indigo);
+    font-size: 18px !important;
 }

@@ -14,6 +14,14 @@ Route::prefix('dashboard')->group(function () {
     Route::post('vendas', [\App\Http\Controllers\DashboardController::class, 'vendas'])->name('dashboard.vendas');
 });
 
+/* CONFIGURAÇÕES */
+Route::prefix('configuracao')->group(function () {
+    Route::get('editar/{id}', [\App\Http\Controllers\ConfigController::class, 'edit'])->name('config.editar');
+    Route::get('show/{id}', [\App\Http\Controllers\ConfigController::class, 'show'])->name('config.visualizar');
+    Route::post('update', [\App\Http\Controllers\ConfigController::class, 'update'])->name('config.update');
+});
+
+
 /* CLIENTES */
 Route::prefix('cliente')->group(function () {
     Route::get('', [\App\Http\Controllers\ClienteController::class, 'index'])->name('cliente.lista');

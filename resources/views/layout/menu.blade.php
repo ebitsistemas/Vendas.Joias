@@ -43,6 +43,13 @@
                 </li>
             </ul>
 
+
+            <div class="form-group ps-3">
+                <label class="form-label fs-14px" for="theme_color">Cor do Layout</label>
+                <input class="form-control form-control-color" name="theme_color" id="theme_color" type="color" value="{{ $config->theme_color }}"
+                       data-bs-toggle="tooltip" data-bs-placement="right" title="Selecione a cor">
+            </div>
+
             <!-- Copyright Info -->
             <div class="copyright-info fs-12px">
                 Copyright © {{ date('Y') }} {{ env('APP_NAME') }}<br>
@@ -51,3 +58,25 @@
         </div>
     </div>
 </div>
+<script>
+    $(document).on('change', '#theme_color', function () {
+        var color = $(this).val();
+
+        $.ajax({
+            url: "configuracao/update",
+            type: "POST",
+            data:{
+                theme_color: color
+            },
+            dataType: "json",
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(data){
+                if (data.success) {
+                    location.reload();
+                }
+            }
+        });
+    });
+</script>

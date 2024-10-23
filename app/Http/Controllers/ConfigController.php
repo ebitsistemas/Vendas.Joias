@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Config;
+use App\Models\Configuracao;
 use Illuminate\Http\Request;
 
 class ConfigController extends Controller
@@ -50,9 +51,13 @@ class ConfigController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Config $config)
+    public function update(Request $request)
     {
-        //
+        $config = Configuracao::first();
+        $config->update($request->all());
+        $result = $config->save();
+
+        return response()->json(['success' => $result]);
     }
 
     /**

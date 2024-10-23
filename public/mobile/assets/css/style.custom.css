@@ -321,7 +321,7 @@ table.table{
     border:2px solid var(--bs-indigo) !important;
 }
 .sidenav-profile{
-    background-color: rgba(102, 16, 242, 0.4);
+    background-color: var(--primary-light-color);
 }
 .cart-table .qty-text {
     width: 4rem;

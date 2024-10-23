@@ -33,25 +33,31 @@
                     <a href="{{ url('venda') }}"><i class="fal fa-shopping-cart"></i> Vendas</a>
                 </li>
                 <li>
-                    <form method="post" action="{{ url('logout') }}">
-                        @csrf
-                        <a href="{{ url('logout') }}"  onclick="event.preventDefault(); this.closest('form').submit();"
-                           data-bs-toggle="tooltip" data-bs-custom-class="tooltip-inverse" data-bs-placement="right" title="Sair do Sistema">
-                            <i class="fal fa-sign-out"></i> Logout
-                        </a>
-                    </form>
+                    <a href="{{ url('configuracao') }}"><i class="fal fa-cogs"></i> Configurações</a>
                 </li>
             </ul>
 
 
-            <div class="form-group ps-3">
+            <div class="form-group ps-3 d-none">
                 <label class="form-label fs-14px" for="theme_color">Cor do Layout</label>
                 <input class="form-control form-control-color" name="theme_color" id="theme_color" type="color" value="{{ $config->theme_color }}"
                        data-bs-toggle="tooltip" data-bs-placement="right" title="Selecione a cor">
             </div>
 
+            <ul class="sidenav-nav ps-0 mt-5">
+                <li>
+                    <form method="post" action="{{ url('logout') }}">
+                        @csrf
+                        <a href="{{ url('logout') }}"  onclick="event.preventDefault(); this.closest('form').submit();"
+                           data-bs-toggle="tooltip" data-bs-custom-class="tooltip-inverse" data-bs-placement="right" title="Sair do Sistema">
+                            <i class="fal fa-sign-out"></i> Sair
+                        </a>
+                    </form>
+                </li>
+            </ul>
+
             <!-- Copyright Info -->
-            <div class="copyright-info fs-12px">
+            <div class="copyright-info fs-12px position-absolute bottom-0">
                 Copyright © {{ date('Y') }} {{ env('APP_NAME') }}<br>
                 Desenvolvido por <a href="https://ebitsistemas.com.br/" target="_blank">eBit Sistemas LTDA</a>
             </div>

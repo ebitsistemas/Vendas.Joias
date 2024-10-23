@@ -316,11 +316,27 @@ body{
 .text-theme{
     color: var(--primary-color);
 }
+.border-theme{
+    border-color: var(--primary-color) !important;
+}
+.border-theme-light{
+    border-color: var(--primary-light-color) !important;
+}
 .btn-theme{
     color: #ffffff;
-    background-color: var(--primary-color);
-    border-color: var(--primary-color);
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
 }
+.btn-theme:hover{
+    color: var(--primary-color) !important;
+    background-color: var(--primary-light-color) !important;
+    border-color: var(--primary-light-color) !important;
+}
+/*
+.btn-theme:hover{
+    color: var(--primary-color);
+    border:2px solid var(--primary-color) !important;
+}*/
 .header-content .back-button a i{
     font-size: 3rem !important;
 }
@@ -342,6 +358,9 @@ body{
     color: #8480ae;
     font-weight: 500;
 }
+.form-control {
+    border-color: #ced4da !important;
+}
 
 .required:after {
     content: "*";
@@ -351,16 +370,14 @@ body{
     padding-left: .25rem;
     font-weight: 600;
 }
+.form-control.form-control-lg.form-control-cart {
+    padding: 0.6rem .4rem;
+}
 div.dt-container div.dt-length select{
     width: 60px !important;
 }
 table.table{
     font-size: 16px;
-}
-
-.btn-theme:hover{
-    color: var(--primary-color);
-    border:2px solid var(--primary-color) !important;
 }
 .sidenav-profile{
     background-color: var(--primary-light-color);

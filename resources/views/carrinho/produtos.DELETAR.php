@@ -16,7 +16,7 @@
                                     <span class="input-group-text" id="searchbox">
                                       <i class="bi bi-search"></i>
                                     </span>
-                                    <input class="form-control" type="search" placeholder="Buscar" aria-describedby="searchbox">
+                                    <input class="form-control" type="search" placeholder="Buscar 123" aria-describedby="searchbox">
                                 </div>
                             </form>
 
@@ -31,7 +31,7 @@
             <div class="col-6 col-sm-4 col-lg-3">
                 <div class="card single-product-card">
                     <div class="card-body p-3">
-                        <a class="product-thumbnail d-block" href="javascript:void(0);">
+                        <a class="product-thumbnail d-none" href="javascript:void(0);">
                             <img src="{{ url('storage/'.$produto->imagem) }}">
                         </a>
                         <a class="product-title d-block text-truncate" href="javascript:void(0);">{{ $produto->nome }}</a>

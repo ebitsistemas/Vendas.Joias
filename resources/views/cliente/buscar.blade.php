@@ -45,7 +45,7 @@
                             </div>
                         </a>
 
-                        <button class="btn" type="button" onclick="location.href='{{ route('carrinho.cliente.adicionar', $cliente->id) }}'" title="Selecionar Cliente">
+                        <button class="btn" type="button" title="Selecionar Cliente">
                             <i class="fa fa-angle-right fs-24px text-theme"></i>
                         </button>
                     </li>

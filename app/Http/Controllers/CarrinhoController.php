@@ -64,7 +64,7 @@ class CarrinhoController extends Controller
     public function produtos()
     {
         $produtos = Produto::all();
-        return view('carrinho.produtos')->with(['method' => 'view', 'produtos' => $produtos]);
+        return view('carrinho.produtos.DELETAR.php')->with(['method' => 'view', 'produtos' => $produtos]);
     }
 
     /**
@@ -73,7 +73,7 @@ class CarrinhoController extends Controller
     public function checkout(Request $request)
     {
         $venda = Venda::find($request->id);
-        return view('carrinho.produtos')->with(['method' => 'view', 'venda' => $venda]);
+        return view('carrinho.produtos.DELETAR.php')->with(['method' => 'view', 'venda' => $venda]);
     }
 
     /**

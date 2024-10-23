@@ -94,6 +94,7 @@ Route::prefix('carrinho')->group(function () {
     Route::get('', [\App\Http\Controllers\CarrinhoController::class, 'index'])->name('carrinho.index');
     Route::get('cliente/adicionar/{id}', [\App\Http\Controllers\CarrinhoController::class, 'clienteAdicionar'])->name('carrinho.cliente.adicionar');
     Route::get('produto/adicionar/{id}', [\App\Http\Controllers\CarrinhoController::class, 'produtoAdicionar'])->name('carrinho.produto.adicionar');
+    Route::get('produtos', [\App\Http\Controllers\CarrinhoController::class, 'produtos'])->name('carrinho.produtos');
 
     Route::get('checkout/{id}', [\App\Http\Controllers\CarrinhoController::class, 'checkout'])->name('carrinho.checkout');
 

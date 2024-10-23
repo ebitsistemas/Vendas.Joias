@@ -25,6 +25,7 @@ Route::prefix('configuracao')->group(function () {
 /* CLIENTES */
 Route::prefix('cliente')->group(function () {
     Route::get('', [\App\Http\Controllers\ClienteController::class, 'index'])->name('cliente.lista');
+    Route::post('', [\App\Http\Controllers\ClienteController::class, 'index'])->name('cliente.search');
     Route::get('cadastrar', [\App\Http\Controllers\ClienteController::class, 'create'])->name('cliente.cadastrar');
     Route::get('editar/{id}', [\App\Http\Controllers\ClienteController::class, 'edit'])->name('cliente.editar');
     Route::get('show/{id}', [\App\Http\Controllers\ClienteController::class, 'show'])->name('cliente.visualizar');
@@ -39,6 +40,7 @@ Route::prefix('cliente')->group(function () {
 /* CATEGORIA */
 Route::prefix('categoria')->group(function () {
     Route::get('', [\App\Http\Controllers\CategoriaController::class, 'index'])->name('categoria.lista');
+    Route::post('', [\App\Http\Controllers\CategoriaController::class, 'index'])->name('categoria.search');
     Route::get('cadastrar', [\App\Http\Controllers\CategoriaController::class, 'create'])->name('categoria.cadastrar');
     Route::get('editar/{id}', [\App\Http\Controllers\CategoriaController::class, 'edit'])->name('categoria.editar');
     Route::post('store', [\App\Http\Controllers\CategoriaController::class, 'store'])->name('categoria.store');
@@ -50,6 +52,7 @@ Route::prefix('categoria')->group(function () {
 /* GRUPOS */
 Route::prefix('grupo')->group(function () {
     Route::get('', [\App\Http\Controllers\GrupoController::class, 'index'])->name('grupo.lista');
+    Route::post('', [\App\Http\Controllers\GrupoController::class, 'index'])->name('grupo.search');
     Route::get('cadastrar', [\App\Http\Controllers\GrupoController::class, 'create'])->name('grupo.cadastrar');
     Route::get('editar/{id}', [\App\Http\Controllers\GrupoController::class, 'edit'])->name('grupo.editar');
     Route::post('store', [\App\Http\Controllers\GrupoController::class, 'store'])->name('grupo.store');
@@ -61,6 +64,7 @@ Route::prefix('grupo')->group(function () {
 /* PRODUTOS */
 Route::prefix('produto')->group(function () {
     Route::get('', [\App\Http\Controllers\ProdutoController::class, 'index'])->name('produto.lista');
+    Route::post('', [\App\Http\Controllers\ProdutoController::class, 'index'])->name('produto.search');
     Route::get('cadastrar', [\App\Http\Controllers\ProdutoController::class, 'create'])->name('produto.cadastrar');
     Route::get('editar/{id}', [\App\Http\Controllers\ProdutoController::class, 'edit'])->name('produto.editar');
     Route::get('show/{id}', [\App\Http\Controllers\ProdutoController::class, 'show'])->name('produto.visualizar');
@@ -74,6 +78,7 @@ Route::prefix('produto')->group(function () {
 /* VENDAS */
 Route::prefix('venda')->group(function () {
     Route::get('', [\App\Http\Controllers\VendaController::class, 'index'])->name('venda.lista');
+    Route::post('', [\App\Http\Controllers\VendaController::class, 'index'])->name('venda.search');
     Route::get('cart', [\App\Http\Controllers\VendaController::class, 'cart'])->name('venda.cart');
     Route::get('nova', [\App\Http\Controllers\VendaController::class, 'create'])->name('venda.nova');
     Route::get('editar/{id}', [\App\Http\Controllers\VendaController::class, 'edit'])->name('venda.editar');

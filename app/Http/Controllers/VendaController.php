@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Configuracao;
 use App\Models\Venda;
 use App\Models\Produto;
 use App\Traits\TraitDatatables;
@@ -17,9 +18,24 @@ class VendaController extends Controller
      */
     public function index()
     {
-        $vendas = Venda::all();
         $produtos = Produto::all();
-        return view('venda.cart')->with(['vendas' => $vendas, 'produtos' => $produtos]);
+        $config = Configuracao::first();
+        if (empty($request->pesquisa)) {
+            $vendas = Venda::where('status', 1)->paginate($config->itens_pagina);
+        } else {
+            $model = Venda::where('status', 1);
+
+            $pesquisa = $request->pesquisa;
+            $model->where(function($query) use ($pesquisa) {
+                $query->orWhere('id', 'like', "%{$pesquisa}")
+                    ->orWhere('total_liquido', 'like', "%{$pesquisa}%")
+                    ->orWhere('cliente_documento', 'like', "%{$pesquisa}%")
+                    ->orWhere('data_venda', 'like', "%{$pesquisa}%")
+                    ->orWhere('anotacoes', 'like', "%{$pesquisa}%");
+            });
+            $vendas = $model->paginate($config->itens_pagina);
+        }
+        return view('venda.lista')->with(['vendas' => $vendas, 'produtos' => $produtos, 'pesquisa' => $pesquisa ?? '']);
     }
 
     /**

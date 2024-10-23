@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Configuracao;
 use App\Models\Produto;
 use App\Models\Categoria;
 use App\Models\Unidade;
@@ -19,8 +20,20 @@ class ProdutoController extends Controller
      */
     public function index()
     {
-        $produtos = Produto::all();
-        return view('produto.lista')->with('produtos', $produtos);
+        $config = Configuracao::first();
+        if (empty($request->pesquisa)) {
+            $produtos = Produto::where('status', 1)->paginate($config->itens_pagina);
+        } else {
+            $model = Produto::where('status', 1);
+
+            $pesquisa = $request->pesquisa;
+            $model->where(function($query) use ($pesquisa) {
+                $query->orWhere('id', 'like', "%{$pesquisa}")
+                    ->orWhere('nome', 'like', "%{$pesquisa}%");
+            });
+            $produtos = $model->paginate($config->itens_pagina);
+        }
+        return view('produto.lista')->with(['produtos' => $produtos, 'pesquisa' => $pesquisa ?? '']);
     }
 
     /**

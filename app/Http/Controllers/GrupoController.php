@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Configuracao;
 use App\Models\Grupo;
 use App\Traits\TraitDatatables;
 use Illuminate\Http\Request;
@@ -15,8 +16,20 @@ class GrupoController extends Controller
      */
     public function index(Request $request)
     {
-        $grupos = Grupo::all();
-        return view('grupo.lista')->with('grupos', $grupos);
+        $config = Configuracao::first();
+        if (empty($request->pesquisa)) {
+            $grupos = Grupo::where('status', 1)->paginate($config->itens_pagina);
+        } else {
+            $model = Grupo::where('status', 1);
+
+            $pesquisa = $request->pesquisa;
+            $model->where(function($query) use ($pesquisa) {
+                $query->orWhere('id', 'like', "%{$pesquisa}")
+                    ->orWhere('nome', 'like', "%{$pesquisa}%");
+            });
+            $grupos = $model->paginate($config->itens_pagina);
+        }
+        return view('grupo.lista')->with(['grupos' => $grupos, 'pesquisa' => $pesquisa ?? '']);
     }
 
     /**

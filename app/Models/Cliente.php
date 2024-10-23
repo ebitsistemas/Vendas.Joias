@@ -36,6 +36,7 @@ class Cliente extends Model
         'telefone',
         'rede_social',
         'celular',
+        'imagem',
 
         'status'
     ];

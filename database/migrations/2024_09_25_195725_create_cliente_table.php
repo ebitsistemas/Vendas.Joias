@@ -35,6 +35,7 @@ return new class extends Migration
             $table->string('telefone', 14)->nullable()->comment('Máscara (xx) xxxx-xxxx');
             $table->string('celular', 15)->nullable()->comment('Máscara (xx) xxxxx-xxxx');
             $table->string('rede_social')->nullable();
+            $table->text('imagem')->nullable();
 
             $table->boolean('status')->default(1)->comment('2 - Bloqueado; 1 - Ativo; 0 - Inativo;');
             $table->timestamps();

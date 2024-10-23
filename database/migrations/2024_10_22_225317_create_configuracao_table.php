@@ -16,6 +16,7 @@ return new class extends Migration
                 $table->id();
                 $table->string('nome', 60)->nullable();
                 $table->string('descricao', 60)->nullable();
+                $table->integer('itens_pagina')->nullable();
                 $table->string('theme_color', 60)->nullable();
                 $table->boolean('status')->default(1)->comment('2 - Bloqueado; 1 - Ativo; 0 - Inativo;');
                 $table->timestamps();

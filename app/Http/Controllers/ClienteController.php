@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cliente;
+use App\Models\Configuracao;
 use App\Models\Grupo;
 use App\Traits\TraitDatatables;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class ClienteController extends Controller
 {
@@ -16,17 +19,9 @@ class ClienteController extends Controller
      */
     public function index(Request $request)
     {
-        $clientes = Cliente::all();
-        return view('cliente.lista')->with('clientes', $clientes);
-    }
-
-    /**
-     * Search client.
-     */
-    public function buscar(Request $request)
-    {
+        $config = Configuracao::first();
         if (empty($request->pesquisa)) {
-            $clientes = Cliente::where('status', 1)->paginate(2);
+            $clientes = Cliente::where('status', 1)->paginate($config->itens_pagina);
         } else {
             $model = Cliente::where('status', 1);
 
@@ -39,7 +34,32 @@ class ClienteController extends Controller
                     ->orWhere('telefone', 'like', "%{$pesquisa}%")
                     ->orWhere('email', 'like', "%{$pesquisa}%");
             });
-            $clientes = $model->paginate(2);
+            $clientes = $model->paginate($config->itens_pagina);
+        }
+        return view('cliente.lista')->with(['clientes' => $clientes, 'pesquisa' => $pesquisa ?? '']);
+    }
+
+    /**
+     * Search client.
+     */
+    public function buscar(Request $request)
+    {
+        $config = Configuracao::first();
+        if (empty($request->pesquisa)) {
+            $clientes = Cliente::where('status', 1)->paginate($config->itens_pagina);
+        } else {
+            $model = Cliente::where('status', 1);
+
+            $pesquisa = $request->pesquisa;
+            $model->where(function($query) use ($pesquisa) {
+                $query->orWhere('id', 'like', "%{$pesquisa}")
+                    ->orWhere('nome', 'like', "%{$pesquisa}%")
+                    ->orWhere('documento', 'like', "%{$pesquisa}%")
+                    ->orWhere('celular', 'like', "%{$pesquisa}%")
+                    ->orWhere('telefone', 'like', "%{$pesquisa}%")
+                    ->orWhere('email', 'like', "%{$pesquisa}%");
+            });
+            $clientes = $model->paginate($config->itens_pagina);
         }
         return view('cliente.buscar')->with(['method' => 'view', 'clientes' => $clientes, 'pesquisa' => $pesquisa ?? '']);
     }
@@ -58,7 +78,17 @@ class ClienteController extends Controller
      */
     public function store(Request $request)
     {
-        $response = Cliente::create($request->all());
+        $data = $request->all();
+        if($request->hasFile('imagem')) {
+            $file = $request->file('imagem');
+            $imagem = $file->get();
+            $extension = $file->getClientOriginalExtension();
+            $name = Auth::id().date('YmdHis').rand(1, 9999);
+            $pathImg = "imagem/{$name}.{$extension}";
+            Storage::disk('public')->put($pathImg, $imagem);
+            $data['imagem'] = $pathImg;
+        }
+        $response = Cliente::create($data);
 
         if ($response) {
             toastr()->success('Registro cadastrado com sucesso!');
@@ -96,16 +126,28 @@ class ClienteController extends Controller
      */
     public function update(Request $request)
     {
-        $cliente = Cliente::find($request->id);
-        $response = $cliente->update($request->all());
+        try {
+            $data = $request->all();
+            $cliente = Cliente::find($request->id);
+            if ($request->hasFile('imagem')) {
+                $file = $request->file('imagem');
+                $imagem = $file->get();
+                $extension = $file->getClientOriginalExtension();
+                $name = Auth::id() . date('YmdHis') . rand(1, 9999);
+                $pathImg = "imagem/{$name}.{$extension}";
+                Storage::disk('public')->put($pathImg, $imagem);
+                $data['imagem'] = $pathImg;
+            }
+            $response = $cliente->update($data);
 
-        if ($response) {
-            toastr()->success('Registro alterado com sucesso!');
-            return redirect()->to('cliente');
+            if ($response) {
+                toastr()->success('Registro alterado com sucesso!');
+                return redirect()->to('cliente');
+            }
+        } catch (\Exception $e) {
+            toastr()->error('Erro ao cadastrar registro: '.$e->getMessage());
+            return back();
         }
-
-        toastr()->error('Erro ao cadastrar registro!');
-        return back();
     }
 
     /**

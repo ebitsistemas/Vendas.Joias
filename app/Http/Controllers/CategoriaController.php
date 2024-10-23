@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Categoria;
+use App\Models\Configuracao;
 use App\Traits\TraitDatatables;
 use Illuminate\Http\Request;
 
@@ -15,8 +16,20 @@ class CategoriaController extends Controller
      */
     public function index(Request $request)
     {
-        $categorias = Categoria::all();
-        return view('categoria.lista')->with('categorias', $categorias);
+        $config = Configuracao::first();
+        if (empty($request->pesquisa)) {
+            $categorias = Categoria::where('status', 1)->paginate($config->itens_pagina);
+        } else {
+            $model = Categoria::where('status', 1);
+
+            $pesquisa = $request->pesquisa;
+            $model->where(function($query) use ($pesquisa) {
+                $query->orWhere('id', 'like', "%{$pesquisa}")
+                    ->orWhere('nome', 'like', "%{$pesquisa}%");
+            });
+            $categorias = $model->paginate($config->itens_pagina);
+        }
+        return view('categoria.lista')->with(['categorias' => $categorias, 'pesquisa' => $pesquisa ?? '']);
     }
 
     /**

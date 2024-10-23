@@ -27,4 +27,9 @@ class Venda extends Model
         'anotacoes',
         'status',
     ];
+
+    public function cliente()
+    {
+        return $this->hasOne(Cliente::class, 'id', 'cliente_id');
+    }
 }

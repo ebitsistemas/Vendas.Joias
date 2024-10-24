@@ -7,19 +7,19 @@
         <ul class="ps-0 chat-user-list mb-3">
             <li class="p-3">
                 <span class="d-flex">
-                @if(isset($venda->cliente))
+                    @if(isset($venda->cliente))
                         <div class="chat-user-thumbnail me-3 shadow">
-                        <img class="img-circle" src="{{ url('mobile/assets/img/user1.png') }}" alt="">
-                    </div>
+                            <img class="img-circle" src="{{ url('mobile/assets/img/user1.png') }}" alt="">
+                        </div>
 
                         <div class="chat-user-info w-410px">
-                        <h6 class="mb-0">{{ $venda->cliente->nome }} - {{ $venda->cliente->documento }}</h6>
-                        <div class="last-chat">
-                            <p class="mb-0 text-truncate">
-                                {{ $venda->cliente->logradouro }}, {{ $venda->cliente->numero }}
-                            </p>
+                            <h6 class="mb-0">{{ $venda->cliente->nome }} - {{ $venda->cliente->documento }}</h6>
+                            <div class="last-chat">
+                                <p class="mb-0 text-truncate">
+                                    {{ $venda->cliente->logradouro }}, {{ $venda->cliente->numero }}
+                                </p>
+                            </div>
                         </div>
-                    </div>
                     @else
                         <div class="chat-user-thumbnail me-3 shadow">
                             <img class="img-circle" src="{{ url('mobile/assets/img/no_client.jpg') }}" alt="">
@@ -36,9 +36,15 @@
                     @endif
                 </span>
 
-                <button class="btn" type="button" onclick="location.href='{{ url('cliente/buscar') }}'" title="Buscar Cliente">
-                    <i class="fa fa-angle-right fs-26px text-theme"></i>
-                </button>
+                @if(isset($venda->cliente) && !empty($venda->cliente))
+                    <button class="btn" type="button" onclick="location.href='{{ url('carrinho/cliente/remover/'.$venda->cliente_id) }}'" title="Remover Cliente">
+                        <i class="fa fa-times fs-26px text-theme"></i>
+                    </button>
+                @else
+                    <button class="btn" type="button" onclick="location.href='{{ url('cliente/buscar') }}'" title="Buscar Cliente">
+                        <i class="fa fa-angle-right fs-26px text-theme"></i>
+                    </button>
+                @endif
             </li>
         </ul>
 
@@ -86,6 +92,20 @@
                 </div>
             </div>
 
+            @if(empty($venda->itens))
+                <div class="alert custom-alert-three alert-info alert-dismissible fade show" role="alert">
+                    <div class="row">
+                        <div class="col text-center pt-3">
+                            <i class="fal fa-shopping-cart fs-60px"></i>
+
+                            <div class="alert-text p-3">
+                                <h6>Carrinho vazio!</h6>
+                                <span>Nenhum produto adicionado ao pedido de venda.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @else
             <div class="card cart-table border mb-3">
                 <div class="table-responsive card-body">
                     <table class="table mb-0 text-center">
@@ -99,13 +119,13 @@
                         </tr>
                         </thead>
                         <tbody>
-                        @foreach($produtos as $produto)
+                        @foreach($venda->itens as $item)
                             <tr class="border-bottom">
                                 <td class="text-start fs-18px">
-                                    {{ $produto->nome }}
+                                    {{ $item->nome }}
                                 </td>
                                 <td class="text-center fs-18px">
-                                    <span>R$ {{ number_format($produto->preco_venda, 2, ',', '.') }}</span>
+                                    <span>R$ {{ number_format($item->preco_venda, 2, ',', '.') }}</span>
                                 </td>
                                 <td class="text-center">
                                     <div class="input-group pt-1">
@@ -115,20 +135,20 @@
                                     </div>
                                 </td>
                                 <td class="text-center fs-18px">
-                                    <span>R$ {{ number_format($produto->preco_venda, 2, ',', '.') }}</span>
+                                    <span>R$ {{ number_format($item->preco_venda, 2, ',', '.') }}</span>
                                 </td>
                                 <td class="text-end">
-                                    <a class="btn btn-icon btn-circle" href="javascrit:void(0);">
+                                    <a class="btn btn-icon btn-circle" href="javascript:void(0);">
                                         <i class="fa fa-times text-theme"></i>
                                     </a>
                                 </td>
                             </tr>
-                        @endforeach
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
 
-                @if (!isset($venda))
+                @if (isset($venda))
                     <div class="card-body">
                         <div class="apply-coupon">
                             <div class="coupon-form">
@@ -138,6 +158,7 @@
                     </div>
                 @endif
             </div>
+            @endif
         </div>
     </div>
 

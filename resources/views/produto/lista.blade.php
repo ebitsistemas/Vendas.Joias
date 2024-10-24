@@ -14,7 +14,6 @@
                             @foreach($produtos as $produto)
                                 <li class="p-3">
                                     <a class="d-flex">
-
                                         <div class="chat-user-info w-100px">
                                             <h6 class="mb-0 fs-18px mb-1">Código</h6>
                                             <div class="last-chat">

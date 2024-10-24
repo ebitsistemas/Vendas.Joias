@@ -26,10 +26,10 @@
                                         </div>
 
                                         <div class="chat-user-info w-375px">
-                                            <h6 class="mb-0 fs-18px mb-1">{{ $venda->cliente->nome }}</h6>
+                                            <h6 class="mb-0 fs-18px mb-1">{{ $venda->cliente->nome ?? 'Não informado' }}</h6>
                                             <div class="last-chat">
                                                 <p class="mb-0 text-truncate fs-16px">
-                                                    {{ $venda->cliente->documento }}
+                                                    {{ $venda->cliente->documento ?? '' }}
                                                 </p>
                                             </div>
                                         </div>

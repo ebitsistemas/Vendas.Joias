@@ -1,11 +1,18 @@
 <?php
 
+use App\Http\Controllers\LoginController;
 use Illuminate\Support\Facades\Route;
 
 
 Route::get('', [\App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::get('cep/{cep}', [\App\Http\Controllers\HomeController::class, 'cep'])->name('cep');
+
+Route::controller(LoginController::class)->group(function () {
+    Route::get('login', 'index')->name('login');
+    Route::post('store', 'store')->name('login.store');
+    Route::post('logout', 'destroy')->name('login.destroy');
+});
 
 
 /* DASHBOARD */
@@ -16,9 +23,9 @@ Route::prefix('dashboard')->group(function () {
 
 /* CONFIGURAÇÕES */
 Route::prefix('configuracao')->group(function () {
-    Route::get('editar/{id}', [\App\Http\Controllers\ConfigController::class, 'edit'])->name('config.editar');
-    Route::get('show/{id}', [\App\Http\Controllers\ConfigController::class, 'show'])->name('config.visualizar');
-    Route::post('update', [\App\Http\Controllers\ConfigController::class, 'update'])->name('config.update');
+    Route::get('', [\App\Http\Controllers\ConfiguracaoController::class, 'edit'])->name('config.editar');
+    Route::get('show', [\App\Http\Controllers\ConfiguracaoController::class, 'show'])->name('config.visualizar');
+    Route::post('update', [\App\Http\Controllers\ConfiguracaoController::class, 'update'])->name('config.update');
 });
 
 
@@ -69,6 +76,7 @@ Route::prefix('produto')->group(function () {
     Route::get('editar/{id}', [\App\Http\Controllers\ProdutoController::class, 'edit'])->name('produto.editar');
     Route::get('show/{id}', [\App\Http\Controllers\ProdutoController::class, 'show'])->name('produto.visualizar');
     Route::get('buscar', [\App\Http\Controllers\ProdutoController::class, 'buscar'])->name('produto.buscar');
+    Route::post('buscar', [\App\Http\Controllers\ProdutoController::class, 'buscar'])->name('produto.buscar');
     Route::post('store', [\App\Http\Controllers\ProdutoController::class, 'store'])->name('produto.store');
     Route::post('update', [\App\Http\Controllers\ProdutoController::class, 'update'])->name('produto.update');
     Route::post('delete', [\App\Http\Controllers\ProdutoController::class, 'destroy'])->name('produto.delete');
@@ -89,19 +97,17 @@ Route::prefix('venda')->group(function () {
     Route::post('ajax', [\App\Http\Controllers\VendaController::class, 'ajax'])->name('venda.ajax');
 });
 
-/* VENDAS */
+/* CARRINHO */
 Route::prefix('carrinho')->group(function () {
-    Route::get('', [\App\Http\Controllers\CarrinhoController::class, 'index'])->name('carrinho.index');
-    Route::get('cliente/adicionar/{id}', [\App\Http\Controllers\CarrinhoController::class, 'clienteAdicionar'])->name('carrinho.cliente.adicionar');
-    Route::get('produto/adicionar/{id}', [\App\Http\Controllers\CarrinhoController::class, 'produtoAdicionar'])->name('carrinho.produto.adicionar');
-    Route::get('produtos', [\App\Http\Controllers\CarrinhoController::class, 'produtos'])->name('carrinho.produtos');
+    Route::get('', [\App\Http\Controllers\CarrinhoController::class, 'index'])->name('carrinho.index')->middleware('auth');
+    Route::get('cliente/adicionar/{cliente_id}', [\App\Http\Controllers\CarrinhoController::class, 'clienteAdicionar'])->name('carrinho.cliente.adicionar')->middleware('auth');
+    Route::get('cliente/remover/{cliente_id}', [\App\Http\Controllers\CarrinhoController::class, 'clienteRemover'])->name('carrinho.cliente.remover')->middleware('auth');
+    Route::get('produto/adicionar/{produto_id}', [\App\Http\Controllers\CarrinhoController::class, 'produtoAdicionar'])->name('carrinho.produto.adicionar')->middleware('auth');
 
-    Route::get('checkout/{id}', [\App\Http\Controllers\CarrinhoController::class, 'checkout'])->name('carrinho.checkout');
+    Route::get('pedido/{id}', [\App\Http\Controllers\CarrinhoController::class, 'pedido'])->name('carrinho.pedido')->middleware('auth');
+    Route::get('checkout/{id}', [\App\Http\Controllers\CarrinhoController::class, 'checkout'])->name('carrinho.checkout')->middleware('auth');
 
-    Route::get('editar/{id}', [\App\Http\Controllers\CarrinhoController::class, 'edit'])->name('venda.editar');
-    Route::get('show/{id}', [\App\Http\Controllers\CarrinhoController::class, 'show'])->name('venda.visualizar');
     Route::post('store', [\App\Http\Controllers\CarrinhoController::class, 'store'])->name('venda.store');
     Route::post('update', [\App\Http\Controllers\CarrinhoController::class, 'update'])->name('venda.update');
     Route::post('delete', [\App\Http\Controllers\CarrinhoController::class, 'destroy'])->name('venda.delete');
-    Route::post('ajax', [\App\Http\Controllers\CarrinhoController::class, 'ajax'])->name('venda.ajax');
 });

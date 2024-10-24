@@ -52,7 +52,6 @@ class ProdutoController extends Controller
             $model->where(function($query) use ($pesquisa) {
                 $query->orWhere('id', 'like', "%{$pesquisa}")
                     ->orWhere('nome', 'like', "%{$pesquisa}%")
-                    ->orWhere('codido_interno', 'like', "%{$pesquisa}%")
                     ->orWhere('descricao_curta', 'like', "%{$pesquisa}%")
                     ->orWhere('preco_venda', 'like', "%{$pesquisa}%");
             });

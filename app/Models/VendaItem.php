@@ -10,9 +10,12 @@ class VendaItem extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $table = 'vendas_itens';
+
     protected $fillable = [
         'venda_id',
         'produto_id',
+        'produto_nome',
         'valor_unitario',
         'quantidade',
         'tipo_desconto',

@@ -37,13 +37,6 @@
                 </li>
             </ul>
 
-
-            <div class="form-group ps-3 d-none">
-                <label class="form-label fs-14px" for="theme_color">Cor do Layout</label>
-                <input class="form-control form-control-color" name="theme_color" id="theme_color" type="color" value="{{ $config->theme_color }}"
-                       data-bs-toggle="tooltip" data-bs-placement="right" title="Selecione a cor">
-            </div>
-
             <ul class="sidenav-nav ps-0 mt-5">
                 <li>
                     <form method="post" action="{{ url('logout') }}">

@@ -24,7 +24,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700"/>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Dosis:wght@200..800&family=Libre+Barcode+EAN13+Text&display=swap"
-        rel="stylesheet">
+          rel="stylesheet">
 
     <!-- Style CSS -->
     <link href="{{ url('mobile/assets/style.css') }}" rel="stylesheet" type="text/css"/>
@@ -47,54 +47,61 @@
     <script src="https://cdn.datatables.net/2.1.7/js/dataTables.bootstrap5.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-    @php
-    $config = \App\Models\Configuracao::first();
-    @endphp
-    <script>
-        $(document).ready(function () {
-            $(':root').css('--primary-color', "{{ $config->theme_color }}");
-            $(':root').css('--primary-light-color', hexToRgbA("{{ $config->theme_color }}"));
-        });
-        function hexToRgbA(hex){
-            var c;
-            if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){
-                c= hex.substring(1).split('');
-                if(c.length== 3){
-                    c= [c[0], c[0], c[1], c[1], c[2], c[2]];
-                }
-                c= '0x'+c.join('');
-                return 'rgba('+[(c>>16)&255, (c>>8)&255, c&255].join(',')+',0.4)';
-            }
-            throw new Error('Bad Hex');
-        }
-    </script>
 </head>
 
 <body data-url="{{ url('') }}">
-<!-- Preloader
-<div id="preloader">
-    <div class="spinner-grow text-primary-color" role="status">
-        <span class="visually-hidden">Carregando...</span>
-    </div>
-</div> -->
+
 
 <!-- Internet Connection Status -->
 <div class="internet-connection-status" id="internetStatus"></div>
 
-@include('layout.header')
+<!-- Login Wrapper Area -->
+<div class="login-wrapper d-flex align-items-center justify-content-center">
+    <div class="login-container">
+        <div class="text-center px-4">
+            <img class="login-intro-img" src="{{ url(env('APP_LOGO')) }}" alt="">
+        </div>
 
-@include('layout.menu')
+        <!-- Register Form -->
+        <div class="register-form mt-4">
+            <h6 class="mb-3 text-center">Login Sistema</h6>
 
-<div class="page-content-wrapper py-1">
-    <div class="container">
-        <x-breadcrumbs menu="{{ $menu ?? '' }}" submenu="{{ $submenu ?? '' }}"/>
+            <form action="{{ route('login.store') }}" method="post">
+                @csrf
+                <div class="form-group">
+                    <input class="form-control form-control-lg" type="text" name="email" id="email" placeholder="E-mail" required>
+                    @error('email')
+                    <div class="pt-1 text-danger">{{ $message }}</div>
+                    @enderror
+                </div>
 
-        @yield('content')
+                <div class="form-group position-relative">
+                    <input class="form-control form-control-lg" type="password" name="password" id="password" placeholder="Senha" required>
+                    <div class="position-absolute" id="password-visibility">
+                        <i class="bi bi-eye"></i>
+                        <i class="bi bi-eye-slash"></i>
+                    </div>
+                    @error('password')
+                    <div class="pt-1 text-danger">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                @error('error')
+                <div class="pt-1 text-danger">{{ $message }}</div>
+                @enderror
+
+                <button class="btn btn-primary w-100" type="submit">Acessar</button>
+            </form>
+        </div>
+
+        <!-- Login Meta -->
+        <div class="login-meta-data text-center">
+            <a class="stretched-link forgot-password d-block mt-3 mb-1" href="forget-password.html">
+                Esqueceu sua senha?
+            </a>
+        </div>
     </div>
 </div>
-
-@include('layout.footer')
 
 <!-- All JavaScript Files -->
 <script src="{{ url('mobile/assets/js/slideToggle.min.js') }}"></script>

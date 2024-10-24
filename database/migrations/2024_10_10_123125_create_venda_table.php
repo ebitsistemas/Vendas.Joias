@@ -26,6 +26,7 @@ return new class extends Migration
             $table->double('total_bruto', 10, 2)->nullable();
             $table->double('total_liquido', 10, 2)->nullable();
             $table->text('anotacoes')->nullable();
+            $table->integer('user_id')->nullable();
             $table->boolean('status')->default(1)->comment('2 - Bloqueado; 1 - Ativo; 0 - Inativo;');
             $table->timestamps();
             $table->softDeletes();

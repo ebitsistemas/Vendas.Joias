@@ -410,3 +410,29 @@ li.page-link > span{
     font-family: "Font Awesome 6 Pro";
     content: "\f101" !important;
 }
+
+.login-container{
+    max-width: 770px;
+}
+
+/* TABS */
+.standard-tab .btn.active {
+    background-color: var(--primary-color) !important;
+    box-shadow: 0 0 0 0.25rem var(--primary-light-color);
+}
+.table-secondary,
+.table-primary,
+.table-success,
+.table-info,
+.table-warning,
+.table-danger,
+.table-light,
+
+.form-control-plaintext,
+
+.dropdown-item,
+.dropdown-item-text,
+.list-group-item-action,
+.popover-body{
+    color: var(--primary-color);
+}

@@ -16,6 +16,7 @@ return new class extends Migration
                 $table->id();
                 $table->integer('venda_id')->nullable();
                 $table->integer('produto_id')->nullable();
+                $table->string('produto_nome', 120)->nullable();
                 $table->double('valor_unitario', 10, 2)->nullable();
                 $table->double('quantidade', 10, 2)->nullable();
                 $table->integer('tipo_desconto')->nullable();

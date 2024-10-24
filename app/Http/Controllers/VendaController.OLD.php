@@ -2,17 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Cliente;
+use App\Models\Configuracao;
 use App\Models\Venda;
 use App\Models\Produto;
-use App\Models\VendaItem;
 use App\Traits\TraitDatatables;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 
-class CarrinhoController extends Controller
+class VendaController extends Controller
 {
     use TraitDatatables;
 
@@ -21,99 +18,45 @@ class CarrinhoController extends Controller
      */
     public function index()
     {
-        $venda = Venda::where('user_id', Auth::id())->orderBy('created_at', 'desc')->first();
+        $produtos = Produto::all();
+        $config = Configuracao::first();
+        if (empty($request->pesquisa)) {
+            $vendas = Venda::where('status', 1)->paginate($config->itens_pagina);
+        } else {
+            $model = Venda::where('status', 1);
 
-        if (!isset($venda->status) OR $venda->status != 0) {
-            $venda = Venda::create([
-                'data_venda' => date('Y-m-d'),
-                'user_id' => auth()->user()->id,
-                'status' => 0,
-            ]);
-            Cache::store('database')->put('venda_id', $venda->id, 86400);
+            $pesquisa = $request->pesquisa;
+            $model->where(function($query) use ($pesquisa) {
+                $query->orWhere('id', 'like', "%{$pesquisa}")
+                    ->orWhere('total_liquido', 'like', "%{$pesquisa}%")
+                    ->orWhere('cliente_documento', 'like', "%{$pesquisa}%")
+                    ->orWhere('data_venda', 'like', "%{$pesquisa}%")
+                    ->orWhere('anotacoes', 'like', "%{$pesquisa}%");
+            });
+            $vendas = $model->paginate($config->itens_pagina);
         }
-
-        return redirect()->to('carrinho/pedido/' . $venda->id);
-    }
-
-    public function pedido(Request $request)
-    {
-        $venda = Venda::find($request->id);
-        $venda_id = Cache::get('venda_id');
-        if (empty($venda_id)) {
-            Cache::store('database')->put('venda_id', $venda->id, 86400);
-        }
-
-        return view('carrinho.index')->with(['method' => 'store', 'venda' => $venda]);
+        return view('venda.lista')->with(['vendas' => $vendas, 'produtos' => $produtos, 'pesquisa' => $pesquisa ?? '']);
     }
 
     /**
-     * Add the client.
+     * Show the form for creating a new resource.
      */
-    public function clienteAdicionar(Request $request)
+    public function create()
     {
-        $venda_id = Cache::get('venda_id');
-        $venda = Venda::find($venda_id);
-        $venda->cliente_id = $request->cliente_id;
-        $response = $venda->save();
-
-        if ($response) {
-            toastr()->success('Cliente adicionado com sucesso!');
-            return redirect()->to('carrinho/pedido/' . $venda->id);
-        }
-        toastr()->error('Erro ao adicionar cliente!');
-        return redirect()->to('carrinho/pedido/' . $venda->id);
+        $produtos = Produto::all();
+        return view('venda.grid')->with(['method' => 'store', 'produtos' => $produtos]);
     }
 
-    /**
-     * Remover the client.
-     */
-    public function clienteRemover()
+    public function cart()
     {
-        $venda_id = Cache::get('venda_id');
-        $venda = Venda::find($venda_id);
-        $venda->cliente_id = null;
-        $response = $venda->save();
+        $venda = Venda::orderBy('created_at', 'desc')->first();
 
-        if ($response) {
-            toastr()->success('Cliente removido com sucesso!');
-            return redirect()->to('carrinho/pedido/' . $venda->id);
+        if (isset($venda->status) AND $venda->status == 0) {
+            return redirect()->to('venda/edit/' . $venda->id);
+        } else {
+            $produtos = Produto::all();
+            return view('venda.cart')->with(['method' => 'store', 'produtos' => $produtos]);
         }
-        toastr()->error('Erro ao remover cliente!');
-        return redirect()->to('carrinho/pedido/' . $venda->id);
-    }
-
-    /**
-     * Add the product.
-     */
-    public function produtoAdicionar(Request $request)
-    {
-        $venda_id = Cache::get('venda_id');
-        $produto = Produto::find($request->produto_id);
-
-        $vendaItem = VendaItem::create([
-            'venda_id' => $venda_id,
-            'produto_id' => $request->produto_id,
-            'valor_unitario' => $produto->valor_unitario,
-            'quantidade' => 1,
-            'valor_total' => $produto->valor_unitario,
-            'status' => 1,
-        ]);
-
-        if ($vendaItem) {
-            toastr()->success('Produto adicionado com sucesso!');
-            return redirect()->to('carrinho/pedido/' . $venda_id);
-        }
-        toastr()->error('Erro ao adicionar produto!');
-        return redirect()->to('carrinho/pedido/' . $venda_id);
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function checkout(Request $request)
-    {
-        $venda = Venda::find($request->id);
-        return view('carrinho.produtos.DELETAR.php')->with(['method' => 'view', 'venda' => $venda]);
     }
 
     /**
@@ -139,6 +82,15 @@ class CarrinhoController extends Controller
 
         toastr()->error('Erro ao cadastrar registro!');
         return back();
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
+        $produto = Produto::find($id);
+        return view('venda.gerenciar')->with(['method' => 'view', 'produto' => $produto]);
     }
 
     /**

@@ -28,7 +28,7 @@
 
             <li>
                 <a href="{{ url('venda') }}">
-                    <i class="fad fa-list text-primary-color"></i>
+                    <i class="fad fa-shopping-cart text-primary-color"></i>
                 </a>
             </li>
         </ul>

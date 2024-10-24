@@ -25,11 +25,17 @@ class Venda extends Model
         'total_bruto',
         'total_liquido',
         'anotacoes',
+        'user_id',
         'status',
     ];
 
     public function cliente()
     {
         return $this->hasOne(Cliente::class, 'id', 'cliente_id');
+    }
+
+    public function itens()
+    {
+        return $this->hasMany(VendaItem::class, 'venda_id', 'id');
     }
 }

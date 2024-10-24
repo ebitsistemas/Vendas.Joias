@@ -27,7 +27,7 @@
             </li>
 
             <li>
-                <a href="{{ url('pedido') }}">
+                <a href="{{ url('venda') }}">
                     <i class="fad fa-list text-primary-color"></i>
                 </a>
             </li>

@@ -48,8 +48,11 @@
                 <li>
                     <form method="post" action="{{ url('logout') }}">
                         @csrf
-                        <a href="{{ url('logout') }}"  onclick="event.preventDefault(); this.closest('form').submit();"
-                           data-bs-toggle="tooltip" data-bs-custom-class="tooltip-inverse" data-bs-placement="right" title="Sair do Sistema">
+                        <a href="{{ url('logout') }}" onclick="event.preventDefault(); this.closest('form').submit();" class="text-danger fw-500"
+                           data-bs-toggle="tooltip"
+                           data-bs-custom-class="tooltip-inverse"
+                           data-bs-placement="right"
+                           title="Sair do Sistema">
                             <i class="fal fa-sign-out"></i> Sair
                         </a>
                     </form>

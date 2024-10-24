@@ -18,7 +18,7 @@ class ProdutoController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $config = Configuracao::first();
         if (empty($request->pesquisa)) {
@@ -29,7 +29,9 @@ class ProdutoController extends Controller
             $pesquisa = $request->pesquisa;
             $model->where(function($query) use ($pesquisa) {
                 $query->orWhere('id', 'like', "%{$pesquisa}")
-                    ->orWhere('nome', 'like', "%{$pesquisa}%");
+                    ->orWhere('nome', 'like', "%{$pesquisa}%")
+                    ->orWhere('descricao', 'like', "%{$pesquisa}%")
+                    ->orWhere('preco_venda', 'like', "%{$pesquisa}%");
             });
             $produtos = $model->paginate($config->itens_pagina);
         }

@@ -90,6 +90,8 @@
 <!-- Order/Payment Success -->
 <div class="page-content-wrapper py-1">
     <div class="container">
+        <x-breadcrumbs menu="{{ $menu ?? '' }}" submenu="{{ $submenu ?? '' }}"/>
+
         @yield('content')
     </div>
 </div>

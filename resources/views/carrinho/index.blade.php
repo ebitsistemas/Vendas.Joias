@@ -1,4 +1,4 @@
-@extends('layout.template')
+@extends('layout.template', ['menu' => 'Carrinho', 'submenu' => ''])
 
 @section('title', 'Carrinho')
 
@@ -91,10 +91,10 @@
                     <table class="table mb-0 text-center">
                         <thead>
                         <tr>
-                            <th class="text-start w-350px">Produto</th>
-                            <th class="text-center">Preço</th>
-                            <th class="text-center w-150px">Quantidade</th>
-                            <th class="text-center">Subtotal</th>
+                            <th class="text-start w-200px">Produto</th>
+                            <th class="text-center w-125px">Preço</th>
+                            <th class="text-center w-200px">Quantidade</th>
+                            <th class="text-center w-125px">Subtotal</th>
                             <th class="text-end w-50px"></th>
                         </tr>
                         </thead>

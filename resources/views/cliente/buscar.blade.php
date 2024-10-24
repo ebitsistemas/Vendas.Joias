@@ -1,4 +1,4 @@
-@extends('layout.template')
+@extends('layout.template', ['menu' => 'Clientes', 'submenu' => 'Buscar'])
 
 @section('title', 'Buscar Cliente')
 

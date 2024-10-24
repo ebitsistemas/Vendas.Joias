@@ -3,13 +3,12 @@
 @section('title', 'Produtos')
 
 @section('content')
-    <section class="section-b-space">
-        <div class="container">
-            <div class="card bg-white">
-                <div class="card-body card-scroll h100p">
-                    <div class="row">
-                        <div class="col-md-12">
-                        <h5 class="text-theme text-uppercase">Cadastro Produto</h5>
+    <div class="container">
+        <div class="card">
+            <div class="card-body card-scroll h100p">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h5 class="text-theme text-uppercase">Produto</h5>
                         <form id="produto" action="{{ url('produto/'.$method) }}" method="POST" enctype="multipart/form-data">
                             <input type="hidden" name="id" id="id" value="{{ $produto->id ?? '' }}">
                             @csrf
@@ -98,11 +97,10 @@
                                 </div>
                             </div>
                         </form>
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
 @endsection
 

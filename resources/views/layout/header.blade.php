@@ -33,7 +33,7 @@
                 <!-- Navbar Toggler -->
                 <div class="navbar--toggler" id="affanNavbarToggler3" data-bs-toggle="offcanvas"
                      data-bs-target="#affanOffcanvas" aria-controls="affanOffcanvas">
-                    <a class="search-trigger-btn" href="#">
+                    <a class="search-trigger-btn" href="javascript:void(0);">
                         <i class="fad fa-bars fs-24px"></i>
                     </a>
                 </div>

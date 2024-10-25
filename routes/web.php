@@ -111,5 +111,8 @@ Route::prefix('carrinho')->group(function () {
     Route::post('produto/quantidade', [\App\Http\Controllers\CarrinhoController::class, 'produtoQuantidade'])->name('carrinho.produto.quantidade')->middleware('auth');
     Route::get('produto/remover/{item_id}', [\App\Http\Controllers\CarrinhoController::class, 'produtoRemover'])->name('carrinho.produto.remover')->middleware('auth');
 
+    Route::get('pagamento/adicionar', [\App\Http\Controllers\CarrinhoController::class, 'pagamentoAdicionar'])->name('carrinho.pagamento.adicionar')->middleware('auth');
+    Route::get('pagamento/remover/{item_id}', [\App\Http\Controllers\CarrinhoController::class, 'pagamentoRemover'])->name('carrinho.pagamento.remover')->middleware('auth');
+
     Route::post('update', [\App\Http\Controllers\CarrinhoController::class, 'update'])->name('carrinho.update');
 });

@@ -88,11 +88,6 @@
             $('#subtotal').val(number_format(subtotal, 2, ',', '.'));
         }
 
-        $(document).on('click', '.fn-salvar', function () {
-            var $form = $('#form_notas');
-            $form.submit();
-        });
-
         $(document).on('click', '.quant-minus', function () {
             var $quant = $(this).parent('div.input-group').find('.qty-text');
             var quantidade = $quant.val();
@@ -112,6 +107,16 @@
 
             $form.find('input[name=quantidade]').val(Number(quantidade) + 1);
             $form.find('input[name=id]').val(id);
+            $form.submit();
+        });
+
+        $(document).on('click', '.add-pagamento', function () {
+            var $form = $('#form_pagamentos');
+            $form.submit();
+        });
+
+        $(document).on('click', '.fn-salvar', function () {
+            var $form = $('#form_notas');
             $form.submit();
         });
     </script>

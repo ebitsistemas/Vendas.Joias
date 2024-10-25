@@ -1,64 +1,68 @@
 <div class="card mb-3">
     <div class="card-body border">
-        <div class="row mb-2">
-            <div class="col-md-3">
-                <label class="form-label" for="valor">Valor</label>
-                <div class="input-group mb-3">
-                    <span class="input-group-text">R$</span>
-                    <input type="text" class="form-control form-control-lg money" id="valor" name="valor" value="">
+        <form id="form_pagamentos" action="{{ url('carrinho/pagamento/adicionar') }}" method="POST">
+            <input type="hidden" name="id" value="{{ $venda->id }}">
+            @csrf
+            <div class="row mb-2">
+                <div class="col-md-3">
+                    <label class="form-label" for="valor">Valor</label>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">R$</span>
+                        <input type="text" class="form-control form-control-lg money" id="valor" name="valor" value="">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label" for="tipo_pagamento">Tipo Pagamento</label>
+                    <select class="form-select form-select-lg fn-show" name="tipo_pagamento">
+                        <option value="0">0: À vista</option>
+                        <option value="1">1: À prazo</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" for="forma_pagamento">Tipo Pagamento</label>
+                    <select class="form-select form-select-lg" name="forma_pagamento">
+                        <option value="01" selected>01: Dinheiro</option>
+                        <option value="03">03: Cartão de Crédito</option>
+                        <option value="04">04: Cartão de Débito</option>
+                        <option value="05">05: Duplicata</option>
+                        <option value="15">15: Boleto Bancário</option>
+                        <option value="16">16: Depósito Bancário</option>
+                        <option value="17">17: Pagamento Instantâneo (PIX)</option>
+                    </select>
                 </div>
             </div>
-            <div class="col-md-3">
-                <label class="form-label" for="tipo_pagamento">Tipo Pagamento</label>
-                <select class="form-select form-select-lg fn-show" name="tipo_pagamento">
-                    <option value="0">0: À vista</option>
-                    <option value="1">1: À prazo</option>
-                </select>
-            </div>
-            <div class="col-md-6">
-                <label class="form-label" for="forma_pagamento">Tipo Pagamento</label>
-                <select class="form-select form-select-lg" name="forma_pagamento">
-                    <option value="01" selected>01: Dinheiro</option>
-                    <option value="03">03: Cartão de Crédito</option>
-                    <option value="04">04: Cartão de Débito</option>
-                    <option value="05">05: Duplicata</option>
-                    <option value="15">15: Boleto Bancário</option>
-                    <option value="16">16: Depósito Bancário</option>
-                    <option value="17">17: Pagamento Instantâneo (PIX)</option>
-                </select>
-            </div>
-        </div>
 
-        <div class="row mb-2 d-none" data-show="tipo_pagamento-1">
-            <div class="col-md-3" data-show="tipo_pagamento-1">
-                <label class="form-label">Data do Pagamento</label>
-                <input class="form-control form-control-lg" type="date" value="2024-10-24" name="data_vencimento">
-            </div>
-            <div class="col-md-3" data-show="tipo_pagamento-1">
-                <label class="form-label">Número de Parcelas</label>
-                <input type="number" value="1" name="total_parcelas" class="form-control form-control-lg text-center" min="1" max="99">
-            </div>
-            <div class="col-md-3" data-show="tipo_pagamento-1">
-                <label class="form-label">Dias entre Parcelas</label>
-                <div class="input-group">
-                    <input class="form-control form-control-lg" type="number" value="30" name="dias_parcelas">
-                    <span class="input-group-text dias-parcelas"> dias </span>
+            <div class="row mb-2 d-none" data-show="tipo_pagamento-1">
+                <div class="col-md-3" data-show="tipo_pagamento-1">
+                    <label class="form-label">Data do Pagamento</label>
+                    <input class="form-control form-control-lg" type="date" value="2024-10-24" name="data_vencimento">
+                </div>
+                <div class="col-md-3" data-show="tipo_pagamento-1">
+                    <label class="form-label">Número de Parcelas</label>
+                    <input type="number" value="1" name="total_parcelas" class="form-control form-control-lg text-center" min="1" max="99">
+                </div>
+                <div class="col-md-3" data-show="tipo_pagamento-1">
+                    <label class="form-label">Dias entre Parcelas</label>
+                    <div class="input-group">
+                        <input class="form-control form-control-lg" type="number" value="30" name="dias_parcelas">
+                        <span class="input-group-text dias-parcelas"> dias </span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Valor por Parcela</label>
+                    <div class="input-group">
+                        <span class="input-group-text"> R$ </span>
+                        <input type="text" name="valor_parcela" class="form-control form-control-lg mask-money" value="0,00" readonly="">
+                    </div>
                 </div>
             </div>
-            <div class="col-md-3">
-                <label class="form-label">Valor por Parcela</label>
-                <div class="input-group">
-                    <span class="input-group-text"> R$ </span>
-                    <input type="text" name="valor_parcela" class="form-control form-control-lg mask-money" value="0,00" readonly="">
-                </div>
-            </div>
-        </div>
 
-        <div class="row mb-2">
-            <div class="col-md-2 offset-10 text-end">
-                <button type="button" class="btn btn-icon btn-theme add-pagamento"><i class="fa fa-plus-circle"></i></button>
+            <div class="row mb-2">
+                <div class="col-md-2 offset-10 text-end">
+                    <button type="button" class="btn btn-icon btn-theme add-pagamento"><i class="fa fa-plus-circle"></i></button>
+                </div>
             </div>
-        </div>
+        </form>
     </div>
 </div>
 

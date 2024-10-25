@@ -3,7 +3,7 @@
         <span class="d-flex">
             @if(isset($venda->cliente))
                 <div class="chat-user-thumbnail me-3 shadow">
-                    <img class="img-circle" src="{{ url('mobile/assets/img/user1.png') }}" alt="">
+                    <img class="img-circle" src="{{ url('mobile/assets/img/no_client.jpg') }}" alt="">
                 </div>
 
                 <div class="chat-user-info w-410px">

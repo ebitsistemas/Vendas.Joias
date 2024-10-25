@@ -90,7 +90,7 @@ Route::prefix('venda')->group(function () {
     Route::get('cart', [\App\Http\Controllers\VendaController::class, 'cart'])->name('venda.cart');
     Route::get('nova', [\App\Http\Controllers\VendaController::class, 'create'])->name('venda.nova');
     Route::get('editar/{id}', [\App\Http\Controllers\VendaController::class, 'edit'])->name('venda.editar');
-    Route::get('show/{id}', [\App\Http\Controllers\VendaController::class, 'show'])->name('venda.visualizar');
+    Route::get('imprimir/{id}', [\App\Http\Controllers\VendaController::class, 'print'])->name('venda.print');
     Route::post('store', [\App\Http\Controllers\VendaController::class, 'store'])->name('venda.store');
     Route::post('update', [\App\Http\Controllers\VendaController::class, 'update'])->name('venda.update');
     Route::post('delete', [\App\Http\Controllers\VendaController::class, 'destroy'])->name('venda.delete');
@@ -111,8 +111,8 @@ Route::prefix('carrinho')->group(function () {
     Route::post('produto/quantidade', [\App\Http\Controllers\CarrinhoController::class, 'produtoQuantidade'])->name('carrinho.produto.quantidade')->middleware('auth');
     Route::get('produto/remover/{item_id}', [\App\Http\Controllers\CarrinhoController::class, 'produtoRemover'])->name('carrinho.produto.remover')->middleware('auth');
 
-    Route::get('pagamento/adicionar', [\App\Http\Controllers\CarrinhoController::class, 'pagamentoAdicionar'])->name('carrinho.pagamento.adicionar')->middleware('auth');
-    Route::get('pagamento/remover/{item_id}', [\App\Http\Controllers\CarrinhoController::class, 'pagamentoRemover'])->name('carrinho.pagamento.remover')->middleware('auth');
+    Route::post('fatura/adicionar', [\App\Http\Controllers\CarrinhoController::class, 'faturaAdicionar'])->name('carrinho.fatura.adicionar')->middleware('auth');
+    Route::get('fatura/remover/{item_id}', [\App\Http\Controllers\CarrinhoController::class, 'faturaRemover'])->name('carrinho.fatura.remover')->middleware('auth');
 
     Route::post('update', [\App\Http\Controllers\CarrinhoController::class, 'update'])->name('carrinho.update');
 });

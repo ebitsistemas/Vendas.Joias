@@ -34,8 +34,18 @@ class Venda extends Model
         return $this->hasOne(Cliente::class, 'id', 'cliente_id');
     }
 
+    public function faturas()
+    {
+        return $this->hasMany(FaturaItem::class, 'venda_id', 'id');
+    }
+
     public function itens()
     {
         return $this->hasMany(VendaItem::class, 'venda_id', 'id');
+    }
+
+    public function situacao()
+    {
+        return $this->hasOne(Situacao::class, 'codigo', 'status');
     }
 }

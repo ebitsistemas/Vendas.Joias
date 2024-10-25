@@ -6,6 +6,8 @@ use App\Models\Categoria;
 use App\Models\Configuracao;
 use App\Traits\TraitDatatables;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class ConfiguracaoController extends Controller
 {
@@ -34,8 +36,18 @@ class ConfiguracaoController extends Controller
      */
     public function update(Request $request)
     {
+        $data = $request->all();
         $config = Configuracao::first();
-        $config->update($request->all());
+        if($request->hasFile('imagem')) {
+            $file = $request->file('imagem');
+            $imagem = $file->get();
+            $extension = $file->getClientOriginalExtension();
+            $name = Auth::id().date('YmdHis').rand(1, 9999);
+            $pathImg = "imagem/{$name}.{$extension}";
+            Storage::disk('public')->put($pathImg, $imagem);
+            $data['imagem'] = $pathImg;
+        }
+        $config->update($data);
         $response = $config->save();
 
         if ($response) {

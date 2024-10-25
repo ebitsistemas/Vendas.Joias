@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Configuracao;
-use App\Models\Produto;
 use App\Models\Venda;
+use App\Models\Produto;
+use App\Models\FaturaItem;
+use App\Models\Configuracao;
 use Illuminate\Http\Request;
+use App\Http\Utilities\Impressao80mm;
 
 class VendaController extends Controller
 {
@@ -32,6 +34,24 @@ class VendaController extends Controller
             $vendas = $model->paginate($config->itens_pagina);
         }
         return view('venda.lista')->with(['vendas' => $vendas, 'produtos' => $produtos, 'pesquisa' => $pesquisa ?? '']);
+    }
+
+    public function print(Request $request)
+    {
+        $config = Configuracao::first();
+
+        $model = Venda::with([
+            'itens',
+            'cliente',
+            'faturas',
+            'situacao',
+        ]);
+        $venda = $model->find($request->id);
+
+        $impressao = new Impressao80mm();
+        $pdf = $impressao->cupom($config, $venda);
+
+        return response($pdf)->header('Content-Type', 'application/pdf');
     }
 
     /**

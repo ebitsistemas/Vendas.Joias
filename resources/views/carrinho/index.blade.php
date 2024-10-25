@@ -29,14 +29,14 @@
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <button class="btn text-theme" id="anotacao-tab"
+                    <button class="btn text-theme" id="outros-tab"
                             data-bs-toggle="tab"
-                            data-bs-target="#anotacao"
+                            data-bs-target="#outros"
                             type="button"
                             role="tab"
-                            aria-controls="anotacao"
+                            aria-controls="outros"
                             aria-selected="false">
-                        Anotações
+                        Outros
                     </button>
                 </li>
             </ul>
@@ -49,8 +49,46 @@
                 <div class="tab-pane fade" id="pagamento" role="tabpanel" aria-labelledby="pagamento-tab">
                     @include('carrinho.partials.pagamento')
                 </div>
-                <div class="tab-pane fade" id="anotacao" role="tabpanel" aria-labelledby="anotacao-tab">
+                <div class="tab-pane fade" id="outros" role="tabpanel" aria-labelledby="outros-tab">
                     @include('carrinho.partials.anotacao')
+                </div>
+            </div>
+
+            <div class="card mb-3">
+                <div class="card-body border">
+                    <div class="row">
+                        @php($total = $venda->faturas->sum('valor_subtotal'))
+                        @php($saldo = $total - $venda->total_liquido)
+                        <div class="col-4">
+                            <!-- Single Counter -->
+                            <div class="single-counter-wrap text-center">
+                                <h4 class="mb-0">
+                                    R$ <span class="counter">{{ number_format($venda->total_liquido, 2, ',', '.') }}</span>
+                                </h4>
+                                <p class="mb-0 fz-12">TOTAL DA VENDA</p>
+                            </div>
+                        </div>
+
+                        <div class="col-4">
+                            <!-- Single Counter -->
+                            <div class="single-counter-wrap text-center">
+                                <h4 class="mb-0">
+                                    R$ <span class="counter">{{ number_format($total, 2, ',', '.') }}</span>
+                                </h4>
+                                <p class="mb-0 fz-12">TOTAL DAS FATURAS</p>
+                            </div>
+                        </div>
+
+                        <div class="col-4">
+                            <!-- Single Counter -->
+                            <div class="single-counter-wrap text-center">
+                                <h4 class="mb-0 @if($saldo < 0) text-danger @else text-primary @endif">
+                                    R$ <span class="counter">{{ number_format($saldo, 2, ',', '.') }}</span>
+                                </h4>
+                                <p class="mb-0 fz-12">SALDO</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -112,11 +150,15 @@
 
         $(document).on('click', '.add-pagamento', function () {
             var $form = $('#form_pagamentos');
+            var $valor = $form.find('input[name=valor_recebido]');
+            var valor = Number($valor.val());
+
             $form.submit();
         });
 
         $(document).on('click', '.fn-salvar', function () {
             var $form = $('#form_notas');
+
             $form.submit();
         });
     </script>

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cliente;
+use App\Models\FaturaItem;
+use App\Models\Situacao;
 use App\Models\Venda;
 use App\Models\Produto;
 use App\Models\VendaItem;
@@ -37,13 +39,14 @@ class CarrinhoController extends Controller
 
     public function pedido(Request $request)
     {
+        $situacoes = Situacao::where('status', 1)->get();
         $venda = Venda::find($request->id);
         $venda_id = Cache::get('venda_id');
         if (empty($venda_id)) {
             Cache::store('database')->put('venda_id', $venda->id, 86400);
         }
 
-        return view('carrinho.index')->with(['method' => 'store', 'venda' => $venda]);
+        return view('carrinho.index')->with(['method' => 'store', 'venda' => $venda, 'situacoes' => $situacoes]);
     }
 
     /**
@@ -169,6 +172,62 @@ class CarrinhoController extends Controller
      * Remover the client.
      */
     public function produtoRemover(Request $request)
+    {
+        $venda_id = Cache::get('venda_id');
+        $response = VendaItem::find($request->item_id)->delete();
+
+        $total = VendaItem::where('venda_id', $venda_id)->sum('valor_total');
+        Venda::where('id', $venda_id)->update(['total_bruto' => $total, 'total_liquido' => $total]);
+
+        if ($response) {
+            toastr()->success('Produto removido com sucesso!');
+            return redirect()->to('carrinho/pedido/' . $venda_id);
+        }
+        toastr()->error('Erro ao remover produto!');
+        return redirect()->to('carrinho/pedido/' . $venda_id);
+    }
+
+    /**
+     * Add the payment.
+     */
+    public function faturaAdicionar(Request $request)
+    {
+        if (empty($request->valor_recebido)) {
+            toastr()->error('Valor da fatura deve ser informado, campo obrigatório!');
+            return redirect()->to('carrinho/pedido/' . $request->venda_id);
+        }
+
+        $vendaItem = FaturaItem::create([
+            'venda_id' => $request->venda_id,
+            'tipo_pagamento' => $request->tipo_pagamento,
+            'forma_pagamento' => $request->forma_pagamento,
+            'valor_parcela' => str_replace(',', '.', str_replace('.', '', $request->valor_parcela)),
+            'numero_parcela' => $request->numero_parcela ?? 1,
+            'total_parcelas' => $request->total_parcelas,
+            'dias_parcelas' => $request->dias_parcelas,
+            'data_vencimento' => $request->data_vencimento,
+            'data_pagamento' => $request->data_pagamento,
+            'valor_recebido' => str_replace(',', '.', str_replace('.', '', $request->valor_recebido)),
+            'valor_subtotal' => str_replace(',', '.', str_replace('.', '', $request->valor_recebido)),
+            'troco' => str_replace(',', '.', str_replace('.', '', $request->troco)),
+            'situacao' => ($request->tipo_pagamento == 0) ? '4' : '0',
+            'status' => 1,
+        ]);
+
+        //$total = FaturaItem::where('venda_id', $request->venda_id)->sum('valor_subtotal');
+
+        if ($vendaItem) {
+            toastr()->success('Fatura adicionada com sucesso!');
+            return redirect()->to('carrinho/pedido/' . $request->venda_id);
+        }
+        toastr()->error('Erro ao adicionar fatura!');
+        return redirect()->to('carrinho/pedido/' . $request->venda_id);
+    }
+
+    /**
+     * Remover the payment.
+     */
+    public function faturaRemover(Request $request)
     {
         $venda_id = Cache::get('venda_id');
         $response = VendaItem::find($request->item_id)->delete();

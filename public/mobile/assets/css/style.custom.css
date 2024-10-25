@@ -436,3 +436,6 @@ li.page-link > span{
 .popover-body{
     color: var(--primary-color);
 }
+.form-control.form-control-clicked {
+    background-color: unset;
+}

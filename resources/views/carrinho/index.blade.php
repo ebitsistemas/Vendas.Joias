@@ -3,168 +3,74 @@
 @section('title', 'Carrinho')
 
 @section('content')
-    <div class="container pt-3">
-        <ul class="ps-0 chat-user-list mb-3">
-            <li class="p-3">
-                <span class="d-flex">
-                    @if(isset($venda->cliente))
-                        <div class="chat-user-thumbnail me-3 shadow">
-                            <img class="img-circle" src="{{ url('mobile/assets/img/user1.png') }}" alt="">
-                        </div>
-
-                        <div class="chat-user-info w-410px">
-                            <h6 class="mb-0">{{ $venda->cliente->nome }} - {{ $venda->cliente->documento }}</h6>
-                            <div class="last-chat">
-                                <p class="mb-0 text-truncate">
-                                    {{ $venda->cliente->logradouro }}, {{ $venda->cliente->numero }}
-                                </p>
-                            </div>
-                        </div>
-                    @else
-                        <div class="chat-user-thumbnail me-3 shadow">
-                            <img class="img-circle" src="{{ url('mobile/assets/img/no_client.jpg') }}" alt="">
-                        </div>
-
-                        <div class="chat-user-info w-410px">
-                            <h6 class="mb-0">Nenhum cliente selecionado</h6>
-                            <div class="last-chat">
-                                <p class="mb-0 text-theme">
-                                    Clique no botão ao lado para selecionar o cliente
-                                </p>
-                            </div>
-                        </div>
-                    @endif
-                </span>
-
-                @if(isset($venda->cliente) && !empty($venda->cliente))
-                    <button class="btn" type="button" onclick="location.href='{{ url('carrinho/cliente/remover/'.$venda->cliente_id) }}'" title="Remover Cliente">
-                        <i class="fa fa-times fs-26px text-theme"></i>
+    <div class="container pt-3 mb-5">
+        <div class="standard-tab">
+            <ul class="nav rounded-lg mb-2 p-2 shadow-sm" id="affanTabs1" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="btn text-theme active" id="geral-tab"
+                            data-bs-toggle="tab"
+                            data-bs-target="#geral"
+                            type="button"
+                            role="tab"
+                            aria-controls="geral"
+                            aria-selected="true">
+                        Geral
                     </button>
-                @else
-                    <button class="btn" type="button" onclick="location.href='{{ url('cliente/buscar') }}'" title="Buscar Cliente">
-                        <i class="fa fa-angle-right fs-26px text-theme"></i>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="btn text-theme" id="pagamento-tab"
+                            data-bs-toggle="tab"
+                            data-bs-target="#pagamento"
+                            type="button"
+                            role="tab"
+                            aria-controls="pagamento"
+                            aria-selected="false">
+                        Pagamento
                     </button>
-                @endif
-            </li>
-        </ul>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="btn text-theme" id="anotacao-tab"
+                            data-bs-toggle="tab"
+                            data-bs-target="#anotacao"
+                            type="button"
+                            role="tab"
+                            aria-controls="anotacao"
+                            aria-selected="false">
+                        Anotações
+                    </button>
+                </li>
+            </ul>
 
-        <!-- Cart Wrapper -->
-        <div class="cart-wrapper-area">
-            <a class="btn btn-theme p-3 mb-3" data-bs-toggle="collapse" href="#addProduto" role="button" aria-expanded="false" aria-controls="addProduto">
-                <i class="fa fa-box me-1"></i> Adicionar Produto
-            </a>
-
-            <div class="collapse mb-3" id="addProduto">
-                <div class="card card-body border">
-                    <div class="row mb-2">
-                        <div class="col-md-6">
-                            <label class="form-label" for="nome">Produto</label>
-                            <input type="text" class="form-control form-control-lg" id="nome_produto" name="nome_produto" value="" required>
-                        </div>
-                        <div class="col-md-2">
-                            <label class="form-label" for="preco_venda">Preço Venda</label>
-                            <div class="input-group mb-3">
-                                <span class="input-group-text">R$</span>
-                                <input type="text" class="form-control form-control-lg form-control-cart text-end money" id="preco_venda_produto" name="preco_venda_produto" required>
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <label class="form-label" for="quantidade">Quantidade</label>
-                            <input type="number" class="form-control form-control-lg form-control-cart text-center" id="quantidade" name="quantidade" value="1" required>
-                        </div>
-                        <div class="col-md-2">
-                            <label class="form-label" for="subtotal">Subtotal</label>
-                            <div class="input-group mb-3">
-                                <span class="input-group-text">R$</span>
-                                <input type="text" class="form-control form-control-lg form-control-cart text-end money" id="subtotal" name="subtotal" readonly>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row mb-2">
-                        <div class="col-md-9 pt-2">
-                            <a href="{{ url('produto/buscar') }}" class="text-theme">Adicionar produto já cadastrado</a>
-                        </div>
-                        <div class="col-md-3 text-end">
-                            <button type="button" class="btn btn-icon btn-theme"><i class="fa fa-plus-circle"></i></button>
-                        </div>
-                    </div>
+            <div class="tab-content border-0 pt-2" id="affanTabs1Content">
+                <div class="tab-pane fade show active" id="geral" role="tabpanel" aria-labelledby="geral-tab">
+                    @include('carrinho.partials.cliente')
+                    @include('carrinho.partials.produto')
+                </div>
+                <div class="tab-pane fade" id="pagamento" role="tabpanel" aria-labelledby="pagamento-tab">
+                    @include('carrinho.partials.pagamento')
+                </div>
+                <div class="tab-pane fade" id="anotacao" role="tabpanel" aria-labelledby="anotacao-tab">
+                    @include('carrinho.partials.anotacao')
                 </div>
             </div>
 
-            @if(empty($venda->itens))
-                <div class="alert custom-alert-three alert-info alert-dismissible fade show" role="alert">
-                    <div class="row">
-                        <div class="col text-center pt-3">
-                            <i class="fal fa-shopping-cart fs-60px"></i>
-
-                            <div class="alert-text p-3">
-                                <h6>Carrinho vazio!</h6>
-                                <span>Nenhum produto adicionado ao pedido de venda.</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            @else
-            <div class="card cart-table border mb-3">
-                <div class="table-responsive card-body">
-                    <table class="table mb-0 text-center">
-                        <thead>
-                        <tr>
-                            <th class="text-start w-200px">Produto</th>
-                            <th class="text-center w-125px">Preço</th>
-                            <th class="text-center w-200px">Quantidade</th>
-                            <th class="text-center w-125px">Subtotal</th>
-                            <th class="text-end w-50px"></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @foreach($venda->itens as $item)
-                            <tr class="border-bottom">
-                                <td class="text-start fs-18px">
-                                    {{ $item->nome }}
-                                </td>
-                                <td class="text-center fs-18px">
-                                    <span>R$ {{ number_format($item->preco_venda, 2, ',', '.') }}</span>
-                                </td>
-                                <td class="text-center">
-                                    <div class="input-group pt-1">
-                                        <button type="button" class="input-group-text"><i class="fa fa-minus-circle"></i></button>
-                                        <input class="qty-text fs-16px" type="text" value="1">
-                                        <button type="button" class="input-group-text"><i class="fa fa-plus-circle"></i></button>
-                                    </div>
-                                </td>
-                                <td class="text-center fs-18px">
-                                    <span>R$ {{ number_format($item->preco_venda, 2, ',', '.') }}</span>
-                                </td>
-                                <td class="text-end">
-                                    <a class="btn btn-icon btn-circle" href="javascript:void(0);">
-                                        <i class="fa fa-times text-theme"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-
-                @if (isset($venda))
-                    <div class="card-body">
+            @if (isset($venda))
+                <div class="card">
+                    <div class="card-body border">
                         <div class="apply-coupon">
                             <div class="coupon-form">
-                                <a class="btn btn-theme fs-20px p-2 w-100 my-3" href="{{ url('carrinho/checkout/'.($venda->id ?? '')) }}">Finalizar <i class="fa fa-right-to-bracket"></i> </a>
+                                <button type="submit" class="btn btn-theme fs-20px p-2 w-100 my-3 fn-salvar"><i class="fa fa-save"></i> Salvar</button>
                             </div>
                         </div>
                     </div>
-                @endif
-            </div>
+                </div>
             @endif
         </div>
     </div>
 
     <script>
         console.log(null);
-        $(document).on('blur', '#preco_venda_produto', function () {
+        $(document).on('blur', '#valor_unitario', function () {
             calculaSubtotal();
         });
 
@@ -173,7 +79,7 @@
         });
 
         function calculaSubtotal() {
-            var valor = $('#preco_venda_produto').val();
+            var valor = $('#valor_unitario').val();
             var quantidade = $('#quantidade').val();
             valor = valor.replace('.', '');
             valor = valor.replace(',', '.');
@@ -181,5 +87,32 @@
             var subtotal = Number(quantidade) * Number(valor);
             $('#subtotal').val(number_format(subtotal, 2, ',', '.'));
         }
+
+        $(document).on('click', '.fn-salvar', function () {
+            var $form = $('#form_notas');
+            $form.submit();
+        });
+
+        $(document).on('click', '.quant-minus', function () {
+            var $quant = $(this).parent('div.input-group').find('.qty-text');
+            var quantidade = $quant.val();
+            var id = $quant.data('id');
+            var $form = $('#form_item_update');
+
+            $form.find('input[name=quantidade]').val(Number(quantidade) - 1);
+            $form.find('input[name=id]').val(id);
+            $form.submit();
+        });
+
+        $(document).on('click', '.quant-plus', function () {
+            var $quant = $(this).parent('div.input-group').find('.qty-text');
+            var quantidade = $quant.val();
+            var id = $quant.data('id');
+            var $form = $('#form_item_update');
+
+            $form.find('input[name=quantidade]').val(Number(quantidade) + 1);
+            $form.find('input[name=id]').val(id);
+            $form.submit();
+        });
     </script>
 @endsection

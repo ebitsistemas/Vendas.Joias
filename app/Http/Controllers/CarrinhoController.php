@@ -76,10 +76,10 @@ class CarrinhoController extends Controller
 
         if ($response) {
             toastr()->success('Cliente removido com sucesso!');
-            return redirect()->to('carrinho/pedido/' . $venda->id);
+            return redirect()->to('carrinho/pedido/' . $venda_id);
         }
         toastr()->error('Erro ao remover cliente!');
-        return redirect()->to('carrinho/pedido/' . $venda->id);
+        return redirect()->to('carrinho/pedido/' . $venda_id);
     }
 
     /**
@@ -93,11 +93,15 @@ class CarrinhoController extends Controller
         $vendaItem = VendaItem::create([
             'venda_id' => $venda_id,
             'produto_id' => $request->produto_id,
-            'valor_unitario' => $produto->valor_unitario,
+            'produto_nome' => $produto->nome,
+            'valor_unitario' => $produto->preco_venda,
             'quantidade' => 1,
-            'valor_total' => $produto->valor_unitario,
+            'valor_total' => $produto->preco_venda,
             'status' => 1,
         ]);
+
+        $total = VendaItem::where('venda_id', $venda_id)->sum('valor_total');
+        Venda::where('id', $venda_id)->update(['total_bruto' => $total, 'total_liquido' => $total]);
 
         if ($vendaItem) {
             toastr()->success('Produto adicionado com sucesso!');
@@ -108,46 +112,76 @@ class CarrinhoController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Add the product.
      */
-    public function checkout(Request $request)
+    public function produtoCadastrar(Request $request)
     {
-        $venda = Venda::find($request->id);
-        return view('carrinho.produtos.DELETAR.php')->with(['method' => 'view', 'venda' => $venda]);
+        //dd($request->all());
+        $vendaItem = VendaItem::create([
+            'venda_id' => $request->venda_id,
+            'produto_id' => $request->produto_id,
+            'produto_nome' => $request->produto_nome,
+            'valor_unitario' => str_replace(',', '.', str_replace('.', '', $request->valor_unitario)),
+            'quantidade' => doubleval($request->quantidade),
+            'valor_total' => str_replace(',', '.', str_replace('.', '', $request->valor_total)),
+            'status' => 1,
+        ]);
+
+        $total = VendaItem::where('venda_id', $request->venda_id)->sum('valor_total');
+        Venda::where('id', $request->venda_id)->update(['total_bruto' => $total, 'total_liquido' => $total]);
+
+        if ($vendaItem) {
+            toastr()->success('Produto adicionado com sucesso!');
+            return redirect()->to('carrinho/pedido/' . $request->venda_id);
+        }
+        toastr()->error('Erro ao adicionar produto!');
+        return redirect()->to('carrinho/pedido/' . $request->venda_id);
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Alter quant the product.
      */
-    public function store(Request $request)
+    public function produtoQuantidade(Request $request)
     {
-        $data = $request->all();
-        $data['preco_custo'] = str_replace('.', '', str_replace(',', '.', $data['preco_custo']));
-        $data['preco_venda'] = str_replace('.', '', str_replace(',', '.', $data['preco_venda']));
-        if($request->hasFile('imagem')) {
-            $file = $request->file('file');
-            $name = $file->hashName();
-            $upload = Storage::put("imagem/{$name}", $file);
-            $data['imagem'] = $upload->path();
+        $vendaItem = VendaItem::find($request->id);
+
+        if ($request->quantidade <= 0) {
+            $vendaItem->delete();
+        } else {
+            $vendaItem->update([
+                'quantidade' => doubleval($request->quantidade),
+                'valor_total' => doubleval($request->quantidade) * $vendaItem->valor_unitario,
+            ]);
         }
-        $response = Produto::create($data);
+
+        $total = VendaItem::where('venda_id', $vendaItem->venda_id)->sum('valor_total');
+        Venda::where('id', $vendaItem->venda_id)->update(['total_bruto' => $total, 'total_liquido' => $total]);
+
+        if ($vendaItem) {
+            toastr()->success('Produto adicionado com sucesso!');
+            return redirect()->to('carrinho/pedido/' . $vendaItem->venda_id);
+        }
+        toastr()->error('Erro ao adicionar produto!');
+        return redirect()->to('carrinho/pedido/' . $vendaItem->venda_id);
+    }
+
+    /**
+     * Remover the client.
+     */
+    public function produtoRemover(Request $request)
+    {
+        $venda_id = Cache::get('venda_id');
+        $response = VendaItem::find($request->item_id)->delete();
+
+        $total = VendaItem::where('venda_id', $venda_id)->sum('valor_total');
+        Venda::where('id', $venda_id)->update(['total_bruto' => $total, 'total_liquido' => $total]);
 
         if ($response) {
-            toastr()->success('Registro cadastrado com sucesso!');
-            return redirect()->to('produto');
+            toastr()->success('Produto removido com sucesso!');
+            return redirect()->to('carrinho/pedido/' . $venda_id);
         }
-
-        toastr()->error('Erro ao cadastrar registro!');
-        return back();
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        $produto = Produto::find($id);
-        return view('venda.gerenciar')->with(['method' => 'update', 'produto' => $produto]);
+        toastr()->error('Erro ao remover produto!');
+        return redirect()->to('carrinho/pedido/' . $venda_id);
     }
 
     /**
@@ -155,75 +189,23 @@ class CarrinhoController extends Controller
      */
     public function update(Request $request)
     {
-        $data = $request->all();
-        $produto = Produto::find($request->id);
-        $data['preco_custo'] = number_format($data['preco_custo'], 2, '.', ',');
-        //$data['preco_custo'] = str_replace('.', ',', str_replace(',', '.', $data['preco_custo']));
-        $data['preco_venda'] = number_format($data['preco_venda'], 2, '.', ',');
-        //$data['preco_venda'] = str_replace('.', ',', str_replace(',', '.', $data['preco_venda']));
-        if($request->hasFile('imagem')) {
-            $file = $request->file('file');
-            $name = $file->hashName();
-            $path = Storage::disk('local')->put($name, $file);
-            $data['imagem'] = $path;
-        }
-        $response = $produto->update($data);
+        $venda = Venda::find($request->id);
+        $response = $venda->update($request->all());
 
         if ($response) {
-            toastr()->success('Registro alterado com sucesso!');
-            return redirect()->to('produto');
+            toastr()->success('Registro salvo com sucesso!');
+            return redirect()->to('carrinho/pedido/' . $request->id);
         }
-
-        toastr()->error('Erro ao cadastrar registro!');
-        return back();
-    }
-
-    public function add(Request $request)
-    {
+        toastr()->error('Erro ao salvar registro!');
+        return redirect()->to('carrinho/pedido/' . $request->id);
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Display the specified resource.
      */
-    public function destroy(Request $request)
+    public function checkout(Request $request)
     {
-        $result = Produto::destroy($request->id);
-
-        return response()->json([
-            'success' => $result
-        ]);
-    }
-
-    public function ajax(Request $request)
-    {
-        $model = Produto::select([
-            'produtos.id',
-            'produtos.nome',
-            'produtos.codigo_interno',
-            'categorias.nome AS categoria_nome',
-            'produtos.preco_venda',
-            'produtos.status'
-        ])
-            ->leftjoin('categorias', 'categorias.id', 'produtos.categoria_id');
-
-        $properties = [
-            'id' => 'id',
-            'nome' => 'string',
-            'codigo_interno' => 'string',
-            'categoria_nome' => 'string',
-            'preco_venda' => 'money',
-            'status' => 'string'
-        ];
-
-        $filters = [
-            'produtos.id' => 'id',
-            'produtos.nome' => 'string',
-            'produtos.codigo_interno' => 'string',
-            'produtos.preco_venda' => 'money',
-            'categorias.nome' => 'string',
-        ];
-
-        $response = $this->dtable($request, $model, $properties, $filters);
-        return response()->json($response);
+        $venda = Venda::find($request->id);
+        return view('carrinho.produtos.DELETAR.php')->with(['method' => 'view', 'venda' => $venda]);
     }
 }

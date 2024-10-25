@@ -100,14 +100,16 @@ Route::prefix('venda')->group(function () {
 /* CARRINHO */
 Route::prefix('carrinho')->group(function () {
     Route::get('', [\App\Http\Controllers\CarrinhoController::class, 'index'])->name('carrinho.index')->middleware('auth');
-    Route::get('cliente/adicionar/{cliente_id}', [\App\Http\Controllers\CarrinhoController::class, 'clienteAdicionar'])->name('carrinho.cliente.adicionar')->middleware('auth');
-    Route::get('cliente/remover/{cliente_id}', [\App\Http\Controllers\CarrinhoController::class, 'clienteRemover'])->name('carrinho.cliente.remover')->middleware('auth');
-    Route::get('produto/adicionar/{produto_id}', [\App\Http\Controllers\CarrinhoController::class, 'produtoAdicionar'])->name('carrinho.produto.adicionar')->middleware('auth');
-
     Route::get('pedido/{id}', [\App\Http\Controllers\CarrinhoController::class, 'pedido'])->name('carrinho.pedido')->middleware('auth');
     Route::get('checkout/{id}', [\App\Http\Controllers\CarrinhoController::class, 'checkout'])->name('carrinho.checkout')->middleware('auth');
 
-    Route::post('store', [\App\Http\Controllers\CarrinhoController::class, 'store'])->name('venda.store');
-    Route::post('update', [\App\Http\Controllers\CarrinhoController::class, 'update'])->name('venda.update');
-    Route::post('delete', [\App\Http\Controllers\CarrinhoController::class, 'destroy'])->name('venda.delete');
+    Route::get('cliente/adicionar/{cliente_id}', [\App\Http\Controllers\CarrinhoController::class, 'clienteAdicionar'])->name('carrinho.cliente.adicionar')->middleware('auth');
+    Route::get('cliente/remover/{cliente_id}', [\App\Http\Controllers\CarrinhoController::class, 'clienteRemover'])->name('carrinho.cliente.remover')->middleware('auth');
+
+    Route::get('produto/adicionar/{produto_id}', [\App\Http\Controllers\CarrinhoController::class, 'produtoAdicionar'])->name('carrinho.produto.adicionar')->middleware('auth');
+    Route::post('produto/cadastrar', [\App\Http\Controllers\CarrinhoController::class, 'produtoCadastrar'])->name('carrinho.produto.cadastrar')->middleware('auth');
+    Route::post('produto/quantidade', [\App\Http\Controllers\CarrinhoController::class, 'produtoQuantidade'])->name('carrinho.produto.quantidade')->middleware('auth');
+    Route::get('produto/remover/{item_id}', [\App\Http\Controllers\CarrinhoController::class, 'produtoRemover'])->name('carrinho.produto.remover')->middleware('auth');
+
+    Route::post('update', [\App\Http\Controllers\CarrinhoController::class, 'update'])->name('carrinho.update');
 });

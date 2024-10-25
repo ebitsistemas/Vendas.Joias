@@ -44,6 +44,7 @@
                                     </button>
                                 </li>
                             </ul>
+
                             <form id="configuracao" action="{{ url('configuracao/update') }}" method="POST" enctype="multipart/form-data">
                                 <input type="hidden" name="id" id="id" value="{{ $configuracao->id ?? '' }}">
                                 @csrf

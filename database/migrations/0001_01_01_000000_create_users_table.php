@@ -20,7 +20,7 @@ return new class extends Migration
             $table->integer('permission_id');
             $table->double('percentual_desconto')->nullable();
             $table->string('session_id', 120);
-            $table->tinyInteger('status');
+            $table->tinyInteger('status')->default(1)->comment('2 - Bloqueado; 1 - Ativo; 0 - Inativo;');
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();

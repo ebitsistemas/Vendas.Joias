@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Situacao;
 use App\Models\Venda;
 use App\Models\Produto;
 use App\Models\FaturaItem;
 use App\Models\Configuracao;
 use Illuminate\Http\Request;
 use App\Http\Utilities\Impressao80mm;
+use Illuminate\Support\Facades\Cache;
 
 class VendaController extends Controller
 {
@@ -36,6 +38,17 @@ class VendaController extends Controller
         return view('venda.lista')->with(['vendas' => $vendas, 'produtos' => $produtos, 'pesquisa' => $pesquisa ?? '']);
     }
 
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Request $request)
+    {
+        $situacoes = Situacao::where('status', 1)->get();
+        $venda = Venda::find($request->id);
+
+        return view('carrinho.index')->with(['method' => 'update', 'venda' => $venda, 'situacoes' => $situacoes]);
+    }
+
     public function print(Request $request)
     {
         $config = Configuracao::first();
@@ -50,6 +63,26 @@ class VendaController extends Controller
 
         $impressao = new Impressao80mm();
         $pdf = $impressao->cupom($config, $venda);
+
+        return response($pdf)->header('Content-Type', 'application/pdf');
+    }
+
+    public function payment(Request $request)
+    {
+        $config = Configuracao::first();
+
+        $fatura = FaturaItem::find($request->id);
+
+        $model = Venda::with([
+            'itens',
+            'cliente',
+            'faturas',
+            'situacao',
+        ]);
+        $venda = $model->find($fatura->venda_id);
+
+        $impressao = new Impressao80mm();
+        $pdf = $impressao->pagamento($config, $venda, $fatura);
 
         return response($pdf)->header('Content-Type', 'application/pdf');
     }
@@ -74,14 +107,6 @@ class VendaController extends Controller
      * Display the specified resource.
      */
     public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
     {
         //
     }

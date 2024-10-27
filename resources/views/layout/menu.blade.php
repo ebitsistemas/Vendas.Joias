@@ -33,8 +33,15 @@
                     <a href="{{ url('venda') }}"><i class="fal fa-shopping-cart"></i> Vendas</a>
                 </li>
                 <li>
+                    <a href="{{ url('usuario') }}"><i class="fal fa-user-shield"></i> Usuários</a>
+                </li>
+                <li>
                     <a href="{{ url('configuracao') }}"><i class="fal fa-cogs"></i> Configurações</a>
                 </li>
+                <!--
+                <li>
+                    <a href="javascript:void(0);" onclick="ToggleFullScreen();"><i class="fal fa-expand"></i> Tela Cheia</a>
+                </li>-->
             </ul>
 
             <ul class="sidenav-nav ps-0 mt-5">

@@ -11,6 +11,11 @@ body{
         max-width: 720px;
     }
 }
+@media (min-width: 576px) {
+    .container, .container-sm {
+        max-width: 720px;
+    }
+}
 
 .ff-dosis {
     font-family: "Dosis", sans-serif;
@@ -438,4 +443,11 @@ li.page-link > span{
 }
 .form-control.form-control-clicked {
     background-color: unset;
+}
+.single-counter-wrap {
+    z-index: 0;
+}
+.bg-theme-light-hover:hover{
+    border:2px solid var(--primary-color) !important;
+    background-color: var(--primary-light-color) !important;
 }

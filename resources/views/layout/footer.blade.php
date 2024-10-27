@@ -15,7 +15,7 @@
             </li>
 
             <li class="active">
-                <a href="{{ url('carrinho') }}" class="badge-avater badge-avater-lg">
+                <a href="javascript:void(0);" class="badge-avater badge-avater-lg add-venda">
                     <i class="fad fa-shopping-basket"></i>
                 </a>
             </li>
@@ -36,10 +36,24 @@
 </div>
 
 <script>
-    $(document).on('click', '.card-product', function () {
-        $('.bagde-cart').addClass('pulse').find('span').text('02');
-        setTimeout(function () {
-            $('.bagde-cart').removeClass('pulse');
-        }, 1500);
+    $(document).on('click', '.add-venda', function () {
+        Swal.fire({
+            title: 'Nova Venda',
+            text: "Deseja iniciar uma nova venda?",
+            icon: "warning",
+            buttonsStyling: false,
+            showCancelButton: true,
+            confirmButtonText: '<i class="fa fa-check-circle"></i> Sim',
+            cancelButtonText: '<i class="fa fa-times-circle"></i> Não',
+            customClass: {
+                actions: 'my-actions',
+                confirmButton: 'btn btn-success me-3',
+                cancelButton: 'btn btn-danger',
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = '{{ url('carrinho') }}';
+            }
+        });
     });
 </script>

@@ -51,7 +51,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="chat-user-info text-center w-150px">
+                                        <div class="chat-user-info text-center w-150px d-sm-none">
                                             <h6 class="fs-18px mb-1">Status</h6>
                                             <div class="last-chat">
                                                 <p class="mb-0 fs-16px">
@@ -67,7 +67,6 @@
                                         <ul class="dropdown-menu">
                                             <li class="p-2"><a href="venda/editar/{{ $venda->id }}" class="fs-16px"><i class="fad fa-edit fs-16px"></i> Editar </a></li>
                                             <li class="p-2"><a href="venda/imprimir/{{ $venda->id }}" target="_blank" class="fs-16px"><i class="fad fa-print fs-16px"></i> Imprimir</a></li>
-                                            <li class="p-2"><a href="venda/concluir/{{ $venda->id }}" class="fs-16px"><i class="fad fa-check-circle fs-16px"></i> Concluir</a></li>
                                             <li class="p-2"><a class="dropdown-item text-danger fs-16px fn-remover" href="javascript:void(0);" data-content="{{ $venda->id }}" data-method="venda" data-id="{{ $venda->id }}"><i class="fad fa-trash fs-16px"></i> Remover</a></li>
                                         </ul>
                                     </div>

@@ -61,7 +61,12 @@ class ClienteController extends Controller
             });
             $clientes = $model->paginate($config->itens_pagina);
         }
-        return view('cliente.buscar')->with(['method' => 'view', 'clientes' => $clientes, 'pesquisa' => $pesquisa ?? '']);
+        return view('cliente.buscar')->with([
+            'method' => 'view',
+            'clientes' => $clientes,
+            'venda_id' => $request->venda_id,
+            'pesquisa' => $pesquisa ?? ''
+        ]);
     }
 
     /**

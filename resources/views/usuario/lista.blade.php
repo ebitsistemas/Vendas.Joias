@@ -1,41 +1,33 @@
-@extends('layout.template', ['menu' => 'cliente', 'submenu' => ''])
+@extends('layout.template', ['menu' => 'usuario', 'submenu' => ''])
 
-@section('title', 'Clientes')
+@section('title', 'Usuários')
 
 @section('content')
     <div class="container">
-        <x-search method="cliente" search="{{ $pesquisa ?? '' }}"/>
+        <x-search method="usuario" search="{{ $pesquisa ?? '' }}"/>
 
         <div class="card">
             <div class="card-body border card-scroll h100p-list">
                 <div class="row pt-3">
                     <div class="col-12">
                         <ul class="ps-0 chat-user-list mb-3">
-                        @foreach($clientes as $cliente)
+                        @foreach($usuarios as $usuario)
                         <li class="p-3">
                             <a class="d-flex">
-                                <div class="chat-user-thumbnail me-3 shadow">
-                                    @if(empty($cliente->imagem))
-                                        <img class="img-circle" src="{{ url('mobile/assets/img/no_client.jpg') }}" alt="">
-                                    @else
-                                        <img class="img-circle" src="{{ url('storage/'.$cliente->imagem) }}" alt="">
-                                    @endif
-                                </div>
-
                                 <div class="chat-user-info w-100px">
                                     <h6 class="mb-0 fs-18px mb-1">Código</h6>
                                     <div class="last-chat">
                                         <p class="mb-0 text-truncate fs-16px">
-                                            {{ str($cliente->id)->padLeft(6,0) }}
+                                            {{ str($usuario->id)->padLeft(6,0) }}
                                         </p>
                                     </div>
                                 </div>
 
                                 <div class="chat-user-info w-500px">
-                                    <h6 class="mb-0 fs-18px mb-1">{{ $cliente->nome }} - {{ $cliente->documento }}</h6>
+                                    <h6 class="mb-0 fs-18px mb-1">{{ $usuario->name }}</h6>
                                     <div class="last-chat">
                                         <p class="mb-0 text-truncate fs-16px">
-                                            {{ $cliente->logradouro }}, {{ $cliente->numero }} - {{ $cliente->cidade }}-{{ $cliente->uf }}
+                                            {{ $usuario->email }}
                                         </p>
                                     </div>
                                 </div>
@@ -44,7 +36,7 @@
                                     <h6 class="mb-0 fs-18px mb-1">Status</h6>
                                     <div class="last-chat">
                                         <p class="mb-0 fs-16px">
-                                            @if($cliente->status == 1)
+                                            @if($usuario->status == 1)
                                                 <span class="badge bg-success ms-2">Ativo</span>
                                             @else
                                                 <span class="badge bg-danger ms-2">Inativo</span>
@@ -58,10 +50,10 @@
                                     <i class="fa fa-ellipsis-v text-theme fs-18px"></i>
                                 </button>
                                 <ul class="dropdown-menu">
-                                    <li class="p-2"><a href="cliente/editar/{{ $cliente->id }}" class="fs-16px"><i class="fad fa-edit fs-16px"></i> Editar </a></li>
-                                    <li class="p-2"><a href="cliente/imprimir/{{ $cliente->id }}" class="fs-16px"><i class="fad fa-print fs-16px"></i> Imprimir</a></li>
-{{--                                    <li class="p-2"><a --}}{{--href="cliente/compartilhar/{{ $cliente->id }}"--}}{{-- href="#" onclick="shareImage()" class="fs-16px"><i class="fad fa-share-nodes fs-16px"></i> Compartilhar</a></li>--}}
-                                    <li class="p-2"><a class="dropdown-item text-danger fs-16px fn-remover" href="javascript:void(0);" data-content="{{ $cliente->nome }}" data-method="cliente" data-id="{{ $cliente->id }}"><i class="fad fa-trash fs-16px"></i> Remover</a></li>
+                                    <li class="p-2"><a href="usuario/editar/{{ $usuario->id }}" class="fs-16px"><i class="fad fa-edit fs-16px"></i> Editar </a></li>
+                                    @if($usuario->id != 1)
+                                        <li class="p-2"><a class="dropdown-item text-danger fs-16px fn-remover" href="javascript:void(0);" data-content="{{ $usuario->name }}" data-method="usuario" data-id="{{ $usuario->id }}"><i class="fad fa-trash fs-16px"></i> Remover</a></li>
+                                    @endif
                                 </ul>
                             </div>
                         </li>
@@ -70,12 +62,12 @@
                     </div>
                 </div>
 
-                <div class="row">
+                <div class="row g-3">
                     <div class="col-7">
-                        {{ $clientes->links() }}
+                        {{ $usuarios->links() }}
                     </div>
                     <div class="col-5 py-2 text-end">
-                        Página {{ $clientes->currentPage() }} de  {{ $clientes->lastPage() }} - {{ $clientes->total() }} registros encontrados
+                        Página {{ $usuarios->currentPage() }} de  {{ $usuarios->lastPage() }} - {{ $usuarios->total() }} registros encontrados
                     </div>
                 </div>
             </div>

@@ -1,7 +1,7 @@
 <div class="card mb-3">
     <div class="card-body border">
         <div class="row">
-            <div class="col-md-9 pe-1 pt-1">
+            <div class="col-9 pe-1 pt-1">
                 <form action="{{ url($method) }}" method="post">
                     @csrf
                     <div class="input-group">
@@ -13,7 +13,7 @@
                 </form>
             </div>
 
-            <div class="col-md-3 ps-1 pt-1">
+            <div class="col-3 ps-1 pt-1">
                 <a href="{{ url($method.'/cadastrar') }}" class="btn btn-theme w-100" style="padding: 14px;"><i class="fad fa-plus-circle"></i> Cadastrar</a>
             </div>
         </div>

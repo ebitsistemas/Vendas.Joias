@@ -10,18 +10,12 @@
 
             <!-- Logo Wrapper -->
             <div class="logo">
-                <a>
+                <a href="{{ url('') }}">
                     <img src="{{ url(env('APP_LOGO')) }}" width="110" alt="">
                 </a>
             </div>
 
             <div class="navbar-content-wrapper d-flex align-items-center">
-                <!-- Search
-                <div class="search-wrapper me-2">
-                    <a class="search-trigger-btn" data-bs-toggle="collapse" href="#collapseSearch" role="button" aria-expanded="false" aria-controls="collapseExample">
-                        <i class="fad fa-search fs-24px"></i>
-                    </a>
-                </div> -->
 
                 <!-- Notificacoes
                 <div class="search-wrapper me-2">
@@ -29,6 +23,13 @@
                         <i class="fad fa-bell fs-24px"></i>
                     </a>
                 </div> -->
+
+                <!--
+                <div class="search-wrapper me-2">
+                    <a class="search-trigger-btn" href="javascript:void(0);" onclick="ToggleFullScreen();">
+                        <i class="fad fa-expand fs-24px" id="full-screen"></i>
+                    </a>
+                </div>-->
 
                 <!-- Navbar Toggler -->
                 <div class="navbar--toggler" id="affanNavbarToggler3" data-bs-toggle="offcanvas"

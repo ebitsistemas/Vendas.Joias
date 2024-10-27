@@ -18,7 +18,7 @@
                         <label class="form-label" for="preco_venda">Preço Venda</label>
                         <div class="input-group mb-3">
                             <span class="input-group-text">R$</span>
-                            <input type="text" class="form-control form-control-lg form-control-cart text-end money" id="valor_unitario" name="valor_unitario" required>
+                            <input type="text" class="form-control form-control-lg form-control-cart text-end money" id="valor_unitario" name="valor_unitario" value="0,00" required>
                         </div>
                     </div>
                     <div class="col-lg-2 col-sm-6">
@@ -36,7 +36,7 @@
 
                 <div class="row mb-2">
                     <div class="col-md-9 pt-2">
-                        <a href="{{ url('produto/buscar') }}" class="text-theme">Adicionar produto já cadastrado</a>
+                        <a href="{{ url('produto/buscar/'.$venda->id) }}" class="text-theme">Adicionar produto já cadastrado</a>
                     </div>
                     <div class="col-md-3 text-end">
                         <button type="submit" class="btn btn-icon btn-theme"><i class="fa fa-plus-circle"></i></button>
@@ -92,7 +92,7 @@
                                 <span>R$ {{ number_format($item->valor_total, 2, ',', '.') }}</span>
                             </td>
                             <td class="text-end">
-                                <a class="btn btn-icon btn-circle" href="javascript:void(0);" onclick="location.href='{{ url('carrinho/produto/remover/'.$item->id) }}'">
+                                <a class="btn btn-icon btn-circle" href="javascript:void(0);" onclick="location.href='{{ url("carrinho/produto/remover/{$venda->id}/{$item->id}") }}'">
                                     <i class="fa fa-times text-theme"></i>
                                 </a>
                             </td>

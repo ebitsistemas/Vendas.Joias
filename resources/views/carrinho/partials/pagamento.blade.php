@@ -59,7 +59,7 @@
             </div>
 
             <div class="row mb-2">
-                <div class="col-md-2 offset-10 text-end">
+                <div class="col-md-12">
                     <button type="button" class="btn btn-icon btn-theme add-pagamento"><i class="fa fa-plus-circle"></i></button>
                 </div>
             </div>
@@ -88,13 +88,13 @@
                     <table class="table mb-0 text-center">
                         <thead>
                         <tr>
-                            <th class="text-start w-200px">Tipo Pagamento</th>
+                            <th class="text-start w-175px">Tipo Pagamento</th>
                             <th class="text-center w-225px">Forma Pagamento</th>
                             <th class="text-center w-175px">Data Vencimento</th>
                             <th class="text-center w-175px">Parcelas</th>
                             <th class="text-center w-175px">Valor Fatura</th>
                             <th class="text-center w-100px">Status</th>
-                            <th class="text-end w-50px"></th>
+                            <th class="text-end w-100px"></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -123,7 +123,7 @@
                                     @elseif($fatura->forma_pagamento == '16')
                                         Depósito Bancário
                                     @elseif($fatura->forma_pagamento == '17')
-                                        Pagamento Instantâneo (PIX)
+                                        PIX
                                     @endif
                                 </td>
                                 <td class="text-center fs-18px">
@@ -136,16 +136,26 @@
                                     <span>R$ {{ number_format($fatura->valor_subtotal, 2, ',', '.') }}</span>
                                 </td>
                                 <td class="text-center fs-18px">
-                                    @if($fatura->status == 1)
-                                        <span class="badge bg-success ms-2">Concluido</span>
-                                    @else
-                                        <span class="badge bg-warning ms-2">Em aberto</span>
-                                    @endif
+                                    {!! $fatura->situacaoFatura->label !!}
                                 </td>
                                 <td class="text-end">
-                                    <a class="btn btn-icon btn-circle" href="javascript:void(0);" onclick="location.href='{{ url('carrinho/fatura/remover/'.$fatura->id) }}'">
-                                        <i class="fa fa-times text-theme"></i>
-                                    </a>
+{{--                                    @if($method == 'update')--}}
+                                        <button class="btn btn-icon" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <i class="fa fa-ellipsis-v text-theme fs-18px"></i>
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <li class="p-2"><a href="{{ url('venda/comprovante/'.$fatura->id) }}" target="_blank" class="fs-16px"><i class="fad fa-file-invoice-dollar fs-16px"></i> Comprovante </a></li>
+                                            <li class="p-2"><a href="{{ url('venda/fatura/pagar/'.$fatura->id) }}" class="text-success fs-16px"><i class="fad fa-check-circle fs-16px"></i> Pagar</a></li>
+                                            <li class="p-2"><a href="{{ url('venda/fatura/cancelar/'.$fatura->id) }}" class="text-danger fs-16px"><i class="fad fa-times-circle fs-16px"></i> Cancelar</a></li>
+                                            {{--                                    <li class="p-2"><a --}}{{--href="cliente/compartilhar/{{ $cliente->id }}"--}}{{-- href="#" onclick="shareImage()" class="fs-16px"><i class="fad fa-share-nodes fs-16px"></i> Compartilhar</a></li>--}}
+                                            <li class="px-2 py-0"><hr class="border-secondary"></li>
+                                            <li class="p-2"><a class="text-danger fs-16px fn-remover" href="javascript:void(0);" data-content="{{ $fatura->id }}" data-method="fatura" data-id="{{ $fatura->id }}"><i class="fad fa-trash fs-16px"></i> Remover</a></li>
+                                        </ul>
+{{--                                    @else--}}
+{{--                                        <a class="btn btn-icon btn-circle" href="javascript:void(0);" onclick="location.href='{{ url('carrinho/fatura/remover/'.$fatura->id) }}'">--}}
+{{--                                            <i class="fa fa-times text-theme"></i>--}}
+{{--                                        </a>--}}
+{{--                                    @endif--}}
                                 </td>
                             </tr>
                         @endforeach

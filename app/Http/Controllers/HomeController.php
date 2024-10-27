@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cliente;
+use App\Models\Venda;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
@@ -9,7 +11,7 @@ class HomeController extends Controller
 {
     public function index()
     {
-        return view('dashboard');
+        return view('home');
     }
 
     public function cep(Request $request)

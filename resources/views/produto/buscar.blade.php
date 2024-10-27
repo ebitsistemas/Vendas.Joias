@@ -33,7 +33,7 @@
                         <ul class="ps-0 chat-user-list mb-3">
                             @foreach($produtos as $produto)
                                 <li class="p-3">
-                                    <a class="d-flex" href="{{ route('carrinho.produto.adicionar', $produto->id) }}" title="Selecionar Produto">
+                                    <a class="d-flex" href="{{ url("carrinho/produto/adicionar/{$venda_id}/{$produto->id}") }}" title="Selecionar Produto">
                                         <div class="chat-user-info w-100px">
                                             <h6 class="mb-0 fs-18px mb-1">Código</h6>
                                             <div class="last-chat">
@@ -62,7 +62,7 @@
                                         </div>
                                     </a>
 
-                                    <button class="btn" type="button" onclick="window.location.href='{{ url('carrinho/produto/adicionar/'.$produto->id) }}'" title="Selecionar Produto">
+                                    <button class="btn" type="button" onclick="window.location.href='{{ url("carrinho/produto/adicionar/{$venda_id}/{$produto->id}") }}'" title="Selecionar Produto">
                                         <i class="fa fa-angle-right fs-24px text-theme"></i>
                                     </button>
                                 </li>

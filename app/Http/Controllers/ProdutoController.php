@@ -57,7 +57,12 @@ class ProdutoController extends Controller
             });
             $produtos = $model->paginate(12);
         }
-        return view('produto.buscar')->with(['method' => 'view', 'produtos' => $produtos, 'pesquisa' => $pesquisa ?? '']);
+        return view('produto.buscar')->with([
+            'method' => 'view',
+            'produtos' => $produtos,
+            'venda_id' => $request->venda_id,
+            'pesquisa' => $pesquisa ?? ''
+        ]);
     }
 
     /**

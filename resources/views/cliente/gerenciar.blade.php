@@ -159,9 +159,9 @@
                             <div class="row mb-2">
                                 <div class="col-md-4 col-sm-12">
                                     @if(empty($cliente->imagem))
-                                        <img class="img-thumbnail mb-2" src="{{ url('mobile/assets/img/no_client.jpg') }}" alt="">
+                                        <img class="img-thumbnail mb-2" src="{{ url('mobile/assets/img/no_client.jpg') }}" style="max-height: 150px;">
                                     @else
-                                        <img class="img-thumbnail mb-2" src="{{ url('storage/'.$cliente->imagem) }}" alt="">
+                                        <img class="img-thumbnail mb-2" src="{{ url('storage/'.$cliente->imagem) }}" style="max-height: 150px;">
                                     @endif
                                     <div class="form-file">
                                         <input class="form-control d-none form-control-clicked" name="imagem" id="imagem" type="file">

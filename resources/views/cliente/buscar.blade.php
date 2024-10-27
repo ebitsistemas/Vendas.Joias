@@ -33,7 +33,7 @@
                         <ul class="ps-0 chat-user-list">
                             @foreach($clientes as $cliente)
                                 <li class="p-3 chat-unread">
-                                    <a class="d-flex" href="{{ url('carrinho/cliente/adicionar/'.$cliente->id) }}" title="Selecionar Cliente">
+                                    <a class="d-flex" href="{{ url("carrinho/cliente/adicionar/{$venda_id}/{$cliente->id}") }}" title="Selecionar Cliente">
                                         <div class="chat-user-thumbnail me-3 shadow">
                                             <img class="img-circle" src="{{ url('mobile/assets/img/no_client.jpg') }}" alt="">
                                         </div>
@@ -48,7 +48,7 @@
                                         </div>
                                     </a>
 
-                                    <button class="btn" type="button" onclick="window.location.href='{{ url('carrinho/cliente/adicionar/'.$cliente->id) }}'" title="Selecionar Cliente">
+                                    <button class="btn" type="button" onclick="window.location.href='{{ url("carrinho/cliente/adicionar/{$venda_id}/{$cliente->id}") }}'" title="Selecionar Cliente">
                                         <i class="fa fa-angle-right fs-24px text-theme"></i>
                                     </button>
                                 </li>

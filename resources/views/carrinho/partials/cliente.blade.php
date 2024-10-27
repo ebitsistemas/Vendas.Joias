@@ -32,11 +32,11 @@
 
         <span class="text-end">
         @if(isset($venda->cliente) && !empty($venda->cliente))
-            <button class="btn" type="button" onclick="location.href='{{ url('carrinho/cliente/remover/'.$venda->cliente_id) }}'" title="Remover Cliente">
+            <a class="btn" href="{{ route('carrinho.cliente.remover', $venda->id) }}" title="Remover Cliente">
                 <i class="fa fa-times fs-26px text-theme"></i>
-            </button>
+            </a>
         @else
-            <button class="btn" type="button" onclick="location.href='{{ url('cliente/buscar') }}'" title="Buscar Cliente">
+            <button class="btn" type="button" onclick="location.href='{{ url('cliente/buscar/'.$venda->id) }}'" title="Buscar Cliente">
                 <i class="fa fa-angle-right fs-26px text-theme"></i>
             </button>
         @endif

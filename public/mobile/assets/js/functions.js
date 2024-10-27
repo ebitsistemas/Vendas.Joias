@@ -449,6 +449,7 @@ ToggleFullScreen = function () {
         } else if (document.documentElement.webkitRequestFullScreen) {
             document.documentElement.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
         }
+        $('#full-screen').removeClass('fa-expand').addClass('fa-compress');
     } else {
         if (document.cancelFullScreen) {
             document.cancelFullScreen();
@@ -457,5 +458,6 @@ ToggleFullScreen = function () {
         } else if (document.webkitCancelFullScreen) {
             document.webkitCancelFullScreen();
         }
+        $('#full-screen').removeClass('fa-compress').addClass('fa-expand');
     }
 }

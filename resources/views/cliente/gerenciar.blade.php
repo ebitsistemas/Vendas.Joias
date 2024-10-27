@@ -61,7 +61,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label" for="data_nascimento">Data de Nascimento</label>
-                                    <input type="date" class="form-control form-control-lg" id="data_nascimento" name="data_nascimento" value="{{ $cliente->data_nascimento ?? '' }}">
+                                    <input type="text" class="form-control form-control-lg mask-date" id="data_nascimento" name="data_nascimento" value="{{ $cliente->data_nascimento ?? '' }}">
                                 </div>
                             </div>
 
@@ -70,14 +70,14 @@
                                     <label class="form-label" for="renda">Renda Mensal</label>
                                     <div class="input-group mb-3">
                                         <span class="input-group-text">R$</span>
-                                        <input type="text" class="form-control form-control-lg money" id="faturamento_mensal" name="faturamento_mensal" value="{{ $cliente->faturamento_mensal ?? '' }}">
+                                        <input type="text" class="form-control form-control-lg mask-money" id="faturamento_mensal" name="faturamento_mensal" value="{{ $cliente->faturamento_mensal ?? '' }}">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label" for="limite_credito">Limite Crédito</label>
                                     <div class="input-group mb-3">
                                         <span class="input-group-text">R$</span>
-                                        <input type="text" class="form-control form-control-lg money" id="limite_credito" name="limite_credito" value="{{ $cliente->limite_credito ?? '' }}">
+                                        <input type="text" class="form-control form-control-lg mask-money" id="limite_credito" name="limite_credito" value="{{ $cliente->limite_credito ?? '' }}">
                                     </div>
                                 </div>
                             </div>
@@ -89,7 +89,7 @@
                                 <div class="col-md-3">
                                     <label class="form-label" for="cep">CEP</label>
                                     <div class="input-group mb-3">
-                                        <input type="text" class="form-control form-control-lg fn-cep" id="cep" name="cep" value="{{ $cliente->cep ?? '' }}">
+                                        <input type="text" class="form-control form-control-lg mask-cep fn-cep" id="cep" name="cep" value="{{ $cliente->cep ?? '' }}">
                                         <a href="#" class="input-group-text"><i class="fa fa-search"></i></a>
                                     </div>
                                 </div>
@@ -132,7 +132,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label" for="exampleInputText2">Celular</label>
-                                    <input type="text" class="form-control form-control-lg" id="celular" name="celular" value="{{ $cliente->celular ?? '' }}">
+                                    <input type="text" class="form-control form-control-lg mask-celular" id="celular" name="celular" value="{{ $cliente->celular ?? '' }}">
                                 </div>
                             </div>
 
@@ -143,7 +143,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label" for="exampleInputText2">Telefone</label>
-                                    <input type="text" class="form-control form-control-lg" id="telefone" name="telefone" value="{{ $cliente->telefone ?? '' }}">
+                                    <input type="text" class="form-control form-control-lg mask-telefone" id="telefone" name="telefone" value="{{ $cliente->telefone ?? '' }}">
                                 </div>
                             </div>
 
@@ -189,5 +189,7 @@
             </div>
         </div>
     </div>
+
+    <span class="p-2"></span>
 @endsection
 

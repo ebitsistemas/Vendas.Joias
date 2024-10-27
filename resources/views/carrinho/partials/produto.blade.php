@@ -18,7 +18,7 @@
                         <label class="form-label" for="preco_venda">Preço Venda</label>
                         <div class="input-group mb-3">
                             <span class="input-group-text">R$</span>
-                            <input type="text" class="form-control form-control-lg form-control-cart text-end money" id="valor_unitario" name="valor_unitario" value="0,00" required>
+                            <input type="text" class="form-control form-control-lg form-control-cart text-end mask-money" id="valor_unitario" name="valor_unitario" placeholder="0,00" required>
                         </div>
                     </div>
                     <div class="col-lg-2 col-sm-6">
@@ -29,7 +29,7 @@
                         <label class="form-label" for="subtotal">Subtotal</label>
                         <div class="input-group mb-3">
                             <span class="input-group-text">R$</span>
-                            <input type="text" class="form-control form-control-lg form-control-cart text-end money" id="subtotal" name="valor_total" readonly>
+                            <input type="text" class="form-control form-control-lg form-control-cart text-end mask-money" id="subtotal" name="valor_total" readonly>
                         </div>
                     </div>
                 </div>

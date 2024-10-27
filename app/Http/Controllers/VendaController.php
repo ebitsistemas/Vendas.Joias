@@ -81,8 +81,10 @@ class VendaController extends Controller
         ]);
         $venda = $model->find($fatura->venda_id);
 
+        $totalPago = FaturaItem::where('venda_id', $fatura->venda_id)->sum('valor_subtotal');
+
         $impressao = new Impressao80mm();
-        $pdf = $impressao->pagamento($config, $venda, $fatura);
+        $pdf = $impressao->pagamento($config, $venda, $fatura, $totalPago);
 
         return response($pdf)->header('Content-Type', 'application/pdf');
     }

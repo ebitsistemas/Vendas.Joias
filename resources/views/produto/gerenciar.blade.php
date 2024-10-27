@@ -48,14 +48,14 @@
                                     <label class="form-label" for="preco_custo">Preço de Custo</label>
                                     <div class="input-group mb-3">
                                         <span class="input-group-text">R$</span>
-                                        <input type="text" class="form-control form-control-lg money" id="preco_custo" name="preco_custo" @if (!empty($produto)) value="{{ number_format($produto->preco_custo, 2, ',', '.') ?? '' }}" @endif>
+                                        <input type="text" class="form-control form-control-lg mask-money" id="preco_custo" name="preco_custo" @if (!empty($produto)) value="{{ number_format($produto->preco_custo, 2, ',', '.') ?? '' }}" @endif>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label required" for="preco_venda">Preço Venda</label>
                                     <div class="input-group mb-3">
                                         <span class="input-group-text">R$</span>
-                                        <input type="text" class="form-control form-control-lg money" id="preco_venda" name="preco_venda" @if (!empty($produto)) value="{{ number_format($produto->preco_venda, 2, ',', '.') ?? '' }}" @endif required>
+                                        <input type="text" class="form-control form-control-lg mask-money" id="preco_venda" name="preco_venda" @if (!empty($produto)) value="{{ number_format($produto->preco_venda, 2, ',', '.') ?? '' }}" @endif required>
                                     </div>
                                 </div>
                             </div>
@@ -102,5 +102,7 @@
             </div>
         </div>
     </div>
+
+    <span class="p-2"></span>
 @endsection
 

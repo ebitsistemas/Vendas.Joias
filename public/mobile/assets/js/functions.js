@@ -49,6 +49,17 @@ var LOCALE = {
     "firstDay": 0
 };
 
+$('.mask-date').mask('00/00/0000');
+$('.mask-time').mask('00:00:00');
+$('.mask-datetime').mask('00/00/0000 00:00:00');
+$('.mask-cep').mask('00000-000');
+$('.mask-telefone').mask('(00) 0000-0000');
+$('.mask-celular').mask('(00) 00000-0000');
+$('.mask-cpf').mask('000.000.000-00', {reverse: true});
+$('.mask-cnpj').mask('00.000.000/0000-00', {reverse: true});
+$('.mask-money').mask('000.000.000.000.000,00', {reverse: true});
+
+
 $.each( $('form').find('select'), function( keyInput, select ) {
     var value = $(select).attr('data-selected');
     if (value != '' && value != undefined) {

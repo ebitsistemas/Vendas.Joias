@@ -27,7 +27,7 @@ class Impressao80mm
 
     public function cupom(Configuracao $config, Venda $venda)
     {
-        $heightPaper = 120;
+        $heightPaper = 130;
 
         $itens = VendaItem::where('venda_id', $venda->id)->get();
         $faturas = FaturaItem::where('venda_id', $venda->id)->get();
@@ -193,6 +193,7 @@ class Impressao80mm
         $pdf->Cell(59, 1, utf8_decode('DESCRIÇÃO'), 0, 0, 'L', true);
         $pdf->Cell(18, 1, 'VALOR', 0, 0, 'R', true);
 
+        $totalPago = 0;
         foreach ($venda->faturas as $fatura) {
             $formaPagamento = FormaPagamento::where('codigo', $fatura->forma_pagamento)->first();
             $height += 4;
@@ -200,6 +201,7 @@ class Impressao80mm
             $pdf->SetFont('Arial','',7);
             $pdf->Cell(59, 1, utf8_decode(strtoupper($formaPagamento->nome)), 0, 0, 'L', true);
             $pdf->Cell(18, 1, 'R$ ' . number_format($fatura->valor_subtotal, 2, ',', '.'), 0, 0, 'R', true);
+            $totalPago += $fatura->valor_subtotal;
         }
 
         if (!empty($fatura->troco)) {
@@ -210,6 +212,21 @@ class Impressao80mm
             $pdf->Cell(59, 1, utf8_decode('TROCO'), 0, 0, 'L', true);
             $pdf->Cell(18, 1, 'R$ ' . number_format($fatura->troco, 2, ',', '.'), 0, 0, 'R', true);
         }
+
+        $height += 4;
+        $pdf->setY($height); $pdf->setX(2);
+        $pdf->SetFont('Arial','',8);
+        $pdf->SetTextColor(100, 100, 100);
+        $pdf->Cell($width, 1, Str::padBoth('', $width, '-'), 0, 0, 'L', true);
+
+        $saldo = $venda->total_liquido - $totalPago;
+        $saldo = $saldo < 0 ? 0 : $saldo;
+        $height += 4;
+        $pdf->setY($height);
+        $pdf->setX(2);
+        $pdf->SetFont('Arial', 'B', 9);
+        $pdf->Cell(59, 1, utf8_decode('SALDO A PAGAR:'), 0, 0, 'L', true);
+        $pdf->Cell(18, 1, 'R$ ' . number_format($saldo, 2, ',', '.'), 0, 0, 'R', true);
 
         $height += 4;
         $pdf->setY($height); $pdf->setX(2);
@@ -259,9 +276,9 @@ class Impressao80mm
         return response($pdf);
     }
 
-    public function pagamento(Configuracao $config, Venda $venda, FaturaItem $fatura)
+    public function pagamento(Configuracao $config, Venda $venda, FaturaItem $fatura, $totalPago)
     {
-        $heightPaper = 112;
+        $heightPaper = 130;
 
         $itens = VendaItem::where('venda_id', $venda->id)->get();
         $heightPaper += (count($itens) * 4);
@@ -430,6 +447,21 @@ class Impressao80mm
         $pdf->SetFont('Arial', '', 8);
         $pdf->Cell(59, 1, utf8_decode('SITUAÇÃO DO PAGAMENTO:'), 0, 0, 'L', true);
         $pdf->Cell(18, 1, strtoupper($fatura->situacaoFatura->nome), 0, 0, 'R', true);
+
+        $height += 4;
+        $pdf->setY($height); $pdf->setX(2);
+        $pdf->SetFont('Arial','',8);
+        $pdf->SetTextColor(100, 100, 100);
+        $pdf->Cell($width, 1, Str::padBoth('', $width, '-'), 0, 0, 'L', true);
+
+        $saldo = $venda->total_liquido - $totalPago;
+        $saldo = $saldo < 0 ? 0 : $saldo;
+        $height += 4;
+        $pdf->setY($height);
+        $pdf->setX(2);
+        $pdf->SetFont('Arial', 'B', 9);
+        $pdf->Cell(59, 1, utf8_decode('SALDO A PAGAR:'), 0, 0, 'L', true);
+        $pdf->Cell(18, 1, 'R$ ' . number_format($saldo, 2, ',', '.'), 0, 0, 'R', true);
 
         $height += 4;
         $pdf->setY($height); $pdf->setX(2);

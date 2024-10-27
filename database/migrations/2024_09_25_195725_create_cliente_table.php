@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('documento', 18)->nullable()->comment('O Documento devera ser salvo com sua mascara.');
             $table->string('rg', 20)->nullable();
             $table->tinyInteger('sexo')->nullable()->comment('	1 - Feminino; 2 - Masculino;');
-            $table->date('data_nascimento')->nullable();
+            $table->string('data_nascimento', 20)->nullable();
             $table->double('faturamento_mensal', 10, 2)->nullable();
             $table->double('limite_credito', 10, 2)->nullable();
             $table->integer('grupo_id')->nullable();

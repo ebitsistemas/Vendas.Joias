@@ -179,7 +179,7 @@ class CarrinhoController extends Controller
             return redirect()->to('carrinho/pedido/' . $request->venda_id);
         }
 
-        $vendaItem = FaturaItem::create([
+        $data = [
             'venda_id' => $request->venda_id,
             'tipo_pagamento' => $request->tipo_pagamento,
             'forma_pagamento' => $request->forma_pagamento,
@@ -194,7 +194,14 @@ class CarrinhoController extends Controller
             'troco' => str_replace(',', '.', str_replace('.', '', $request->troco)),
             'situacao' => ($request->tipo_pagamento == 0) ? '4' : '0',
             'status' => 1,
-        ]);
+        ];
+
+        if (isset($request->id) && !empty($request->id)) {
+            $vendaItem = FaturaItem::find($request->id);
+            $vendaItem->update($data);
+        } else {
+            $vendaItem = FaturaItem::create($data);
+        }
 
         if ($vendaItem) {
             toastr()->success('Fatura adicionada com sucesso!');

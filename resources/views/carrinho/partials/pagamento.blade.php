@@ -1,8 +1,9 @@
 <div class="card mb-3">
     <div class="card-body border">
         <form id="form_pagamentos" action="{{ url('carrinho/fatura/adicionar') }}" method="POST">
-            <input type="hidden" name="venda_id" value="{{ $venda->id }}">
-            <input type="hidden" name="troco" value="0,00">
+            <input type="hidden" name="venda_id" id="venda_id" value="{{ $venda->id }}">
+            <input type="hidden" name="troco" id="troco" value="0,00">
+            <input type="hidden" name="id" id="id">
             @csrf
             <div class="row mb-2">
                 <div class="col-md-3">
@@ -14,14 +15,14 @@
                 </div>
                 <div class="col-md-3">
                     <label class="form-label required" for="tipo_pagamento">Tipo Pagamento</label>
-                    <select class="form-select form-select-lg fn-show" name="tipo_pagamento" required>
+                    <select class="form-select form-select-lg fn-show" name="tipo_pagamento" id="tipo_pagamento" required>
                         <option value="0">0: À vista</option>
                         <option value="1">1: À prazo</option>
                     </select>
                 </div>
                 <div class="col-md-6">
                     <label class="form-label required" for="forma_pagamento">Forma Pagamento</label>
-                    <select class="form-select form-select-lg" name="forma_pagamento" required>
+                    <select class="form-select form-select-lg" name="forma_pagamento" id="forma_pagamento" required>
                         <option value="01" selected>01: Dinheiro</option>
                         <option value="03">03: Cartão de Crédito</option>
                         <option value="04">04: Cartão de Débito</option>
@@ -36,16 +37,16 @@
             <div class="row mb-2 d-none" data-show="tipo_pagamento-1">
                 <div class="col-md-3" data-show="tipo_pagamento-1">
                     <label class="form-label">Data do Pagamento</label>
-                    <input class="form-control form-control-lg" type="date" value="2024-10-24" name="data_vencimento">
+                    <input class="form-control form-control-lg" type="date" value="" name="data_vencimento" id="data_vencimento">
                 </div>
                 <div class="col-md-3" data-show="tipo_pagamento-1">
                     <label class="form-label">Número de Parcelas</label>
-                    <input type="number" value="1" name="total_parcelas" class="form-control form-control-lg text-center" min="1" max="99">
+                    <input type="number" value="1" name="total_parcelas" id="total_parcelas" class="form-control form-control-lg text-center" min="1" max="99">
                 </div>
                 <div class="col-md-3" data-show="tipo_pagamento-1">
                     <label class="form-label">Dias entre Parcelas</label>
                     <div class="input-group">
-                        <input class="form-control form-control-lg" type="number" value="30" name="dias_parcelas">
+                        <input class="form-control form-control-lg" type="number" value="30" name="dias_parcelas" id="dias_parcelas">
                         <span class="input-group-text dias-parcelas"> dias </span>
                     </div>
                 </div>
@@ -144,7 +145,7 @@
                                             <i class="fa fa-ellipsis-v text-theme fs-18px"></i>
                                         </button>
                                         <ul class="dropdown-menu">
-                                            <li class="p-2"><a href="{{ url('carrinho/fatura/editar/'.$fatura->id) }}" class="text-primary fs-16px"><i class="fad fa-edit fs-16px"></i> Editar</a></li>
+                                            <li class="p-2"><a href="javascript:void(0);" class="text-primary fs-16px fn-editar" data-id="{{ $fatura->id }}" data-value='{{ json_encode($fatura) }}'><i class="fad fa-edit fs-16px"></i> Editar</a></li>
                                             <li class="p-2"><a href="{{ url('venda/fatura/pagar/'.$fatura->id) }}" class="text-success fs-16px"><i class="fad fa-check-circle fs-16px"></i> Pagar</a></li>
                                             <li class="p-2"><a href="{{ url('venda/comprovante/'.$fatura->id) }}" target="_blank" class="text-theme fs-16px"><i class="fad fa-file-invoice-dollar fs-16px"></i> Comprovante </a></li>
                                             {{--                                    <li class="p-2"><a --}}{{--href="cliente/compartilhar/{{ $cliente->id }}"--}}{{-- href="#" onclick="shareImage()" class="fs-16px"><i class="fad fa-share-nodes fs-16px"></i> Compartilhar</a></li>--}}
@@ -171,5 +172,17 @@
         var valor = $(this).val();
 
        $('#valor_parcela').val(valor);
+    });
+
+    $(document).on('click', '.fn-editar', function () {
+        var value = $(this).data('value');
+        $('#tipo_pagamento').val(value.tipo_pagamento).trigger('change');
+        $('#forma_pagamento').val(value.forma_pagamento).trigger('change');
+        $('#data_vencimento').val(value.data_vencimento);
+        $('#dias_parcelas').val(value.dias_parcelas);
+        $('#total_parcelas').val(value.total_parcelas);
+        $('#valor_recebido').val(number_format(value.valor_recebido, 2, ',', '.'));
+        $('#valor_parcela').val(number_format(value.valor_parcela, 2, ',', '.'));
+        $('#id').val(value.id);
     });
 </script>

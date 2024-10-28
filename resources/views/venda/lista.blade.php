@@ -8,7 +8,6 @@
 
         <div class="card">
             <div class="card-body border card-scroll h100p-list">
-
                 <div class="row pt-3">
                     <div class="col-12">
                         <ul class="ps-0 chat-user-list mb-3">

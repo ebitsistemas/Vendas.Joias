@@ -52,7 +52,8 @@ body{
 
 .card .card-scroll {
     position: relative;
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .h100p {

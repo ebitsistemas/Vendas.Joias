@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Cliente;
 use App\Models\Configuracao;
 use App\Models\Grupo;
+use App\Models\Venda;
 use App\Traits\TraitDatatables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -120,10 +121,28 @@ class ClienteController extends Controller
      */
     public function edit(string $id)
     {
+        $config = Configuracao::first();
         $cliente = Cliente::find($id);
         $grupos = Grupo::all();
+        $vendas = Venda::where('cliente_id', $id)->paginate($config->itens_pagina);
 
-        return view('cliente.gerenciar')->with(['method' => 'update', 'cliente' => $cliente, 'grupos' => $grupos]);
+        $totais = [];
+        $totais['vendas'] = 0;
+        $totais['faturas'] = 0;
+        foreach ($vendas as $venda) {
+            if ($venda->status <= 7) {
+                $totais['vendas'] += $venda->total_liquido;
+                $totais['faturas'] += $venda->faturas->sum('valor_subtotal');
+            }
+        }
+
+        return view('cliente.gerenciar')->with([
+            'method' => 'update',
+            'cliente' => $cliente,
+            'grupos' => $grupos,
+            'vendas' => $vendas,
+            'totais' => $totais,
+        ]);
     }
 
     /**

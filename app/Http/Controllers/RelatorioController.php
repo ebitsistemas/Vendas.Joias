@@ -33,8 +33,8 @@ class RelatorioController extends Controller
             if (!empty($request->cidade)) {
                 $model->where('cidade', 'like', "%{$request->cidade}%");
             }
-            if (!empty($request->uf)) {
-                $model->where('uf', $request->uf);
+            if (!empty($request->bairro)) {
+                $model->where('bairro', 'like', "%{$request->bairro}%");
             }
             if (!empty($request->status)) {
                 $model->where('status', $request->status);
@@ -50,8 +50,10 @@ class RelatorioController extends Controller
         return view('relatorio.financeiro');
     }
 
-    public function venda()
+    public function venda(Request $request)
     {
-        return view('relatorio.venda');
+        $clientes = Cliente::all();
+
+        return view('relatorio.venda')->with(['clientes' => $clientes, 'vendas' => $vendas ?? null,  'request' => $request]);
     }
 }

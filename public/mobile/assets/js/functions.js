@@ -59,7 +59,6 @@ $('.mask-cpf').mask('000.000.000-00', {reverse: true});
 $('.mask-cnpj').mask('00.000.000/0000-00', {reverse: true});
 $('.mask-money').mask('000.000.000.000.000,00', {reverse: true});
 
-
 $.each( $('form').find('select'), function( keyInput, select ) {
     var value = $(select).attr('data-selected');
     if (value != '' && value != undefined) {

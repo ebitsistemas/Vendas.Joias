@@ -188,44 +188,12 @@ class ClienteController extends Controller
         ]);
     }
 
-    public function ajax(Request $request)
-    {
-        $model = Cliente::select([
-            'clientes.id',
-            'clientes.nome',
-            'clientes.documento',
-            'clientes.tipo_pessoa',
-            'grupos.nome AS grupo_nome',
-            'clientes.status'
-        ])
-            ->leftjoin('grupos', 'grupos.id', 'clientes.grupo_id');
-
-        $properties = [
-            'id' => 'id',
-            'nome' => 'string',
-            'documento' => 'string',
-            'tipo_pessoa' => 'integer',
-            'grupo_nome' => 'string',
-            'status' => 'string'
-        ];
-
-        $filters = [
-            'clientes.id' => 'id',
-            'clientes.nome' => 'string',
-            'clientes.documento' => 'string',
-            'grupos.nome' => 'string',
-        ];
-
-        $response = $this->dtable($request, $model, $properties, $filters);
-        return response()->json($response);
-    }
-
     public function disable()
     {
         $config = Configuracao::first();
         if ($config->inativar_cadastro > 0) {
             $data = Carbon::now()->subDays($config->inativar_cadastro);
-            $model = Cliente::select('clientes.id');
+            $model = Cliente::select('clientes.id, vendas.data_venda');
             $model->whereRaw("((SELECT count(1) FROM vendas WHERE vendas.cliente_id = clientes.id AND vendas.data_venda >= '{$data}') = 0)");
             $clientes = $model->get();
 

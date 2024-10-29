@@ -140,7 +140,7 @@
                                     {!! $fatura->situacaoFatura->label !!}
                                 </td>
                                 <td class="text-end">
-                                    <button class="btn btn-icon" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <button class="btn btn-icon btn-circle btn-light btn-dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                         <i class="fa fa-ellipsis-v text-theme fs-18px"></i>
                                     </button>
                                     <ul class="dropdown-menu">

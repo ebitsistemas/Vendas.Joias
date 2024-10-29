@@ -7,21 +7,22 @@
             @if(isset($menu))
                 @php
                     switch ($menu) {
-                        case 'ordemservico':
-                            $link = $menu;
-                            $menu = 'Ordem Serviço';
-                        case 'minhasfaturas':
-                            $link = $menu;
-                            $menu = 'Minhas Faturas';
-                        case 'usuario':
-                            $link = $menu;
-                            $menu = 'Usuário';
                         case 'configuracao':
                             $link = $menu;
                             $menu = 'Configuração';
+                            break;
+                        case 'relatorio':
+                            $link = $menu;
+                            $menu = 'Relatório';
+                            break;
+                        case 'usuario':
+                            $link = $menu;
+                            $menu = 'Usuário';
+                            break;
                         break;
                             default:
                             $link = $menu;
+                            break;
                     }
                 @endphp
                 @if(isset($submenu) AND !empty($submenu))

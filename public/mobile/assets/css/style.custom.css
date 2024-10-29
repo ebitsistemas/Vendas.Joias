@@ -452,3 +452,6 @@ li.page-link > span{
     border:2px solid var(--primary-color) !important;
     background-color: var(--primary-light-color) !important;
 }
+.btn-dropdown{
+    width: 2.5rem !important;
+}

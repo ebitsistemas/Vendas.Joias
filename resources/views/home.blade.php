@@ -63,7 +63,7 @@
 
             <div class="col-md-3 col-sm-4 col-xs-4 mb-3">
                 <div class="card">
-                    <a href="{{ url('dashboard') }}" class="card-body bg-theme-light-hover border border-2 p-2">
+                    <a href="{{ url('categoria') }}" class="card-body bg-theme-light-hover border border-2 p-2">
                         <div class="text-center py-3">
                             <i class="fal fa-sitemap text-theme fs-36px mb-2"></i>
                             <h4 class="mb-1 text-theme fs-18px mt-3">Categorias</h4>
@@ -74,7 +74,7 @@
 
             <div class="col-md-3 col-sm-4 col-xs-4 mb-3">
                 <div class="card">
-                    <a href="{{ url('cliente') }}" class="card-body bg-theme-light-hover border border-2 p-2">
+                    <a href="{{ url('grupo') }}" class="card-body bg-theme-light-hover border border-2 p-2">
                         <div class="text-center py-3">
                             <i class="fal fa-folder-tree text-theme fs-36px mb-2"></i>
                             <h4 class="mb-1 text-theme fs-18px mt-3">Grupos</h4>

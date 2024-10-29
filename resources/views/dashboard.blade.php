@@ -4,8 +4,45 @@
 
 @section('content')
     <div class="container">
+        <div class="row mb-2">
+            <div class="col-md-4 col-xs-4 mb-3">
+                <div class="card">
+                    <a href="{{ url('relatorio/cliente') }}" class="card-body bg-theme-light-hover border border-2 p-2">
+                        <div class="text-center py-3">
+                            <i class="fal fa-user text-theme fs-36px mb-2"></i>
+                            <h4 class="mb-1 text-theme fs-18px mt-3">Relatórios de Clientes</h4>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-md-4 col-xs-4 mb-3">
+                <div class="card">
+                    <a href="{{ url('relatorio/financeiro') }}" class="card-body bg-theme-light-hover border border-2 p-2">
+                        <div class="text-center py-3">
+                            <i class="fal fa-circle-dollar text-theme fs-36px mb-2"></i>
+                            <h4 class="mb-1 text-theme fs-18px mt-3">Relatórios de Financeiro</h4>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-md-4 col-xs-4 mb-3">
+                <div class="card">
+                    <a href="{{ url('relatorio/venda') }}" class="card-body bg-theme-light-hover border border-2 p-2">
+                        <div class="text-center py-3">
+                            <i class="fal fa-shopping-cart text-theme fs-36px mb-2"></i>
+                            <h4 class="mb-1 text-theme fs-18px mt-3">Relatórios de Vendas</h4>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
         <div class="card">
-            <div class="card-body direction-rtl">
+            <div class="card-body border">
                 <div class="row">
                     <div class="col-4">
                         <div class="single-counter-wrap text-center">

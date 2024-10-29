@@ -54,13 +54,11 @@
                                 </div>
                             </a>
                             <div class="dropstart chat-options-btn">
-                                <button class="btn btn-icon dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <button class="btn btn-icon btn-circle btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="fa fa-ellipsis-v text-theme fs-18px"></i>
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li class="p-2"><a href="cliente/editar/{{ $cliente->id }}" class="fs-16px"><i class="fad fa-edit fs-16px"></i> Editar </a></li>
-                                    <li class="p-2"><a href="cliente/imprimir/{{ $cliente->id }}" class="fs-16px"><i class="fad fa-print fs-16px"></i> Imprimir</a></li>
-{{--                                    <li class="p-2"><a --}}{{--href="cliente/compartilhar/{{ $cliente->id }}"--}}{{-- href="#" onclick="shareImage()" class="fs-16px"><i class="fad fa-share-nodes fs-16px"></i> Compartilhar</a></li>--}}
                                     <li class="p-2"><a class="dropdown-item text-danger fs-16px fn-remover" href="javascript:void(0);" data-content="{{ $cliente->nome }}" data-method="cliente" data-id="{{ $cliente->id }}"><i class="fad fa-trash fs-16px"></i> Remover</a></li>
                                 </ul>
                             </div>

@@ -35,7 +35,7 @@
                                         </div>
                                     </a>
                                     <div class="dropstart chat-options-btn">
-                                        <button class="btn btn-icon dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <button class="btn btn-icon btn-circle btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                             <i class="fa fa-ellipsis-v text-theme fs-18px"></i>
                                         </button>
                                         <ul class="dropdown-menu">

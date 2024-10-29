@@ -7,8 +7,10 @@ use App\Models\Configuracao;
 use App\Models\Grupo;
 use App\Models\Venda;
 use App\Traits\TraitDatatables;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class ClienteController extends Controller
@@ -216,5 +218,21 @@ class ClienteController extends Controller
 
         $response = $this->dtable($request, $model, $properties, $filters);
         return response()->json($response);
+    }
+
+    public function disable()
+    {
+        $config = Configuracao::first();
+        if ($config->inativar_cadastro > 0) {
+            $data = Carbon::now()->subDays($config->inativar_cadastro);
+            $model = Cliente::select('clientes.id');
+            $model->whereRaw("((SELECT count(1) FROM vendas WHERE vendas.cliente_id = clientes.id AND vendas.data_venda >= '{$data}') = 0)");
+            $clientes = $model->get();
+
+            foreach ($clientes as $cliente) {
+                $modelCliente = Cliente::find($cliente->id);
+                $modelCliente->update(['status' => '2']);
+            }
+        }
     }
 }

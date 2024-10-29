@@ -41,6 +41,8 @@ Route::prefix('cliente')->group(function () {
     Route::post('store', [\App\Http\Controllers\ClienteController::class, 'store'])->name('cliente.store')->middleware('auth');
     Route::post('update', [\App\Http\Controllers\ClienteController::class, 'update'])->name('cliente.update')->middleware('auth');
     Route::post('delete', [\App\Http\Controllers\ClienteController::class, 'destroy'])->name('cliente.delete')->middleware('auth');
+
+    Route::get('disable', [\App\Http\Controllers\ClienteController::class, 'disable'])->name('cliente.disable')->middleware('auth');
 });
 
 /* CATEGORIA */
@@ -88,6 +90,22 @@ Route::prefix('venda')->group(function () {
     Route::get('comprovante/{id}', [\App\Http\Controllers\VendaController::class, 'payment'])->name('venda.payment');
     Route::post('store', [\App\Http\Controllers\VendaController::class, 'store'])->name('venda.store')->middleware('auth');
     Route::post('update', [\App\Http\Controllers\VendaController::class, 'update'])->name('venda.update')->middleware('auth');
+});
+
+/* USUÁRIO */
+Route::prefix('relatorio')->group(function () {
+    Route::get('', function () {
+        return redirect()->route('dashboard.index');
+    })->middleware('auth');
+
+    Route::get('cliente', [\App\Http\Controllers\RelatorioController::class, 'cliente'])->name('relatorio.cliente')->middleware('auth');
+    Route::post('cliente', [\App\Http\Controllers\RelatorioController::class, 'cliente'])->name('relatorio.cliente')->middleware('auth');
+
+    Route::get('financeiro', [\App\Http\Controllers\RelatorioController::class, 'financeiro'])->name('relatorio.financeiro')->middleware('auth');
+    Route::post('financeiro', [\App\Http\Controllers\RelatorioController::class, 'financeiro'])->name('relatorio.financeiro')->middleware('auth');
+
+    Route::get('venda', [\App\Http\Controllers\RelatorioController::class, 'venda'])->name('relatorio.venda')->middleware('auth');
+    Route::post('venda', [\App\Http\Controllers\RelatorioController::class, 'venda'])->name('relatorio.venda')->middleware('auth');
 });
 
 /* USUÁRIO */

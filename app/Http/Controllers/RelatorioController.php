@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cliente;
-use App\Models\Configuracao;
+use App\Models\FaturaItem;
+use App\Models\FaturaSituacao;
 use App\Models\Grupo;
+use App\Models\Situacao;
 use App\Models\Venda;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class RelatorioController extends Controller
@@ -45,15 +48,67 @@ class RelatorioController extends Controller
         return view('relatorio.cliente')->with(['clientes' => $clientes ?? null, 'grupos' => $grupos, 'request' => $request]);
     }
 
-    public function financeiro()
+    public function financeiro(Request $request)
     {
-        return view('relatorio.financeiro');
+        $clientes = Cliente::all();
+        $situacoes = FaturaSituacao::all();
+
+        if (!empty($request->has('_token'))) {
+            $model = FaturaItem::select('*');
+            $model->leftjoin('vendas', 'vendas.id', '=', 'faturas_itens.venda_id');
+            $model->leftjoin('clientes', 'clientes.id', '=', 'vendas.cliente_id');
+            if (!empty($request->data_inicial) AND !empty($request->data_final)) {
+                $inicio = Carbon::createFromFormat('d/m/Y', $request->data_inicial)->format('Y-m-d');
+                $fim = Carbon::createFromFormat('d/m/Y', $request->data_final)->format('Y-m-d');
+                if ($request->tipo_data == 1) {
+                    $model->whereBetween('created_at', [$inicio, $fim]);
+                } else if ($request->tipo_data == 2) {
+                    $model->whereBetween('data_vencimento', [$inicio, $fim]);
+                } else if ($request->tipo_data == 3) {
+                    $model->whereBetween('data_pagamento', [$inicio, $fim]);
+                }
+            }
+            if (!empty($request->cliente_id)) {
+                $model->where('vendas.cliente_id', $request->cliente_id);
+            }
+            if ($request->status != '') {
+                $model->where('situacao', $request->status);
+            }
+            $faturas = $model->get();
+        }
+        /*
+        echo '<pre>';
+        print_r($faturas);
+        exit();*/
+
+        return view('relatorio.financeiro')->with(['faturas' => $faturas ?? null, 'clientes' => $clientes, 'situacoes' => $situacoes, 'request' => $request]);
     }
 
     public function venda(Request $request)
     {
         $clientes = Cliente::all();
+        $situacoes = Situacao::all();
 
-        return view('relatorio.venda')->with(['clientes' => $clientes, 'vendas' => $vendas ?? null,  'request' => $request]);
+        if (!empty($request->has('_token'))) {
+            $model = Venda::select('*');
+            if (!empty($request->data_inicial) AND !empty($request->data_final)) {
+                $inicio = Carbon::createFromFormat('d/m/Y', $request->data_inicial)->format('Y-m-d');
+                $fim = Carbon::createFromFormat('d/m/Y', $request->data_final)->format('Y-m-d');
+                if ($request->tipo_data == 1) {
+                    $model->whereBetween('data_venda', [$inicio, $fim]);
+                } else if ($request->tipo_data == 2) {
+                    $model->whereBetween('data_confirmacao', [$inicio, $fim]);
+                }
+            }
+            if (!empty($request->cliente_id)) {
+                $model->where('cliente_id', $request->cliente_id);
+            }
+            if ($request->status != '') {
+                $model->where('status', $request->status);
+            }
+            $vendas = $model->get();
+        }
+
+        return view('relatorio.venda')->with(['vendas' => $vendas ?? null, 'clientes' => $clientes, 'situacoes' => $situacoes, 'request' => $request]);
     }
 }

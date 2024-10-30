@@ -92,6 +92,14 @@ Route::prefix('venda')->group(function () {
     Route::post('update', [\App\Http\Controllers\VendaController::class, 'update'])->name('venda.update')->middleware('auth');
 });
 
+/* FATURAS */
+Route::prefix('fatura')->group(function () {
+    Route::get('imprimir/{id}', [\App\Http\Controllers\FaturaController::class, 'print'])->name('fatura.print');
+    Route::get('pagar/{id}', [\App\Http\Controllers\FaturaController::class, 'pagar'])->name('fatura.pagar');
+    Route::post('update', [\App\Http\Controllers\FaturaController::class, 'update'])->name('fatura.update')->middleware('auth');
+    Route::post('delete', [\App\Http\Controllers\FaturaController::class, 'destroy'])->name('fatura.destroy')->middleware('auth');
+});
+
 /* USUÁRIO */
 Route::prefix('relatorio')->group(function () {
     Route::get('', function () {

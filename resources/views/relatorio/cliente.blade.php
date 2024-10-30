@@ -4,13 +4,12 @@
 
 @section('content')
     <div class="container">
-        <div class="card mb-3">
+        <div class="card mb-2">
             <div class="card-body border">
                 <form method="post" action="{{ url('relatorio/cliente') }}" enctype="multipart/form-data">
                     @csrf
-                    <h3 class="fs-22px text-theme">Relatório de Clientes</h3>
                     <div class="row mb-2">
-                        <div class="col-md-4">
+                        <div class="col-sm-4">
                             <label class="fs-6 form-label">Tipo Pessoa</label>
                             <select class="form-select form-select-lg" name="tipo_pessoa" data-control="select2"
                                     data-hide-search="true" data-select="{{ $request->tipo_pessoa ?? '' }}">
@@ -20,7 +19,7 @@
                             </select>
                         </div>
 
-                        <div class="col-md-4">
+                        <div class="col-sm-4">
                             <label class="fs-6 form-label">Grupo</label>
                             <select class="form-select form-select-lg" name="grupo_id" data-control="select2"
                                     data-hide-search="true" data-select="{{ $request->grupo_id ?? '' }}">
@@ -31,7 +30,7 @@
                             </select>
                         </div>
 
-                        <div class="col-md-4">
+                        <div class="col-sm-4">
                             <label class="fs-6 form-label">Sexo</label>
                             <select class="form-select form-select-lg" id="sexo" name="sexo" data-selected=""
                                     data-select="{{ $request->sexo ?? '' }}">
@@ -43,16 +42,16 @@
                     </div>
 
                     <div class="row mb-2">
-                        <div class="col-md-4">
+                        <div class="col-sm-4">
                             <label class="fs-6 form-label">Cidade</label>
                             <input class="form-control form-control-lg" id="cidade" name="cidade" value="{{ $request->cidade ?? '' }}">
                         </div>
 
-                        <div class="col-md-4">
+                        <div class="col-sm-4">
                             <label class="fs-6 form-label">Bairro</label>
                             <input class="form-control form-control-lg" id="bairro" name="bairro" value="{{ $request->bairro ?? '' }}">
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-sm-4">
                             <label class="fs-6 form-label">Status</label>
                             <select class="form-select form-select-lg" name="status" id="status" data-control="select2"
                                     data-hide-search="true" data-select="{{ $request->status ?? '' }}">
@@ -81,9 +80,9 @@
         </div>
 
         @if(!empty($clientes))
-            <div class="card">
-                <div class="card-body border">
-                    <div class="row pt-3">
+            <div class="card mb-5">
+                <div class="card-body border pt-1">
+                    <div class="row">
                         <div class="col-12">
                             <table class="table mb-0 table-striped" id="table_clientes">
                                 <thead>
@@ -123,6 +122,8 @@
                 </div>
             </div>
         @endif
+        <br>
+        <br>
     </div>
 
     <script src="https://cdn.datatables.net/buttons/3.1.2/js/dataTables.buttons.js"></script>
@@ -136,7 +137,7 @@
             }
         });
 
-        $('#limpa-filtros').on('click', function () {
+        $('.limpa-filtros').on('click', function () {
             $('#tipo_pessoa').val('');
             $('#grupo_id').val('');
             $('#sexo').val('');

@@ -4,49 +4,48 @@
 
 @section('content')
     <div class="container">
-        <div class="card mb-3">
+        <div class="card mb-2">
             <div class="card-body border">
-                <form method="post" action="{{ url('relatorio/cliente') }}" enctype="multipart/form-data">
+                <form method="post" action="{{ url('relatorio/venda') }}" enctype="multipart/form-data">
                     @csrf
-                    <h3 class="fs-22px text-theme">Relatório de Vendas</h3>
                     <div class="row mb-2">
-                        <div class="col-md-4">
+                        <div class="col-sm-4">
                             <label class="fs-6 form-label">Tipo Data</label>
-                            <select class="form-select form-select-lg" name="tipo_data" data-select="{{ $request->tipo_data ?? '' }}">
-                                <option value="1">Data da Venda</option>
-                                <option value="2">Data de Confirmação</option>
+                            <select class="form-select form-select-lg" name="tipo_data">
+                                <option value="1" @if($request->tipo_data == 1) selected @endif>Data da Venda</option>
+                                <option value="2" @if($request->tipo_data == 2) selected @endif>Data de Confirmação</option>
                             </select>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-sm-4">
                             <label class="fs-6 form-label">Data Inicial</label>
                             <input class="form-control form-control-lg mask-date" id="data_inicial" name="data_inicial" value="{{ $request->data_inicial ?? '' }}">
                         </div>
 
-                        <div class="col-md-4">
+                        <div class="col-sm-4">
                             <label class="fs-6 form-label">Data Final</label>
                             <input class="form-control form-control-lg mask-date" id="data_final" name="data_final" value="{{ $request->data_final ?? '' }}">
                         </div>
                     </div>
 
                     <div class="row mb-2">
-                        <div class="col-md-8">
+                        <div class="col-sm-8">
                             <label class="fs-6 form-label">Cliente</label>
                             <select class="form-select form-select-lg" name="cliente_id" data-control="select2"
                                     data-hide-search="true" data-select="{{ $request->cliente_id ?? '' }}">
                                 <option value="">Todos</option>
                                 @foreach($clientes as $cliente)
-                                    <option value="{{ $cliente->id }}">{{ str($cliente->id)->padLeft(4,0) }}: {{ $cliente->nome }}</option>
+                                    <option value="{{ $cliente->id }}" @if($request->cliente_id == $cliente->id) selected @endif>{{ str($cliente->id)->padLeft(4,0) }}: {{ $cliente->nome }}</option>
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-sm-4">
                             <label class="fs-6 form-label">Status</label>
                             <select class="form-select form-select-lg" name="status" id="status" data-control="select2"
                                     data-hide-search="true" data-select="{{ $request->status ?? '' }}">
                                 <option value="">Todos</option>
-                                <option value="1">Ativo</option>
-                                <option value="0">Inativo</option>
-                                <option value="2">Bloqueado</option>
+                                @foreach($situacoes as $situacao)
+                                    <option value="{{ $situacao->codigo }}" @if($request->status == $situacao->codigo) selected @endif>{{ $situacao->nome }}</option>
+                                @endforeach
                             </select>
                         </div>
                     </div>
@@ -67,49 +66,47 @@
             </div>
         </div>
 
-        @if(!empty($clientes))
-            <div class="card">
-                <div class="card-body border">
-                    <div class="row pt-3">
+        @if(!empty($vendas))
+            <div class="card mb-5">
+                <div class="card-body border pt-1">
+                    <div class="row">
                         <div class="col-12">
                             <table class="table mb-0 table-striped" id="table_clientes">
                                 <thead>
                                 <tr>
                                     <th>Código</th>
-                                    <th>Nome</th>
-                                    <th>Endereço</th>
+                                    <th>Cliente</th>
+                                    <th>Valor</th>
+                                    <th>Data Venda</th>
                                     <th>Status</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 @php($total = 0)
-                                @foreach($clientes as $cliente)
-                                    @php($total += 1)
+                                @foreach($vendas as $venda)
+                                    @php($total += $venda->total_liquido)
                                     <tr>
                                         <td>
-                                            {{ str($cliente->id)->padLeft(6,0) }}
+                                            {{ str($venda->id)->padLeft(6,0) }}
                                         </td>
-                                        <td>{{ $cliente->nome }}</td>
+                                        <td>{{ $venda->cliente->nome }}</td>
                                         <td>
-                                            {{ $cliente->logradouro }}, {{ $cliente->numero }}
-                                            - {{ $cliente->cidade }}-{{ $cliente->uf }}
+                                            R$ {{ number_format($venda->total_liquido, 2, ',', '.') }}
                                         </td>
-                                        <td>
-                                            @if($cliente->status == 1)
-                                                <span class="badge bg-success ms-2">Ativo</span>
-                                            @else
-                                                <span class="badge bg-danger ms-2">Inativo</span>
-                                            @endif
-                                        </td>
+                                        <td>{{ date('d/m/Y', strtotime($venda->data_venda)) }}</td>
+                                        <td>{!! $venda->situacao->label !!}</td>
                                     </tr>
                                 @endforeach
                                 </tbody>
                             </table>
                         </div>
+                        <h3 class="text-theme fs-22px text-end">TOTAL: R$ {{ number_format($total, 2, ',', '.') }}</h3>
                     </div>
                 </div>
             </div>
         @endif
+        <br>
+        <br>
     </div>
 
     <script src="https://cdn.datatables.net/buttons/3.1.2/js/dataTables.buttons.js"></script>
@@ -123,12 +120,12 @@
             }
         });
 
-        $('#limpa-filtros').on('click', function () {
-            $('#tipo_data').val('');
-            $('#data_inicial').val('');
-            $('#data_final').val('');
-            $('#cliente_id').val('');
-            $('#status').val('');
-        })
+        $('.limpa-filtros').on('click', function () {
+            $('#tipo_data').val(1).trigger('change');
+            $('#data_inicial').val('').trigger('change');
+            $('#data_final').val('').trigger('change');
+            $('#cliente_id').val('').trigger('change');
+            $('#status').val('').trigger('change');
+        });
     </script>
 @endsection

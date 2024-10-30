@@ -59,7 +59,7 @@ $('.mask-cpf').mask('000.000.000-00', {reverse: true});
 $('.mask-cnpj').mask('00.000.000/0000-00', {reverse: true});
 $('.mask-money').mask('000.000.000.000.000,00', {reverse: true});
 
-$.each( $('form').find('select'), function( keyInput, select ) {
+$.each($('form').find('select'), function( keyInput, select ) {
     var value = $(select).attr('data-selected');
     if (value != '' && value != undefined) {
         $(select).val(value).trigger('change');
@@ -403,9 +403,10 @@ $(document).on('click', '.fn-remover', function () {
                     return false;
                 },
                 success: function (response) {
-                    toastr.clear()
+                    toastr.clear();
                     if (response.success) {
                         toastr.success("Registro removido com sucesso!");
+                        window.location.reload();
                     } else {
                         erros = jQuery.parseJSON(response.erro);
                         toastr.warning("Erro ao remover registro: " + response.erro);

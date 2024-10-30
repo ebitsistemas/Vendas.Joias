@@ -12,7 +12,7 @@ class DashboardController extends Controller
     {
         $clientes = Cliente::count();
         $nVendas = Venda::count();
-        $vendas = Venda::sum('total_liquido');
+        $vendas = Venda::whereNot('status', 8)->sum('total_liquido');
         return view('dashboard')->with(['clientes' => $clientes, 'vendas' => $vendas, 'nVendas' => $nVendas]);
     }
 }

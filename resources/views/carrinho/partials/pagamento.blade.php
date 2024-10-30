@@ -145,7 +145,7 @@
                                     </button>
                                     <ul class="dropdown-menu">
                                         <li class="p-2"><a href="javascript:void(0);" class="text-primary fs-16px fn-editar" data-id="{{ $fatura->id }}" data-value='{{ json_encode($fatura) }}'><i class="fad fa-edit fs-16px"></i> Editar</a></li>
-                                        <li class="p-2"><a href="{{ url('venda/fatura/pagar/'.$fatura->id) }}" class="text-success fs-16px"><i class="fad fa-check-circle fs-16px"></i> Pagar</a></li>
+                                        <li class="p-2"><a href="{{ url('fatura/pagar/'.$fatura->id) }}" class="text-success fs-16px"><i class="fad fa-check-circle fs-16px"></i> Pagar</a></li>
                                         <li class="p-2"><a href="{{ url('venda/comprovante/'.$fatura->id) }}" target="_blank" class="text-theme fs-16px"><i class="fad fa-file-invoice-dollar fs-16px"></i> Comprovante </a></li>
                                         <li class="px-2 py-0"><hr class="border-secondary"></li>
                                         <li class="p-2"><a class="text-danger fs-16px fn-remover" href="javascript:void(0);" data-content="{{ $fatura->id }}" data-method="fatura" data-id="{{ $fatura->id }}"><i class="fad fa-trash fs-16px"></i> Remover</a></li>

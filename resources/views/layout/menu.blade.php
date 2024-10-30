@@ -38,10 +38,9 @@
                 <li>
                     <a href="{{ url('configuracao') }}"><i class="fal fa-cogs"></i> Configurações</a>
                 </li>
-                <!--
-                <li>
-                    <a href="javascript:void(0);" onclick="ToggleFullScreen();"><i class="fal fa-expand"></i> Tela Cheia</a>
-                </li>-->
+                <li class="mt-3">
+                    <a href="https://mariatoebesemijoias.com.br:2096" target="_blank"><i class="fal fa-envelope"></i> E-mail<i class="fal fa-arrow-up-right-from-square fs-10px ms-1"></i></a>
+                </li>
             </ul>
 
             <ul class="sidenav-nav ps-0 mt-5">

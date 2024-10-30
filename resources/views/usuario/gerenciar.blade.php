@@ -34,22 +34,18 @@
                                     <div class="row mb-2">
                                         <div class="col-md-6">
                                             <label class="form-label" for="exampleInputText2">Senha</label>
-                                            <div class="form-group position-relative">
-                                                <input type="password" class="form-control form-control-lg" id="password" name="password">
-                                                <div class="position-absolute" id="password-visibility">
-                                                    <i class="bi bi-eye"></i>
-                                                    <i class="bi bi-eye-slash"></i>
-                                                </div>
+                                            <div class="input-group mb-3">
+                                                <input type="password" class="form-control form-control-lg" id="password" name="password" disabled>
+                                                <button type="button" class="input-group-text fn-passEdit"><i class="fad fa-edit"></i></button>
+                                                <button type="button" class="input-group-text fn-passHide"><i class="fad fa-eye"></i></button>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label" for="exampleInputText2">Confirmação de senha</label>
-                                            <div class="form-group position-relative">
-                                                <input type="password" class="form-control form-control-lg form-control-clicked" id="confirm_password">
-                                                <div class="position-absolute" id="password-visibility">
-                                                    <i class="bi bi-eye"></i>
-                                                    <i class="bi bi-eye-slash"></i>
-                                                </div>
+                                            <div class="input-group mb-3">
+                                                <input type="password" class="form-control form-control-lg" id="confirm_password" disabled>
+                                                <button type="button" class="input-group-text fn-passEdit"><i class="fad fa-edit"></i></button>
+                                                <button type="button" class="input-group-text fn-passHide"><i class="fad fa-eye"></i></button>
                                             </div>
                                         </div>
                                     </div>
@@ -73,22 +69,41 @@
     </div>
 
     <script>
-        let passWord = document.getElementById('password-visibility');
+        $(document).on('blur', 'form .confirmPassword', function () {
+            var $password = $('input[name=password]');
+            var $confirmPassword = $(this);
 
-        if (passWord) {
-            passWord.addEventListener('click', passwordFunction);
-        }
-
-        function passwordFunction() {
-            let passInput = document.getElementById('password');
-            passWord.classList.toggle('active');
-
-            if (passInput.type === 'password') {
-                passInput.type = 'text';
+            if ($password.val() !== $confirmPassword.val()) {
+                $password.addClass('is-invalid');
+                $confirmPassword.addClass('is-invalid');
+                toastr.warning('As senhas não conferem!');
             } else {
-                passInput.type = 'password';
+                $password.removeClass('is-invalid');
+                $confirmPassword.removeClass('is-invalid');
             }
-        }
+        });
+
+        /* EXIBE E OCULTA VALUE DO CAMPO */
+        $(document).on('click', '.fn-passHide',  function () {
+            var $botao = $(this);
+            var $icon = $botao.children('i');
+
+            if ($icon.hasClass('fa-eye')) {
+                $icon.removeClass('fa-eye');
+                $botao.siblings('input').removeAttr('type', 'password');
+                setTimeout(function () {
+                    $icon.addClass('fa-eye-slash');
+                    $botao.siblings('input').attr('type', 'text');
+                })
+            } else if($icon.hasClass('fa-eye-slash')) {
+                $icon.removeClass('fa-eye-slash');
+                $botao.siblings('input').removeAttr('type', 'text');
+                setTimeout(function () {
+                    $icon.addClass('fa-eye');
+                    $botao.siblings('input').attr('type', 'password');
+                })
+            }
+        });
     </script>
 @endsection
 

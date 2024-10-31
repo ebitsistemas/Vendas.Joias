@@ -107,6 +107,17 @@
     <script src="{{ url('mobile/assets/js/apexcharts.min.js') }}"></script>
 
     <script>
+        var dia = '{{ date('d') }}';
+        if (dia < 7) {
+            dia = 7
+        }
+
+        var diaInicio = Number(dia) - 7;
+        var semana = [];
+        for (i = diaInicio; i <= dia; i++) {
+            semana.push(i);
+        }
+        console.log(semana);
         var columnChart2 = {
             chart: {
                 height: 180,
@@ -187,10 +198,10 @@
                 colors: ['transparent'],
                 width: 3
             },
-            labels: ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15'],
+            labels: semana,
             series: [{
                 name: 'Venda',
-                data: [320, 420, 395, 350, 410, 355, 360, 420, 320, 420, 395, 350, 410, 355, 360]
+                data: []
             }],
             xaxis: {
                 crosshairs: {
@@ -290,7 +301,7 @@
             },
             series: [{
                 name: "Vendas",
-                data: [100, 401, 305, 501, 409, 602]
+                data: []
             }],
             xaxis: {
                 categories: ['Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out'],

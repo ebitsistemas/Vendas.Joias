@@ -11,8 +11,44 @@ Route::get('cep/{cep}', [\App\Http\Controllers\HomeController::class, 'cep'])->n
 Route::controller(LoginController::class)->group(function () {
     Route::get('login', 'index')->name('login');
     Route::post('store', 'store')->name('login.store');
+
+    Route::get('lembrar/senha', 'forgot')->name('login.forgot');
+    Route::post('forgot-password', 'forgot')->name('login.forgot');
+
     Route::post('logout', 'destroy')->name('login.destroy');
 });
+
+/* LEMBRAR SENHA */
+Route::get('/reset-password/{token}', function (string $token) {
+    return view('login.reset-password', ['token' => $token]);
+})->middleware('guest')->name('password.reset');
+
+Route::post('/reset-password', function (Request $request) {
+    $request->validate([
+        'token' => 'required',
+        'email' => 'required|email',
+        'password' => 'required|min:6|confirmed',
+    ]);
+
+    $status = Password::reset(
+        $request->only('email', 'password', 'password_confirmation', 'token'),
+        function (\App\Models\User $user, string $password) {
+            $user->forceFill([
+                'password' => Hash::make($password)
+            ])->setRememberToken(Str::random(60));
+
+            $user->save();
+
+            event(new PasswordReset($user));
+        }
+    );
+
+    return $status === Password::PASSWORD_RESET
+        ? redirect()->route('login')->with('status', __($status))
+        : back()->withErrors(['email' => [__($status)]]);
+})->middleware('guest')->name('password.update');
+/* LEMBRAR SENHA */
+
 Route::get('', [\App\Http\Controllers\HomeController::class, 'index'])->name('home')->middleware('auth');
 
 /* DASHBOARD */

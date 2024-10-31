@@ -66,46 +66,45 @@
 
 <!-- Login Wrapper Area -->
 <div class="login-wrapper d-flex align-items-center justify-content-center">
-    <div class="login-container">
+    <div class="custom-container">
         <div class="text-center px-4">
             <img class="login-intro-img" src="{{ url(env('APP_LOGO')) }}" alt="">
         </div>
 
+        <div class="text-center px-4">
+            <img class="login-intro-img" src="{{ url('mobile/assets/img/bg-img/37.png') }}" alt="">
+        </div>
+
         <!-- Register Form -->
         <div class="register-form mt-4">
-            <h6 class="mb-3 text-center text-uppercase text-login fs-22px">Login Sistema</h6>
+            <form action="{{ url('') }}" method="post">
+                <h6 class="mb-3 text-center text-uppercase">Alterar Senha</h6>
 
-            <form action="{{ route('login.store') }}" method="post">
-                @csrf
-                <div class="form-group">
-                    <input class="form-control form-control-lg" type="text" name="email" id="email" placeholder="E-mail" required>
-                    @error('email')
-                    <div class="pt-1 text-danger">{{ $message }}</div>
-                    @enderror
+                <div class="form-group text-start mb-3">
+                    <input class="form-control" type="text" placeholder="Enter 8 digit security code">
                 </div>
 
-                <div class="form-group position-relative">
+                <div class="form-group text-start mb-3 position-relative">
                     <div class="input-group mb-3">
                         <input type="password" class="form-control form-control-lg" id="password" name="password" placeholder="Senha" required>
                         <button type="button" class="input-group-text fn-passHide"><i class="fad fa-eye"></i></button>
                     </div>
-                    @error('password')
-                    <div class="pt-1 text-danger">{{ $message }}</div>
-                    @enderror
                 </div>
 
-                @error('error')
-                <div class="pt-1 text-danger">{{ $message }}</div>
-                @enderror
+                <div class="mb-3" id="pswmeter"></div>
 
-                <button class="btn btn-login w-100" type="submit">Acessar</button>
+                <div class="form-group text-start mb-3">
+                    <input class="form-control" type="password" placeholder="Re-write password">
+                </div>
+
+                <button class="btn btn-login w-100" type="submit">Alterar Senha</button>
             </form>
         </div>
 
         <!-- Login Meta -->
         <div class="login-meta-data text-center">
-            <a class="stretched-link text-login forgot-password d-block mt-3 mb-1" href="{{ url('lembrar/senha') }}">
-                Esqueceu sua senha?
+            <a class="stretched-link text-login forgot-password d-block mt-3 mb-1" href="{{ url('login') }}">
+                Ir para o login
             </a>
         </div>
     </div>

@@ -7,6 +7,7 @@ use App\Models\Usuario;
 use App\Models\Configuracao;
 use App\Traits\TraitDatatables;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UsuarioController extends Controller
 {
@@ -47,7 +48,15 @@ class UsuarioController extends Controller
      */
     public function store(Request $request)
     {
-        $response = User::create($request->all());
+        $data = $request->all();
+        if ($data['password'] != $data['confirm_password']) {
+            toastr()->error('As senhas digitadas não conferem!');
+            return redirect()->to('usuario');
+        }
+        $data['password'] = Hash::make($data['password']);
+        unset($data['confirm_password']);
+
+        $response = User::create($data);
 
         if ($response) {
             toastr()->success('Registro cadastrado com sucesso!');
@@ -74,8 +83,16 @@ class UsuarioController extends Controller
      */
     public function update(Request $request)
     {
+        $data = $request->all();
+        if ($data['password'] != $data['confirm_password']) {
+            toastr()->error('As senhas digitadas não conferem!');
+            return redirect()->to('usuario');
+        }
+        $data['password'] = Hash::make($data['password']);
+        unset($data['confirm_password']);
+
         $usuario = User::find($request->id);
-        $response = $usuario->update($request->all());
+        $response = $usuario->update($data);
 
         if ($response) {
             toastr()->success('Registro alterado com sucesso!');

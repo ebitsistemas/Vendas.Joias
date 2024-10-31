@@ -3,8 +3,6 @@
 use App\Http\Controllers\LoginController;
 use Illuminate\Support\Facades\Route;
 
-
-
 Route::get('cep/{cep}', [\App\Http\Controllers\HomeController::class, 'cep'])->name('cep')->middleware('auth');
 
 /* LOGIN */
@@ -126,6 +124,8 @@ Route::prefix('venda')->group(function () {
     Route::get('comprovante/{id}', [\App\Http\Controllers\VendaController::class, 'payment'])->name('venda.payment');
     Route::post('store', [\App\Http\Controllers\VendaController::class, 'store'])->name('venda.store')->middleware('auth');
     Route::post('update', [\App\Http\Controllers\VendaController::class, 'update'])->name('venda.update')->middleware('auth');
+
+    Route::get('cadastrar', [\App\Http\Controllers\VendaController::class, 'index'])->name('venda.cadastrar')->middleware('auth');
 });
 
 /* FATURAS */

@@ -101,13 +101,6 @@
                 <button class="btn btn-login w-100" type="submit">Acessar</button>
             </form>
         </div>
-
-        <!-- Login Meta -->
-        <div class="login-meta-data text-center">
-            <a class="stretched-link text-login forgot-password d-block mt-3 mb-1" href="{{ url('lembrar/senha') }}">
-                Esqueceu sua senha?
-            </a>
-        </div>
     </div>
 </div>
 

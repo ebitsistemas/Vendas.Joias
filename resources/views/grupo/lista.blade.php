@@ -4,7 +4,7 @@
 
 @section('content')
     <div class="container">
-        <x-search method="cliente" search="{{ $pesquisa ?? '' }}"/>
+        <x-search method="grupo" search="{{ $pesquisa ?? '' }}"/>
 
         <div class="card">
             <div class="card-body border card-scroll h100p-list">

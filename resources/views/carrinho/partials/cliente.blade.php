@@ -7,9 +7,9 @@
                 </div>
 
                 <div class="chat-user-info w-410px">
-                    <h6 class="mb-0">{{ $venda->cliente->nome }} - {{ $venda->cliente->documento }}</h6>
+                    <h6 class="mb-0 fs-20px">{{ $venda->cliente->nome }} - {{ $venda->cliente->documento }}</h6>
                     <div class="last-chat">
-                        <p class="mb-0 text-truncate">
+                        <p class="mb-0 text-truncate fs-18px">
                             {{ $venda->cliente->logradouro }}, {{ $venda->cliente->numero }}
                         </p>
                     </div>

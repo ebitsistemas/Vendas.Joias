@@ -132,7 +132,7 @@ class ClienteController extends Controller
         $totais['vendas'] = 0;
         $totais['faturas'] = 0;
         foreach ($vendas as $venda) {
-            if ($venda->status <= 7) {
+            if ($venda->status != 3) {
                 $totais['vendas'] += $venda->total_liquido;
                 $totais['faturas'] += $venda->faturas->sum('valor_subtotal');
             }

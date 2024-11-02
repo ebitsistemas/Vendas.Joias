@@ -40,7 +40,7 @@
                         </div>
                     </div>
 
-                    <div class="chat-user-info text-center w-150px d-sm-none">
+                    <div class="chat-user-info text-center w-150px">
                         <h6 class="fs-18px mb-1">Status</h6>
                         <div class="last-chat">
                             <p class="mb-0 fs-16px">

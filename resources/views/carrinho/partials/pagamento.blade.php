@@ -10,7 +10,7 @@
                     <label class="form-label required" for="valor_recebido">Valor</label>
                     <div class="input-group mb-3">
                         <span class="input-group-text">R$</span>
-                        <input type="text" class="form-control form-control-lg money" id="valor_recebido" name="valor_recebido" value="" required>
+                        <input type="text" class="form-control form-control-lg mask-money" id="valor_recebido" name="valor_recebido" value="" required>
                     </div>
                 </div>
                 <div class="col-md-3">
@@ -37,7 +37,7 @@
             <div class="row mb-2 d-none" data-show="tipo_pagamento-1">
                 <div class="col-md-3" data-show="tipo_pagamento-1">
                     <label class="form-label">Data do Pagamento</label>
-                    <input class="form-control form-control-lg" type="date" value="" name="data_vencimento" id="data_vencimento">
+                    <input class="form-control form-control-lg mask-date" type="date" value="" name="data_vencimento" id="data_vencimento">
                 </div>
                 <div class="col-md-3" data-show="tipo_pagamento-1">
                     <label class="form-label">Número de Parcelas</label>

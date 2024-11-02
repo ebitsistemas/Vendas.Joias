@@ -59,6 +59,7 @@ class Impressao80mm
         $pdf->SetFont('Arial','B',10);
         $pdf->Cell($width, 1, utf8_decode($config->nome), 0, 0, 'C', true);
 
+        /*
         $height += 4;
         $pdf->setY($height);
         $pdf->setX(0);
@@ -67,18 +68,12 @@ class Impressao80mm
             $pdf->Cell($width, 1, utf8_decode("CPF: " . $this->helper->mascara('###.###.###-##', $config->documento)), 0, 0, 'C', true);
         } else {
             $pdf->Cell($width, 1, utf8_decode("CNPJ: ".$this->helper->mascara('##.###.###/####-##', $config->documento)." - IE: ".$config->inscricao_estadual), 0, 0, 'C', true);
-        }
+        }*/
 
         $height += 3;
         $pdf->setY($height);
         $pdf->setX(0);
-        $pdf->SetFont('Arial','',8);
-        $pdf->Cell($width, 1, utf8_decode($config->logradouro.", ".$config->numero), 0, 0, 'C', true);
-
-        $height += 3;
-        $pdf->setY($height);
-        $pdf->setX(0);
-        $pdf->Cell($width, 1, utf8_decode($config->bairro." - ".$config->cidade." - ".$config->uf), 0, 0, 'C', true);
+        $pdf->Cell($width, 1, utf8_decode($config->cidade." - ".$config->uf), 0, 0, 'C', true);
 
         $height += 3;
         $pdf->setY($height);
@@ -308,6 +303,7 @@ class Impressao80mm
         $pdf->SetFont('Arial','B',10);
         $pdf->Cell($width, 1, utf8_decode($config->nome), 0, 0, 'C', true);
 
+        /*
         $height += 4;
         $pdf->setY($height);
         $pdf->setX(0);
@@ -316,18 +312,12 @@ class Impressao80mm
             $pdf->Cell($width, 1, utf8_decode("CPF: " . $this->helper->mascara('###.###.###-##', $config->documento)), 0, 0, 'C', true);
         } elseif ($config->tipo_pessoa == 2 AND !empty($config->documento)) {
             $pdf->Cell($width, 1, utf8_decode("CNPJ: ".$this->helper->mascara('##.###.###/####-##', $config->documento)." - IE: ".$config->inscricao_estadual), 0, 0, 'C', true);
-        }
+        }*/
 
         $height += 3;
         $pdf->setY($height);
         $pdf->setX(0);
-        $pdf->SetFont('Arial','',8);
-        $pdf->Cell($width, 1, utf8_decode($config->logradouro.", ".$config->numero), 0, 0, 'C', true);
-
-        $height += 3;
-        $pdf->setY($height);
-        $pdf->setX(0);
-        $pdf->Cell($width, 1, utf8_decode($config->bairro." - ".$config->cidade." - ".$config->uf), 0, 0, 'C', true);
+        $pdf->Cell($width, 1, utf8_decode($config->cidade." - ".$config->uf), 0, 0, 'C', true);
 
         $height += 3;
         $pdf->setY($height);

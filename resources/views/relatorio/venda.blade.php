@@ -89,7 +89,7 @@
                                         <td>
                                             {{ str($venda->id)->padLeft(6,0) }}
                                         </td>
-                                        <td>{{ $venda->cliente->nome }}</td>
+                                        <td>{{ $venda->cliente->nome ?? '' }}</td>
                                         <td>
                                             R$ {{ number_format($venda->total_liquido, 2, ',', '.') }}
                                         </td>

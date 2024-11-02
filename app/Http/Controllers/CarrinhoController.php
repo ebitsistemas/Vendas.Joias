@@ -179,6 +179,8 @@ class CarrinhoController extends Controller
             return redirect()->to('carrinho/pedido/' . $request->venda_id);
         }
 
+        $dataPagamento = empty($request->data_pagamento) ? date('Y-m-d') : $request->data_pagamento;
+
         $data = [
             'venda_id' => $request->venda_id,
             'tipo_pagamento' => $request->tipo_pagamento,
@@ -188,7 +190,7 @@ class CarrinhoController extends Controller
             'total_parcelas' => $request->total_parcelas,
             'dias_parcelas' => $request->dias_parcelas,
             'data_vencimento' => $request->data_vencimento,
-            'data_pagamento' => ($request->tipo_pagamento == 0) ? $request->data_pagamento : date('Y-m-d'),
+            'data_pagamento' => ($request->tipo_pagamento == 0) ? $dataPagamento : date('Y-m-d'),
             'valor_recebido' => str_replace(',', '.', str_replace('.', '', $request->valor_recebido)),
             'valor_subtotal' => str_replace(',', '.', str_replace('.', '', $request->valor_recebido)),
             'troco' => str_replace(',', '.', str_replace('.', '', $request->troco)),

@@ -70,7 +70,7 @@ class Impressao80mm
             $pdf->Cell($width, 1, utf8_decode("CNPJ: ".$this->helper->mascara('##.###.###/####-##', $config->documento)." - IE: ".$config->inscricao_estadual), 0, 0, 'C', true);
         }*/
 
-        $height += 3;
+        $height += 5;
         $pdf->setY($height);
         $pdf->setX(0);
         $pdf->Cell($width, 1, utf8_decode($config->cidade." - ".$config->uf), 0, 0, 'C', true);
@@ -314,7 +314,7 @@ class Impressao80mm
             $pdf->Cell($width, 1, utf8_decode("CNPJ: ".$this->helper->mascara('##.###.###/####-##', $config->documento)." - IE: ".$config->inscricao_estadual), 0, 0, 'C', true);
         }*/
 
-        $height += 3;
+        $height += 5;
         $pdf->setY($height);
         $pdf->setX(0);
         $pdf->Cell($width, 1, utf8_decode($config->cidade." - ".$config->uf), 0, 0, 'C', true);

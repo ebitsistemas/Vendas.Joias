@@ -18,3 +18,13 @@
         </form>
     </div>
 </div>
+
+<div class="card mb-5">
+    <div class="card-body border">
+        <div class="apply-coupon">
+            <div class="coupon-form">
+                <button type="submit" class="btn btn-theme fs-20px p-2 w-100 my-3 fn-salvar"><i class="fa fa-save"></i> Salvar</button>
+            </div>
+        </div>
+    </div>
+</div>

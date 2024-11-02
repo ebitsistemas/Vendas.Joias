@@ -11,9 +11,9 @@
             </select>
         </div>
         <div class="col-md-6">
-            <label class="form-label required" for="documento" data-show="tipo_pessoa-1">CPF</label>
-            <label class="form-label required d-none" for="documento" data-show="tipo_pessoa-2">CNPJ</label>
-            <input type="text" class="form-control form-control-lg" id="documento" name="documento" value="{{ $cliente->documento ?? '' }}" required>
+            <label class="form-label" for="documento" data-show="tipo_pessoa-1">CPF</label>
+            <label class="form-label d-none" for="documento" data-show="tipo_pessoa-2">CNPJ</label>
+            <input type="text" class="form-control form-control-lg" id="documento" name="documento" value="{{ $cliente->documento ?? '' }}">
         </div>
     </div>
 

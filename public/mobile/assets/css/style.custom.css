@@ -455,3 +455,6 @@ li.page-link > span{
 .btn-dropdown{
     width: 2.5rem !important;
 }
+.modal-backdrop{
+    --bs-backdrop-opacity: 0.8;
+}

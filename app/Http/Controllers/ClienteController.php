@@ -126,6 +126,21 @@ class ClienteController extends Controller
         $config = Configuracao::first();
         $cliente = Cliente::find($id);
         $grupos = Grupo::all();
+
+        return view('cliente.gerenciar')->with([
+            'method' => 'update',
+            'cliente' => $cliente,
+            'grupos' => $grupos,
+        ]);
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function historico(string $id)
+    {
+        $config = Configuracao::first();
+        $cliente = Cliente::find($id);
         $vendas = Venda::where('cliente_id', $id)->paginate($config->itens_pagina);
 
         $totais = [];
@@ -138,10 +153,9 @@ class ClienteController extends Controller
             }
         }
 
-        return view('cliente.gerenciar')->with([
+        return view('cliente.partials.historico')->with([
             'method' => 'update',
             'cliente' => $cliente,
-            'grupos' => $grupos,
             'vendas' => $vendas,
             'totais' => $totais,
         ]);

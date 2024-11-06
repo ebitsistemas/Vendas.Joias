@@ -8,30 +8,28 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-body border card-scroll h100p">
-                        <div class="minimal-tab">
-                            <ul class="nav nav-tabs mb-3" id="affanTab2" role="tablist">
-                                <li class="nav-item" role="presentation">
-                                    <button class="btn active" id="geral-tab" data-bs-toggle="tab" data-bs-target="#geral" type="button"
-                                            role="tab" aria-controls="geral" aria-selected="true">Geral</button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="btn" id="historico-tab" data-bs-toggle="tab" data-bs-target="#historico" type="button" role="tab"
-                                            aria-controls="historico" aria-selected="false">Histórico</button>
-                                </li>
-                            </ul>
+                        @if($method == 'update')
+                        <div class="row mb-2">
+                            <div class="col-md-6">
+                                <a href="{{ url('cliente/historico/'.$cliente->id) }}" class="btn btn-lg btn-theme w-100 d-flex align-items-center justify-content-center submit">
+                                    <i class="fa fa-shopping-cart fz-16 me-2"></i> Histórico Vendas
+                                </a>
+                            </div>
+                            <div class="col-md-6 d-none">
+                                <a href="{{ url('cliente/faturas/'.$cliente->id) }}" class="btn btn-lg btn-theme w-100 d-flex align-items-center justify-content-center submit">
+                                    <i class="fa fa-circle-dollar fz-16 me-2"></i> Histórico Faturas
+                                </a>
+                            </div>
                         </div>
 
-                        <div class="tab-content rounded-lg p-3">
-                            <div class="tab-pane fade show active" id="geral" role="tabpanel" aria-labelledby="geral-tab">
+                        <hr class="separator">
+                        @endif
+
+                        <div class="row mb-3">
+                            <div class="col-md-12">
                                 @include('cliente.partials.form')
                             </div>
-                            @if($method == 'update')
-                            <div class="tab-pane fade" id="historico" role="tabpanel" aria-labelledby="historico-tab">
-                                @include('cliente.partials.historico')
-                            </div>
-                            @endif
                         </div>
-
                     </div>
                 </div>
             </div>

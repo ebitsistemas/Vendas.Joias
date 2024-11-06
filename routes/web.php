@@ -69,6 +69,7 @@ Route::prefix('cliente')->group(function () {
     Route::post('', [\App\Http\Controllers\ClienteController::class, 'index'])->name('cliente.search')->middleware('auth');
     Route::get('cadastrar', [\App\Http\Controllers\ClienteController::class, 'create'])->name('cliente.cadastrar')->middleware('auth');
     Route::get('editar/{id}', [\App\Http\Controllers\ClienteController::class, 'edit'])->name('cliente.editar')->middleware('auth');
+    Route::get('historico/{id}', [\App\Http\Controllers\ClienteController::class, 'historico'])->name('cliente.historico')->middleware('auth');
     Route::get('show/{id}', [\App\Http\Controllers\ClienteController::class, 'show'])->name('cliente.visualizar')->middleware('auth');
     Route::get('buscar/{venda_id}', [\App\Http\Controllers\ClienteController::class, 'buscar'])->name('cliente.buscar')->middleware('auth');
     Route::post('buscar', [\App\Http\Controllers\ClienteController::class, 'buscar'])->name('cliente.buscar')->middleware('auth');
@@ -124,6 +125,7 @@ Route::prefix('venda')->group(function () {
     Route::get('comprovante/{id}', [\App\Http\Controllers\VendaController::class, 'payment'])->name('venda.payment');
     Route::post('store', [\App\Http\Controllers\VendaController::class, 'store'])->name('venda.store')->middleware('auth');
     Route::post('update', [\App\Http\Controllers\VendaController::class, 'update'])->name('venda.update')->middleware('auth');
+    Route::post('baixar/faturas', [\App\Http\Controllers\VendaController::class, 'baixar'])->name('venda.baixar.faturas')->middleware('auth');
 
     Route::get('cadastrar', [\App\Http\Controllers\VendaController::class, 'index'])->name('venda.cadastrar')->middleware('auth');
 });

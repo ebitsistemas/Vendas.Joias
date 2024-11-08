@@ -513,7 +513,7 @@ class Impressao80mm
             $saldo += $venda->saldo;
             $pedidos ++;
         }
-        $heightPaper = 130;
+        $heightPaper = 110;
 
         $pdf = new Fpdf('P', 'mm', [80, $heightPaper]);
         $pdf->SetAutoPageBreak(false);

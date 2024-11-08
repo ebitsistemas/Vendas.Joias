@@ -21,7 +21,7 @@
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Data do Pagamento</label>
-                            <input class="form-control form-control-lg mask-date" type="date" value="" name="data_pagamento" id="data_pagamento">
+                            <input class="form-control form-control-lg mask-date" type="text" value="{{ date('d/m/Y') }}" name="data_pagamento" id="data_pagamento">
                         </div>
                     </div>
 

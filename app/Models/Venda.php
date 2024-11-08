@@ -24,6 +24,7 @@ class Venda extends Model
         'total_acrescimo',
         'total_bruto',
         'total_liquido',
+        'saldo',
         'anotacoes',
         'user_id',
         'status',

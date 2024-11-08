@@ -90,6 +90,8 @@ class CarrinhoController extends Controller
         $total = VendaItem::where('venda_id', $request->venda_id)->sum('valor_total');
         Venda::where('id', $request->venda_id)->update(['total_bruto' => $total, 'total_liquido' => $total]);
 
+        $this->saldo($request->venda_id);
+
         if ($vendaItem) {
             toastr()->success('Produto adicionado com sucesso!');
             return redirect()->to('carrinho/pedido/' . $request->venda_id);
@@ -115,6 +117,8 @@ class CarrinhoController extends Controller
 
         $total = VendaItem::where('venda_id', $request->venda_id)->sum('valor_total');
         Venda::where('id', $request->venda_id)->update(['total_bruto' => $total, 'total_liquido' => $total]);
+
+        $this->saldo($request->venda_id);
 
         if ($vendaItem) {
             toastr()->success('Produto adicionado com sucesso!');
@@ -143,6 +147,8 @@ class CarrinhoController extends Controller
         $total = VendaItem::where('venda_id', $vendaItem->venda_id)->sum('valor_total');
         Venda::where('id', $vendaItem->venda_id)->update(['total_bruto' => $total, 'total_liquido' => $total]);
 
+        $this->saldo($vendaItem->venda_id);
+
         if ($vendaItem) {
             toastr()->success('Produto adicionado com sucesso!');
             return redirect()->to('carrinho/pedido/' . $vendaItem->venda_id);
@@ -156,10 +162,13 @@ class CarrinhoController extends Controller
      */
     public function produtoRemover(Request $request)
     {
-        $response = VendaItem::find($request->item_id)->delete();
+        $vendaItem = VendaItem::find($request->item_id);
+        $response = $vendaItem->delete();
 
         $total = VendaItem::where('venda_id', $request->venda_id)->sum('valor_total');
         Venda::where('id', $request->venda_id)->update(['total_bruto' => $total, 'total_liquido' => $total]);
+
+        $this->saldo($request->venda_id);
 
         if ($response) {
             toastr()->success('Produto removido com sucesso!');
@@ -205,6 +214,8 @@ class CarrinhoController extends Controller
             $vendaItem = FaturaItem::create($data);
         }
 
+        $this->saldo($request->venda_id);
+
         if ($vendaItem) {
             toastr()->success('Fatura adicionada com sucesso!');
             return redirect()->to('carrinho/pedido/' . $request->venda_id);
@@ -218,10 +229,13 @@ class CarrinhoController extends Controller
      */
     public function faturaRemover(Request $request)
     {
-        $response = VendaItem::find($request->item_id)->delete();
+        $faturaItem = FaturaItem::find($request->item_id);
+        $response = $faturaItem->delete();
 
         $total = VendaItem::where('venda_id', $request->venda_id)->sum('valor_total');
         Venda::where('id', $request->venda_id)->update(['total_bruto' => $total, 'total_liquido' => $total]);
+
+        $this->saldo($request->venda_id);
 
         if ($response) {
             toastr()->success('Produto removido com sucesso!');
@@ -245,5 +259,14 @@ class CarrinhoController extends Controller
         }
         toastr()->error('Erro ao salvar registro!');
         return redirect()->to('carrinho/pedido/' . $request->id);
+    }
+
+    public function saldo($venda_id)
+    {
+        $faturas = FaturaItem::where('venda_id', $venda_id)->where('status', '>', 0)->sum('valor_subtotal');
+        $venda = Venda::find($venda_id);
+        $venda->saldo = $venda->total_liquido - $faturas;
+        $venda->status = ($venda->total_liquido - $faturas) <= 0 ? 1 : 0;
+        $venda->save();
     }
 }

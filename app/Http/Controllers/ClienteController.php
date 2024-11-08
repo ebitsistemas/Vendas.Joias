@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Utilities\Impressao80mm;
 use App\Models\Cliente;
 use App\Models\Configuracao;
+use App\Models\FaturaItem;
 use App\Models\Grupo;
 use App\Models\Venda;
 use App\Traits\TraitDatatables;
@@ -144,12 +146,15 @@ class ClienteController extends Controller
         $vendas = Venda::where('cliente_id', $id)->paginate($config->itens_pagina);
 
         $totais = [];
+        $totais['saldo'] = 0;
         $totais['vendas'] = 0;
         $totais['faturas'] = 0;
         foreach ($vendas as $venda) {
+            $somaFaturas = FaturaItem::where('venda_id', $venda->id)->sum('valor_subtotal');
             if ($venda->status != 3) {
+                $totais['saldo'] += $venda->saldo;
                 $totais['vendas'] += $venda->total_liquido;
-                $totais['faturas'] += $venda->faturas->sum('valor_subtotal');
+                $totais['faturas'] += $somaFaturas;
             }
         }
 
@@ -202,6 +207,27 @@ class ClienteController extends Controller
         ]);
     }
 
+    public function imprimir(Request $request)
+    {
+        $config = Configuracao::first();
+
+        $model = Venda::with([
+            'itens',
+            'cliente',
+            'faturas',
+            'situacao',
+        ]);
+        $vendas = $model->where('cliente_id', $request->id)->get();
+
+        $cliente = Cliente::find($request->id);
+
+        $impressao = new Impressao80mm();
+        $pdf = $impressao->saldo($config, $vendas, $cliente);
+
+        return response($pdf)->header('Content-Type', 'application/pdf');
+    }
+
+    /*
     public function disable()
     {
         $config = Configuracao::first();
@@ -216,5 +242,5 @@ class ClienteController extends Controller
                 $modelCliente->update(['status' => '2']);
             }
         }
-    }
+    }*/
 }

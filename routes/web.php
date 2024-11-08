@@ -71,6 +71,7 @@ Route::prefix('cliente')->group(function () {
     Route::get('editar/{id}', [\App\Http\Controllers\ClienteController::class, 'edit'])->name('cliente.editar')->middleware('auth');
     Route::get('historico/{id}', [\App\Http\Controllers\ClienteController::class, 'historico'])->name('cliente.historico')->middleware('auth');
     Route::get('show/{id}', [\App\Http\Controllers\ClienteController::class, 'show'])->name('cliente.visualizar')->middleware('auth');
+    Route::get('imprimir/{id}', [\App\Http\Controllers\ClienteController::class, 'imprimir'])->name('cliente.imprimir')->middleware('auth');
     Route::get('buscar/{venda_id}', [\App\Http\Controllers\ClienteController::class, 'buscar'])->name('cliente.buscar')->middleware('auth');
     Route::post('buscar', [\App\Http\Controllers\ClienteController::class, 'buscar'])->name('cliente.buscar')->middleware('auth');
     Route::post('store', [\App\Http\Controllers\ClienteController::class, 'store'])->name('cliente.store')->middleware('auth');

@@ -403,7 +403,6 @@ $(document).on('click', '.fn-remover', function () {
                     return false;
                 },
                 success: function (response) {
-                    toastr.clear();
                     if (response.success) {
                         toastr.success("Registro removido com sucesso!");
                         window.location.reload();

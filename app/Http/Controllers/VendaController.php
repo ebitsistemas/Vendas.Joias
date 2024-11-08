@@ -94,12 +94,49 @@ class VendaController extends Controller
      */
     public function baixar(Request $request)
     {
+        echo '<pre>';
         $vendas = Venda::where('cliente_id', $request->cliente_id)
             ->where('status', 0)
             ->get();
 
+        $valorRecebido = str_replace('.', '', $request->valor_recebido);
+        $valorRecebido = floatval(str_replace(',', '.', $valorRecebido));
         foreach ($vendas as $venda) {
+            if($valorRecebido > 0) {
+                $saldo = $venda->saldo;
+                $valorPagamento = floatval($valorRecebido > $saldo ? $saldo : $valorRecebido);
+                $valorRecebido = $valorRecebido - $valorPagamento;
+                $dataPagamento = empty($request->data_pagamento) ? date('Y-m-d') : date('Y-m-d', strtotime($request->data_pagamento));
 
+                $data = [
+                    'venda_id' => $venda->id,
+                    'tipo_pagamento' => $request->tipo_pagamento,
+                    'forma_pagamento' => $request->forma_pagamento,
+                    'valor_parcela' => str_replace(',', '.', str_replace('.', '', $valorPagamento)),
+                    'numero_parcela' => 1,
+                    'total_parcelas' => 1,
+                    'dias_parcelas' => 30,
+                    'data_vencimento' => $request->data_vencimento,
+                    'data_pagamento' => ($request->tipo_pagamento == 0) ? $dataPagamento : date('Y-m-d'),
+                    'valor_recebido' => str_replace(',', '.', str_replace('.', '', $valorPagamento)),
+                    'valor_subtotal' => str_replace(',', '.', str_replace('.', '', $valorPagamento)),
+                    'troco' => 0.00,
+                    'situacao' => ($request->tipo_pagamento == 0) ? '4' : '0',
+                    'status' => 1,
+                ];
+                FaturaItem::create($data);
+                $this->saldo($venda->id);
+            }
         }
+        return redirect()->back();
+    }
+
+    public function saldo($venda_id)
+    {
+        $faturas = FaturaItem::where('venda_id', $venda_id)->where('status', '>', 0)->sum('valor_subtotal');
+        $venda = Venda::find($venda_id);
+        $venda->saldo = $venda->total_liquido - $faturas;
+        $venda->status = ($venda->total_liquido - $faturas) <= 0 ? 1 : 0;
+        $venda->save();
     }
 }

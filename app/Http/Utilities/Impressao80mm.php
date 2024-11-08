@@ -2,6 +2,7 @@
 
 namespace App\Http\Utilities;
 
+use App\Models\Cliente;
 use App\Models\FormaPagamento;
 use App\Models\Venda;
 use App\Models\VendaItem;
@@ -470,6 +471,175 @@ class Impressao80mm
         $pdf->SetFont('Arial','',8);
         $pdf->SetTextColor(100, 100, 100);
         $pdf->Cell($width, 1, Str::padBoth('', $width, '-'), 0, 0, 'L', true);*/
+
+        $height += 4;
+        $pdf->setY($height); $pdf->setX(2);
+        $pdf->SetFont('Arial','',8);
+        $pdf->Cell($width, 1, utf8_decode("EMITIDO EM: ".date('d/m/Y H:i:s', strtotime(now()))), 0, 0, 'C', true);
+
+        $height += 4;
+        $pdf->setY($height); $pdf->setX(2);
+        $pdf->SetFont('Arial','',8);
+        $pdf->SetTextColor(100, 100, 100);
+        $pdf->Cell($width, 1, Str::padBoth('', $width, '-'), 0, 0, 'L', true);
+
+        $height += 4;
+        $pdf->setY($height); $pdf->setX(2);
+        $pdf->SetFont('Arial','',8);
+        $pdf->Cell($width, 1, utf8_decode('DESENVOLVIDO POR EBIT SISTEMAS'), 0, 0, 'C', true);
+        $height += 4;
+        $pdf->setY($height); $pdf->setX(2);
+        $pdf->SetFont('Arial','',8);
+        $pdf->Cell($width, 1, utf8_decode('(41) 99890-0800 - CASCAVEL/PR'), 0, 0, 'C', true);
+        $height += 4;
+        $pdf->setY($height); $pdf->setX(2);
+        $pdf->SetFont('Arial','',8);
+        $pdf->Cell($width, 1, utf8_decode('WWW.EBITSISTEMAS.COM.BR'), 0, 0, 'C', true);
+
+        ob_start();
+        $pdf->output('I');
+        $pdf = ob_get_clean();
+
+        return response($pdf);
+    }
+
+    public function saldo(Configuracao $config, $vendas, Cliente $cliente)
+    {
+        $total = 0;
+        $saldo = 0;
+        $pedidos = 0;
+        foreach ($vendas as $venda) {
+            $total += $venda->total_liquido;
+            $saldo += $venda->saldo;
+            $pedidos ++;
+        }
+        $heightPaper = 130;
+
+        $pdf = new Fpdf('P', 'mm', [80, $heightPaper]);
+        $pdf->SetAutoPageBreak(false);
+        $pdf->AddPage();
+
+        $width = 80;
+        $height = 6;
+        $pdf->SetFillColor(255, 255, 255);
+        $pdf->SetTextColor(94, 98, 120);
+        /* LOGO */
+        if (!empty($config->imagem)) {
+            list($widthimg, $heightimg) = $this->resizeToFit('assets/images/logo.png');
+            $pdf->Image(
+                'assets/images/logo.png', (self::A4_HEIGHT - $widthimg) / 2,
+                $height,
+                $widthimg,
+                $heightimg
+            );
+            $height += 24;
+        }
+        /* DADOS DO EMITENTE */
+        $pdf->setY($height);
+        $pdf->setX(0);
+        $pdf->SetFont('Arial','B',10);
+        $pdf->Cell($width, 1, utf8_decode($config->nome), 0, 0, 'C', true);
+
+        $height += 5;
+        $pdf->setY($height);
+        $pdf->setX(0);
+        $pdf->Cell($width, 1, utf8_decode($config->cidade." - ".$config->uf), 0, 0, 'C', true);
+
+        $height += 3;
+        $pdf->setY($height);
+        $pdf->setX(2);
+        $pdf->SetFont('Arial','',8);
+        $pdf->SetTextColor(100, 100, 100);
+        $pdf->Cell($width, 1, Str::padBoth('', $width, '-'), 0, 0, 'L', true);
+
+        /* # PEDIDO */
+        $height += 3;
+        $pdf->setY($height);
+        $pdf->setX(0);
+        $pdf->SetFont('Arial','B',10);
+        $pdf->Cell($width, 3, "CADASTRO", 0, 0, 'C', true);
+
+        $height += 5;
+        $pdf->setY($height);
+        $pdf->setX(2);
+        $pdf->SetFont('Arial','',8);
+        $pdf->SetTextColor(100, 100, 100);
+        $pdf->Cell($width, 1, Str::padBoth('', $width, '-'), 0, 0, 'L', true);
+
+
+        /* DADOS DO CLIENTE */
+        $height += 3;
+        $pdf->setY($height);
+        $pdf->setX(2);
+        $pdf->SetFont('Arial', '', 8);
+        $pdf->Cell($width, 1, utf8_decode("CLIENTE: " . $cliente->nome), 0, 0, 'L', true);
+
+        $height += 3;
+        $pdf->setY($height);
+        $pdf->setX(2);
+        if ($cliente->tipo_pessoa == 1) {
+            $pdf->Cell($width, 1, utf8_decode("DOCUMENTO: " . $this->helper->mascara('###.###.###-##', $cliente->documento)), 0, 0, 'L', true);
+        } else {
+            $pdf->Cell($width, 1, utf8_decode("DOCUMENTO: " . $this->helper->mascara('##.###.###/####-##', $cliente->documento)), 0, 0, 'L', true);
+        }
+
+        $height += 3;
+        $pdf->setY($height);
+        $pdf->setX(2);
+        $pdf->Cell($width, 1, utf8_decode($config->logradouro . ", " . $config->numero), 0, 0, 'L', true);
+
+        $height += 3;
+        $pdf->setY($height);
+        $pdf->setX(2);
+        $pdf->Cell($width, 1, utf8_decode($config->bairro . " - " . $config->cidade . " - " . $config->uf), 0, 0, 'L', true);
+
+        $height += 3;
+        $pdf->setY($height);
+        $pdf->setX(2);
+        $pdf->SetTextColor(100, 100, 100);
+        $pdf->Cell($width, 1, Str::padBoth('', $width, '-'), 0, 0, 'L', true);
+
+        $height += 4;
+        $pdf->setY($height);
+        $pdf->setX(2);
+        $pdf->SetFont('Arial', '', 8);
+        $pdf->Cell(59, 1, utf8_decode('NÚMERO PEDIDOS:'), 0, 0, 'L', true);
+        $pdf->Cell(18, 1, str($pedidos)->padLeft(3,0), 0, 0, 'R', true);
+
+        $height += 4;
+        $pdf->setY($height);
+        $pdf->setX(2);
+        $pdf->SetFont('Arial', '', 8);
+        $pdf->Cell(59, 1, utf8_decode('VALOR TOTAL DAS VENDAS:'), 0, 0, 'L', true);
+        $pdf->Cell(18, 1, 'R$ ' . number_format($total, 2, ',', '.'), 0, 0, 'R', true);
+
+        $height += 4;
+        $pdf->setY($height);
+        $pdf->setX(2);
+        $pdf->SetFont('Arial', '', 8);
+        $pdf->Cell(59, 1, utf8_decode('VALOR TOTAL DOS PAGAMENTOS:'), 0, 0, 'L', true);
+        $pdf->Cell(18, 1, 'R$ ' . number_format($total - $saldo, 2, ',', '.'), 0, 0, 'R', true);
+
+        $height += 4;
+        $pdf->setY($height); $pdf->setX(2);
+        $pdf->SetFont('Arial','',8);
+        $pdf->SetTextColor(100, 100, 100);
+        $pdf->Cell($width, 1, Str::padBoth('', $width, '-'), 0, 0, 'L', true);
+
+        $saldo = $venda->saldo;
+        $saldo = $saldo < 0 ? 0 : $saldo;
+        $height += 4;
+        $pdf->setY($height);
+        $pdf->setX(2);
+        $pdf->SetFont('Arial', 'B', 9);
+        $pdf->Cell(59, 1, utf8_decode('SALDO A PAGAR:'), 0, 0, 'L', true);
+        $pdf->Cell(18, 1, 'R$ ' . number_format($saldo, 2, ',', '.'), 0, 0, 'R', true);
+
+        $height += 4;
+        $pdf->setY($height); $pdf->setX(2);
+        $pdf->SetFont('Arial','',8);
+        $pdf->SetTextColor(100, 100, 100);
+        $pdf->Cell($width, 1, Str::padBoth('', $width, '-'), 0, 0, 'L', true);
 
         $height += 4;
         $pdf->setY($height); $pdf->setX(2);

@@ -37,5 +37,7 @@
     </div>
 
     <span class="p-5"></span>
+
+    <hr>
 @endsection
 

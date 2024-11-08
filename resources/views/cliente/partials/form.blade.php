@@ -153,11 +153,11 @@
                 <img class="img-thumbnail mb-2" src="{{ url('storage/'.$cliente->imagem) }}" style="max-height: 150px;">
             @endif
             <div class="form-file">
-                <input class="form-control d-none form-control-clicked" name="imagem" id="imagem" type="file">
+                <input class="form-control d-none form-control-clicked" name="imagem" id="imagem" type="file" accept="image/png, image/jpeg"/>
                 <label class="form-file-label justify-content-center" for="imagem">
-                                                <span class="form-file-button btn btn-primary d-flex align-items-center justify-content-center shadow-lg">
-                                                  <i class="fa fa-plus-circle me-2"></i> Upload Imagem
-                                                </span>
+                    <span class="form-file-button btn btn-primary d-flex align-items-center justify-content-center shadow-lg">
+                      <i class="fa fa-plus-circle me-2"></i> Upload Imagem
+                    </span>
                 </label>
             </div>
         </div>

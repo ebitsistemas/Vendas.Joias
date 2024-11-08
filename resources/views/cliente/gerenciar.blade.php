@@ -36,6 +36,6 @@
         </div>
     </div>
 
-    <span class="p-2"></span>
+    <span class="p-5"></span>
 @endsection
 

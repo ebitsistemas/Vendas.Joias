@@ -61,18 +61,18 @@ class RelatorioController extends Controller
                 $inicio = Carbon::createFromFormat('d/m/Y', $request->data_inicial)->format('Y-m-d');
                 $fim = Carbon::createFromFormat('d/m/Y', $request->data_final)->format('Y-m-d');
                 if ($request->tipo_data == 1) {
-                    $model->whereBetween('created_at', [$inicio, $fim]);
+                    $model->whereBetween('faturas_itens.created_at', [$inicio, $fim]);
                 } else if ($request->tipo_data == 2) {
-                    $model->whereBetween('data_vencimento', [$inicio, $fim]);
+                    $model->whereBetween('faturas_itens.data_vencimento', [$inicio, $fim]);
                 } else if ($request->tipo_data == 3) {
-                    $model->whereBetween('data_pagamento', [$inicio, $fim]);
+                    $model->whereBetween('faturas_itens.data_pagamento', [$inicio, $fim]);
                 }
             }
             if (!empty($request->cliente_id)) {
                 $model->where('vendas.cliente_id', $request->cliente_id);
             }
             if ($request->status != '') {
-                $model->where('situacao', $request->status);
+                $model->where('faturas_itens.situacao', $request->status);
             }
             $faturas = $model->get();
         }

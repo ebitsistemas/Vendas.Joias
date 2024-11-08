@@ -250,6 +250,10 @@ class CarrinhoController extends Controller
      */
     public function update(Request $request)
     {
+        if ($request->total_liquido <= 0) {
+            toastr()->error('Deve ser informado um produto e valor a venda!');
+            return redirect()->to('carrinho/pedido/' . $request->id);
+        }
         $venda = Venda::find($request->id);
         $response = $venda->update($request->all());
 

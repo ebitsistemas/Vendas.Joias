@@ -117,12 +117,12 @@ class Impressao80mm
             $height += 3;
             $pdf->setY($height);
             $pdf->setX(2);
-            $pdf->Cell($width, 1, utf8_decode($config->logradouro . ", " . $config->numero), 0, 0, 'L', true);
+            $pdf->Cell($width, 1, utf8_decode($venda->cliente->logradouro . ", " . $venda->cliente->numero), 0, 0, 'L', true);
 
             $height += 3;
             $pdf->setY($height);
             $pdf->setX(2);
-            $pdf->Cell($width, 1, utf8_decode($config->bairro . " - " . $config->cidade . " - " . $config->uf), 0, 0, 'L', true);
+            $pdf->Cell($width, 1, utf8_decode($venda->cliente->bairro . " - " . $venda->cliente->cidade . " - " . $venda->cliente->uf), 0, 0, 'L', true);
 
             $height += 3;
             $pdf->setY($height);
@@ -361,12 +361,12 @@ class Impressao80mm
             $height += 3;
             $pdf->setY($height);
             $pdf->setX(2);
-            $pdf->Cell($width, 1, utf8_decode($config->logradouro . ", " . $config->numero), 0, 0, 'L', true);
+            $pdf->Cell($width, 1, utf8_decode($venda->cliente->logradouro . ", " . $venda->cliente->numero), 0, 0, 'L', true);
 
             $height += 3;
             $pdf->setY($height);
             $pdf->setX(2);
-            $pdf->Cell($width, 1, utf8_decode($config->bairro . " - " . $config->cidade . " - " . $config->uf), 0, 0, 'L', true);
+            $pdf->Cell($width, 1, utf8_decode($venda->cliente->bairro . " - " . $venda->cliente->cidade . " - " . $venda->cliente->uf), 0, 0, 'L', true);
 
             $height += 3;
             $pdf->setY($height);
@@ -586,12 +586,12 @@ class Impressao80mm
         $height += 3;
         $pdf->setY($height);
         $pdf->setX(2);
-        $pdf->Cell($width, 1, utf8_decode($config->logradouro . ", " . $config->numero), 0, 0, 'L', true);
+        $pdf->Cell($width, 1, utf8_decode($venda->cliente->logradouro . ", " . $venda->cliente->numero), 0, 0, 'L', true);
 
         $height += 3;
         $pdf->setY($height);
         $pdf->setX(2);
-        $pdf->Cell($width, 1, utf8_decode($config->bairro . " - " . $config->cidade . " - " . $config->uf), 0, 0, 'L', true);
+        $pdf->Cell($width, 1, utf8_decode($venda->cliente->bairro . " - " . $venda->cliente->cidade . " - " . $venda->cliente->uf), 0, 0, 'L', true);
 
         $height += 3;
         $pdf->setY($height);

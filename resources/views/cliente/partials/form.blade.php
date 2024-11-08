@@ -140,7 +140,7 @@
             <label class="form-label" for="anotacoes">Anotações</label>
             <textarea class="form-control" id="anotacoes" name="anotacoes" cols="3" rows="2">{{ $cliente->anotacoes ?? '' }}</textarea>
         </div>
-    </div><hr>
+    </div>
 
     <div class="row mb-2 d-none">
         <div class="col-md-4 col-sm-12">

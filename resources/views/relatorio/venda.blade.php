@@ -77,6 +77,7 @@
                                     <th>Código</th>
                                     <th>Cliente</th>
                                     <th>Valor</th>
+                                    <th>Saldo</th>
                                     <th>Data Venda</th>
                                     <th>Status</th>
                                 </tr>
@@ -92,6 +93,9 @@
                                         <td>{{ $venda->cliente->nome ?? '' }}</td>
                                         <td>
                                             R$ {{ number_format($venda->total_liquido, 2, ',', '.') }}
+                                        </td>
+                                        <td>
+                                            R$ {{ number_format($venda->saldo, 2, ',', '.') }}
                                         </td>
                                         <td>{{ date('d/m/Y', strtotime($venda->data_venda)) }}</td>
                                         <td>{!! $venda->situacao->label !!}</td>

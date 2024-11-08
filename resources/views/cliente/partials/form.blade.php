@@ -112,24 +112,24 @@
     {{-- CONTATO --}}
 
     <div class="row mb-2">
-        <div class="col-md-8">
+        <div class="col-md-6">
             <label class="form-label" for="exampleInputText2">E-mail</label>
             <input type="email" class="form-control form-control-lg" id="email" name="email" value="{{ $cliente->email ?? '' }}">
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             <label class="form-label" for="exampleInputText2">Celular</label>
             <input type="text" class="form-control form-control-lg mask-celular" id="celular" name="celular" value="{{ $cliente->celular ?? '' }}">
         </div>
+        <div class="col-md-3">
+            <label class="form-label" for="exampleInputText2">Telefone</label>
+            <input type="text" class="form-control form-control-lg mask-telefone" id="telefone" name="telefone" value="{{ $cliente->telefone ?? '' }}">
+        </div>
     </div>
 
-    <div class="row mb-2">
+    <div class="row mb-2 d-none">
         <div class="col-md-8">
             <label class="form-label" for="exampleInputText2">Rede Social</label>
             <input type="text" class="form-control form-control-lg" id="rede_social" name="rede_social" value="{{ $cliente->rede_social ?? '' }}">
-        </div>
-        <div class="col-md-4">
-            <label class="form-label" for="exampleInputText2">Telefone</label>
-            <input type="text" class="form-control form-control-lg mask-telefone" id="telefone" name="telefone" value="{{ $cliente->telefone ?? '' }}">
         </div>
     </div>
 

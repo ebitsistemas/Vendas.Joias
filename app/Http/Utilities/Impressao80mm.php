@@ -525,9 +525,9 @@ class Impressao80mm
         $pdf->SetTextColor(94, 98, 120);
         /* LOGO */
         if (!empty($config->imagem)) {
-            list($widthimg, $heightimg) = $this->resizeToFit('assets/images/logo.png');
+            list($widthimg, $heightimg) = $this->resizeToFit(url('assets/images/logo.png'));
             $pdf->Image(
-                'assets/images/logo.png', (self::A4_HEIGHT - $widthimg) / 2,
+                url('assets/images/logo.png'), (self::A4_HEIGHT - $widthimg) / 2,
                 $height,
                 $widthimg,
                 $heightimg

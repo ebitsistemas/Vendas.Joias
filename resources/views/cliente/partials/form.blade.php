@@ -82,29 +82,26 @@
                 <a href="#" class="input-group-text"><i class="fa fa-search"></i></a>
             </div>
         </div>
-        <div class="col-md-9">
+        <div class="col-md-7">
             <label class="form-label" for="logradouro">Logradouro</label>
             <input type="text" class="form-control form-control-lg" id="logradouro" name="logradouro" value="{{ $cliente->logradouro ?? '' }}">
         </div>
-    </div>
-
-    <div class="row mb-2">
-        <div class="col-md-3">
+        <div class="col-md-2">
             <label class="form-label" for="numero">Número</label>
             <input type="text" class="form-control form-control-lg" id="numero" name="numero" value="{{ $cliente->numero ?? '' }}">
         </div>
-        <div class="col-md-9">
-            <label class="form-label" for="bairro">Bairro</label>
-            <input type="text" class="form-control form-control-lg" id="bairro" name="bairro" value="{{ $cliente->bairro ?? '' }}">
-        </div>
     </div>
 
     <div class="row mb-2">
-        <div class="col-md-9">
+        <div class="col-md-5">
+            <label class="form-label" for="bairro">Bairro</label>
+            <input type="text" class="form-control form-control-lg" id="bairro" name="bairro" value="{{ $cliente->bairro ?? '' }}">
+        </div>
+        <div class="col-md-5">
             <label class="form-label" for="cidade">Cidade</label>
             <input type="text" class="form-control form-control-lg" id="cidade" name="cidade" value="{{ $cliente->cidade ?? '' }}">
         </div>
-        <div class="col-md-3">
+        <div class="col-md-2">
             <label class="form-label" for="uf">UF</label>
             <input type="text" class="form-control form-control-lg" id="uf" name="uf" value="{{ $cliente->uf ?? '' }}">
         </div>

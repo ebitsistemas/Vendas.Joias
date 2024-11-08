@@ -141,11 +141,11 @@
     <div class="row mb-2">
         <div class="col-md-12">
             <label class="form-label" for="anotacoes">Anotações</label>
-            <textarea class="form-control" id="anotacoes" name="anotacoes" cols="3" rows="5">{{ $cliente->anotacoes ?? '' }}</textarea>
+            <textarea class="form-control" id="anotacoes" name="anotacoes" cols="3" rows="2">{{ $cliente->anotacoes ?? '' }}</textarea>
         </div>
     </div><hr>
 
-    <div class="row mb-2">
+    <div class="row mb-2 d-none">
         <div class="col-md-4 col-sm-12">
             @if(empty($cliente->imagem))
                 <img class="img-thumbnail mb-2" src="{{ url('mobile/assets/img/no_client.jpg') }}" style="max-height: 150px;">

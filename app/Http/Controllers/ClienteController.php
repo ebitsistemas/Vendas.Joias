@@ -219,6 +219,10 @@ class ClienteController extends Controller
         ]);
         $vendas = $model->where('cliente_id', $request->id)->get();
 
+        if (empty($vendas)) {
+            return redirect()->back();
+        }
+
         $cliente = Cliente::find($request->id);
 
         $impressao = new Impressao80mm();

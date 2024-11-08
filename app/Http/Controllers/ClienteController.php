@@ -227,7 +227,7 @@ class ClienteController extends Controller
         $impressao = new Impressao80mm();
         $pdf = $impressao->saldo($config, $vendas, $cliente);
 
-        return response($pdf)->header('Content-Type', 'application/pdf');
+        return response($pdf)->header('Content-Type', 'application/pdf')->header('filename', 'inline');
     }
 
     /*

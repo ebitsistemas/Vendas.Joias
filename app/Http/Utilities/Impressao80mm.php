@@ -626,8 +626,6 @@ class Impressao80mm
         $pdf->SetTextColor(100, 100, 100);
         $pdf->Cell($width, 1, Str::padBoth('', $width, '-'), 0, 0, 'L', true);
 
-        $saldo = $venda->saldo;
-        $saldo = $saldo < 0 ? 0 : $saldo;
         $height += 4;
         $pdf->setY($height);
         $pdf->setX(2);

@@ -213,7 +213,6 @@ class ClienteController extends Controller
 
         $model = Venda::with([
             'itens',
-            'cliente',
             'faturas',
             'situacao',
         ]);

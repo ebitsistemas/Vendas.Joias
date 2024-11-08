@@ -109,6 +109,9 @@ class RelatorioController extends Controller
             $vendas = $model->get();
         }
 
+        // pegar data do ultimo pagamento
+        // verificar se teve pagamento na venda, no mes do filtro [para mostrar os pagos e não pagos]
+
         return view('relatorio.venda')->with(['vendas' => $vendas ?? null, 'clientes' => $clientes, 'situacoes' => $situacoes, 'request' => $request]);
     }
 }

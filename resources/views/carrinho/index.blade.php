@@ -83,7 +83,7 @@
                             <!-- Single Counter -->
                             <div class="single-counter-wrap text-center">
                                 <h4 class="mb-0 @if($saldo < 0) text-danger @else text-primary @endif">
-                                    R$ <span class="counter">{{ number_format($venda->saldo, 2, ',', '.') }}</span>
+                                    R$ <span class="counter" id="saldoCarrinho">{{ number_format($venda->saldo, 2, ',', '.') }}</span>
                                 </h4>
                                 <p class="mb-0 fz-12">SALDO</p>
                             </div>

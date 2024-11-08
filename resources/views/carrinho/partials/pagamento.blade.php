@@ -9,7 +9,7 @@
                 <div class="col-md-3">
                     <label class="form-label required" for="valor_recebido">Valor</label>
                     <div class="input-group mb-3">
-                        <span class="input-group-text">R$</span>
+                        <span class="input-group-text fn-saldo">R$</span>
                         <input type="text" class="form-control form-control-lg mask-money" id="valor_recebido" name="valor_recebido" value="" required>
                     </div>
                 </div>
@@ -166,6 +166,12 @@
 
        $('#valor_parcela').val(valor);
     });
+
+    $(document).on('click', '.fn-saldo', function () {
+        var saldo = $('#saldoCarrinho').val();
+
+        $('#valor_recebido').val(saldo);
+    })
 
     $(document).on('click', '.fn-editar', function () {
         var value = $(this).data('value');

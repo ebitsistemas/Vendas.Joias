@@ -26,9 +26,9 @@ class ClienteController extends Controller
     {
         $config = Configuracao::first();
         if (empty($request->pesquisa)) {
-            $clientes = Cliente::where('status', 1)->paginate($config->itens_pagina);
+            $clientes = Cliente::where('status', 1)->orderBy('nome')->paginate($config->itens_pagina);
         } else {
-            $model = Cliente::where('status', 1);
+            $model = Cliente::select('*');
 
             $pesquisa = $request->pesquisa;
             $model->where(function($query) use ($pesquisa) {

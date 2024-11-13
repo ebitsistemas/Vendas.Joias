@@ -109,9 +109,9 @@ class Impressao80mm
             $pdf->setY($height);
             $pdf->setX(2);
             if ($venda->cliente->tipo_pessoa == 1 AND !empty($venda->cliente->documento)) {
-                $pdf->Cell($width, 1, utf8_decode("DOCUMENTO: " . $this->helper->mascara('###.###.###-##', $venda->cliente->documento)), 0, 0, 'L', true);
+                $pdf->Cell($width, 1, utf8_decode("DOCUMENTO: " . $venda->cliente->documento), 0, 0, 'L', true);
             } else {
-                $pdf->Cell($width, 1, utf8_decode("DOCUMENTO: " . $this->helper->mascara('##.###.###/####-##', $venda->cliente->documento)), 0, 0, 'L', true);
+                $pdf->Cell($width, 1, utf8_decode("DOCUMENTO: " . $venda->cliente->documento), 0, 0, 'L', true);
             }
 
             $height += 3;

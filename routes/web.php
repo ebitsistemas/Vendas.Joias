@@ -73,7 +73,7 @@ Route::prefix('cliente')->group(function () {
     Route::get('show/{id}', [\App\Http\Controllers\ClienteController::class, 'show'])->name('cliente.visualizar')->middleware('auth');
     Route::get('imprimir/{id}', [\App\Http\Controllers\ClienteController::class, 'imprimir'])->name('cliente.imprimir')->middleware('auth');
     Route::get('buscar/{venda_id}', [\App\Http\Controllers\ClienteController::class, 'buscar'])->name('cliente.buscar')->middleware('auth');
-    Route::post('buscar', [\App\Http\Controllers\ClienteController::class, 'buscar'])->name('cliente.buscar')->middleware('auth');
+    Route::post('buscar/{venda_id}', [\App\Http\Controllers\ClienteController::class, 'buscar'])->name('cliente.buscar')->middleware('auth');
     Route::post('store', [\App\Http\Controllers\ClienteController::class, 'store'])->name('cliente.store')->middleware('auth');
     Route::post('update', [\App\Http\Controllers\ClienteController::class, 'update'])->name('cliente.update')->middleware('auth');
     Route::post('delete', [\App\Http\Controllers\ClienteController::class, 'destroy'])->name('cliente.delete')->middleware('auth');

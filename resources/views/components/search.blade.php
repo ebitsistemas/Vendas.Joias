@@ -5,9 +5,9 @@
                 <form action="{{ url($method) }}" method="post">
                     @csrf
                     <div class="input-group">
-                        <span class="input-group-text px-3">
-                          <i class="fal fa-search"></i>
-                        </span>
+                        <button type="submit" class="input-group-text px-3">
+                            <i class="fal fa-search"></i>
+                        </button>
                         <input class="form-control form-control-lg" type="search" name="pesquisa" value="{{ $search }}" placeholder="Buscar">
                     </div>
                 </form>

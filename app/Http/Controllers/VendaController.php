@@ -21,7 +21,7 @@ class VendaController extends Controller
         $produtos = Produto::all();
         $config = Configuracao::first();
         if (empty($request->pesquisa)) {
-            $vendas = Venda::paginate($config->itens_pagina);
+            $vendas = Venda::orderBy('id', 'desc')->paginate($config->itens_pagina);
         } else {
             $model = Venda::select('*');
 

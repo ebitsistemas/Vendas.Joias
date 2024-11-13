@@ -353,9 +353,9 @@ class Impressao80mm
             $pdf->setY($height);
             $pdf->setX(2);
             if ($venda->cliente->tipo_pessoa == 1) {
-                $pdf->Cell($width, 1, utf8_decode("DOCUMENTO: " . $this->helper->mascara('###.###.###-##', $venda->cliente->documento)), 0, 0, 'L', true);
+                $pdf->Cell($width, 1, utf8_decode("DOCUMENTO: " . $venda->cliente->documento), 0, 0, 'L', true);
             } else {
-                $pdf->Cell($width, 1, utf8_decode("DOCUMENTO: " . $this->helper->mascara('##.###.###/####-##', $venda->cliente->documento)), 0, 0, 'L', true);
+                $pdf->Cell($width, 1, utf8_decode("DOCUMENTO: " . $venda->cliente->documento), 0, 0, 'L', true);
             }
 
             $height += 3;
@@ -578,9 +578,9 @@ class Impressao80mm
         $pdf->setY($height);
         $pdf->setX(2);
         if ($cliente->tipo_pessoa == 1) {
-            $pdf->Cell($width, 1, utf8_decode("DOCUMENTO: " . $this->helper->mascara('###.###.###-##', $cliente->documento)), 0, 0, 'L', true);
+            $pdf->Cell($width, 1, utf8_decode("DOCUMENTO: " . $cliente->documento), 0, 0, 'L', true);
         } else {
-            $pdf->Cell($width, 1, utf8_decode("DOCUMENTO: " . $this->helper->mascara('##.###.###/####-##', $cliente->documento)), 0, 0, 'L', true);
+            $pdf->Cell($width, 1, utf8_decode("DOCUMENTO: " . $cliente->documento), 0, 0, 'L', true);
         }
 
         $height += 3;

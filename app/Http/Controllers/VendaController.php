@@ -33,7 +33,7 @@ class VendaController extends Controller
                     ->orWhere('data_venda', 'like', "%{$pesquisa}%")
                     ->orWhere('anotacoes', 'like', "%{$pesquisa}%");
             });
-            $vendas = $model->paginate($config->itens_pagina);
+            $vendas = $model->orderBy('id', 'desc')->paginate($config->itens_pagina);
         }
         return view('venda.lista')->with(['vendas' => $vendas, 'produtos' => $produtos, 'pesquisa' => $pesquisa ?? '']);
     }

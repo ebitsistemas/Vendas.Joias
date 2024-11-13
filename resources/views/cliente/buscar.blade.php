@@ -8,7 +8,7 @@
             <div class="card-body border">
                 <div class="row">
                     <div class="col-md-9 pe-1 pt-1">
-                        <form action="{{ url('cliente/buscar') }}" method="post">
+                        <form action="{{ url('cliente/buscar/'.$venda_id) }}" method="post">
                             @csrf
                             <div class="input-group">
                                 <button type="submit" class="input-group-text px-3">

@@ -11,32 +11,29 @@
                     <div class="row mb-2">
                         <div class="col-sm-4">
                             <label class="fs-6 form-label">Tipo Pessoa</label>
-                            <select class="form-select form-select-lg" name="tipo_pessoa" data-control="select2"
-                                    data-hide-search="true" data-select="{{ $request->tipo_pessoa ?? '' }}">
+                            <select class="form-select form-select-lg" name="tipo_pessoa" data-control="select2" data-hide-search="true">
                                 <option value="">Todos</option>
-                                <option value="1">Pessoa Física</option>
-                                <option value="2">Pessoa Jurídica</option>
+                                <option value="1" @if($request->tipo_pessoa == 1) selected @endif>Pessoa Física</option>
+                                <option value="2" @if($request->tipo_pessoa == 2) selected @endif>Pessoa Jurídica</option>
                             </select>
                         </div>
 
                         <div class="col-sm-4">
                             <label class="fs-6 form-label">Grupo</label>
-                            <select class="form-select form-select-lg" name="grupo_id" data-control="select2"
-                                    data-hide-search="true" data-select="{{ $request->grupo_id ?? '' }}">
+                            <select class="form-select form-select-lg" name="grupo_id" data-control="select2" data-hide-search="true">
                                 <option value="">Todos</option>
                                 @foreach($grupos as $grupo)
-                                    <option value="{{ $grupo->id }}">{{ $grupo->nome }}</option>
+                                    <option value="{{ $grupo->id }}" @if($request->grupo_id == $grupo->id) selected @endif>{{ $grupo->nome }}</option>
                                 @endforeach
                             </select>
                         </div>
 
                         <div class="col-sm-4">
                             <label class="fs-6 form-label">Sexo</label>
-                            <select class="form-select form-select-lg" id="sexo" name="sexo" data-selected=""
-                                    data-select="{{ $request->sexo ?? '' }}">
+                            <select class="form-select form-select-lg" id="sexo" name="sexo">
                                 <option value="">Todos</option>
-                                <option value="1">Feminino</option>
-                                <option value="2">Masculino</option>
+                                <option value="1" @if($request->sexo == 1) selected @endif>Feminino</option>
+                                <option value="2" @if($request->sexo == 2) selected @endif>Masculino</option>
                             </select>
                         </div>
                     </div>
@@ -54,10 +51,10 @@
                         <div class="col-sm-4">
                             <label class="fs-6 form-label">Status</label>
                             <select class="form-select form-select-lg" name="status" id="status" data-control="select2"
-                                    data-hide-search="true" data-select="{{ $request->status ?? '' }}">
+                                    data-hide-search="true">
                                 <option value="">Todos</option>
-                                <option value="1">Ativo</option>
-                                <option value="2">Inativo</option>
+                                <option value="1" @if($request->status == 1) selected @endif>Ativo</option>
+                                <option value="2" @if($request->status == 2) selected @endif>Inativo</option>
                             </select>
                         </div>
                     </div>

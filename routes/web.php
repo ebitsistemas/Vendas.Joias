@@ -129,6 +129,7 @@ Route::prefix('venda')->group(function () {
     Route::post('baixar/faturas', [\App\Http\Controllers\VendaController::class, 'baixar'])->name('venda.baixar.faturas')->middleware('auth');
     Route::post('delete', [\App\Http\Controllers\VendaController::class, 'destroy'])->name('venda.delete')->middleware('auth');
 
+    Route::post('status', [\App\Http\Controllers\VendaController::class, 'status'])->name('venda.status');
     Route::get('cadastrar', [\App\Http\Controllers\VendaController::class, 'index'])->name('venda.cadastrar')->middleware('auth');
 });
 

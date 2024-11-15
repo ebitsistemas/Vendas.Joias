@@ -230,7 +230,7 @@ class ClienteController extends Controller
         return response($pdf)->header('Content-Type', 'application/pdf')->header('filename', 'inline');
     }
 
-    /*
+    /* */
     public function disable()
     {
         $config = Configuracao::first();
@@ -245,5 +245,5 @@ class ClienteController extends Controller
                 $modelCliente->update(['status' => '2']);
             }
         }
-    }*/
+    }/* */
 }

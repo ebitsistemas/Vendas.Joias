@@ -9,10 +9,8 @@ use App\Models\FaturaItem;
 use App\Models\Grupo;
 use App\Models\Venda;
 use App\Traits\TraitDatatables;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class ClienteController extends Controller

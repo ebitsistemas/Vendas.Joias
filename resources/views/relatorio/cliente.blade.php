@@ -57,8 +57,7 @@
                                     data-hide-search="true" data-select="{{ $request->status ?? '' }}">
                                 <option value="">Todos</option>
                                 <option value="1">Ativo</option>
-                                <option value="0">Inativo</option>
-                                <option value="2">Bloqueado</option>
+                                <option value="2">Inativo</option>
                             </select>
                         </div>
                     </div>
@@ -103,8 +102,8 @@
                                             </td>
                                             <td>{{ $cliente->nome }}</td>
                                             <td>
-                                                {{ $cliente->logradouro }}, {{ $cliente->numero }}
-                                                - {{ $cliente->cidade }}-{{ $cliente->uf }}
+                                                @if (!empty($cliente->logradouro)) {{ $cliente->logradouro }}, {{ $cliente->numero }} @endif
+                                                @if (!empty($cliente->cidade)) - {{ $cliente->cidade }}-{{ $cliente->uf }} @endif
                                             </td>
                                             <td>
                                                 @if($cliente->status == 1)

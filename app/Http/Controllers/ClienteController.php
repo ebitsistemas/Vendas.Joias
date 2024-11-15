@@ -234,6 +234,7 @@ class ClienteController extends Controller
     public function disable()
     {
         $config = Configuracao::first();
+        /*
         if ($config->inativar_cadastro > 0) {
             $data = Carbon::now(); //Carbon::now()->subDays($config->inativar_cadastro);
             $model = Cliente::select('clientes.id, vendas.data_venda');
@@ -245,6 +246,18 @@ class ClienteController extends Controller
                 $modelCliente = Cliente::find($cliente->id);
                 $modelCliente->update(['status' => '2']);
             }
+        }*/
+        $clientes = Cliente::where('status', '1')->get();
+
+        foreach ($clientes as $cliente) {
+            $vendas = Venda::where('cliente_id', $cliente->id)
+                ->where('status', 0)
+                ->get();
+
+            if (empty($vendas)) {
+                $modelCliente = Cliente::find($cliente->id);
+                $modelCliente->update(['status' => '2']);
+            }
         }
-    }/* */
+    }
 }

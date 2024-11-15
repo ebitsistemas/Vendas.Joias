@@ -7,6 +7,7 @@ use App\Models\Venda;
 use App\Models\Produto;
 use App\Models\FaturaItem;
 use App\Models\Configuracao;
+use App\Models\VendaItem;
 use Illuminate\Http\Request;
 use App\Http\Utilities\Impressao80mm;
 use Illuminate\Support\Facades\Cache;
@@ -94,7 +95,6 @@ class VendaController extends Controller
      */
     public function baixar(Request $request)
     {
-        echo '<pre>';
         $vendas = Venda::where('cliente_id', $request->cliente_id)
             ->where('status', 0)
             ->get();
@@ -138,5 +138,33 @@ class VendaController extends Controller
         $venda->saldo = $venda->total_liquido - $faturas;
         $venda->status = ($venda->total_liquido - $faturas) <= 0 ? 1 : 0;
         $venda->save();
+    }
+
+    public function status()
+    {
+        $vendas = Venda::where('saldo', '<=', 0)->get();
+
+        foreach ($vendas as $venda) {
+            $venda->status = 1;
+            $venda->save();
+        }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Request $request)
+    {
+        \DB::beginTransaction();
+
+        $result = Venda::destroy($request->id);
+        FaturaItem::where('venda_id', $request->id)->delete();
+        VendaItem::where('venda_id', $request->id)->delete();
+
+        \DB::commit();
+
+        return response()->json([
+            'success' => $result
+        ]);
     }
 }

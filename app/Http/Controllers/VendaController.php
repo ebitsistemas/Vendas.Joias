@@ -142,11 +142,15 @@ class VendaController extends Controller
 
     public function status()
     {
-        $vendas = Venda::where('saldo', '<=', 0)->get();
+        $vendas = Venda::with('itens')
+            ->where('saldo', '<=', 0)
+            ->get();
 
         foreach ($vendas as $venda) {
-            $venda->status = 1;
-            $venda->save();
+            if (!empty($venda->itens)) {
+                $venda->status = 1;
+                $venda->save();
+            }
         }
     }
 

@@ -153,6 +153,9 @@ Route::prefix('relatorio')->group(function () {
     Route::get('financeiro', [\App\Http\Controllers\RelatorioController::class, 'financeiro'])->name('relatorio.financeiro')->middleware('auth');
     Route::post('financeiro', [\App\Http\Controllers\RelatorioController::class, 'financeiro'])->name('relatorio.financeiro')->middleware('auth');
 
+    Route::get('periodo', [\App\Http\Controllers\RelatorioController::class, 'periodo'])->name('relatorio.periodo')->middleware('auth');
+    Route::post('periodo', [\App\Http\Controllers\RelatorioController::class, 'periodo'])->name('relatorio.periodo')->middleware('auth');
+
     Route::get('venda', [\App\Http\Controllers\RelatorioController::class, 'venda'])->name('relatorio.venda')->middleware('auth');
     Route::post('venda', [\App\Http\Controllers\RelatorioController::class, 'venda'])->name('relatorio.venda')->middleware('auth');
 });

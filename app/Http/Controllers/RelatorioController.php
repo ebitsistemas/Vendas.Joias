@@ -84,6 +84,45 @@ class RelatorioController extends Controller
         return view('relatorio.financeiro')->with(['faturas' => $faturas ?? null, 'clientes' => $clientes, 'situacoes' => $situacoes, 'request' => $request]);
     }
 
+    public function periodo(Request $request)
+    {
+        $grupos = Grupo::all();
+
+        if (!empty($request->has('_token'))) {
+            $model = Cliente::select([
+                'clientes.id',
+                'clientes.nome',
+                'clientes.logradouro',
+                'clientes.numero',
+                'clientes.cidade',
+                'clientes.uf',
+                'clientes.status'
+            ]);
+            $model->leftjoin('vendas', 'vendas.cliente_id', 'clientes.id');
+            if (!empty($request->tipo_pessoa)) {
+                $model->where('clientes.tipo_pessoa', $request->tipo_pessoa);
+            }
+            if (!empty($request->grupo_id)) {
+                $model->where('clientes.grupo_id', $request->grupo_id);
+            }
+            if (!empty($request->cidade)) {
+                $model->where('clientes.logradouro', 'like', "%{$request->cidade}%");
+            }
+            if (!empty($request->bairro)) {
+                $model->where('clientes.bairro', 'like', "%{$request->bairro}%");
+            }
+            if (!empty($request->status)) {
+                $model->where('clientes.status', $request->status);
+            }
+            $model->whereBetween('vendas.data_venda', [date("{$request->ano}-{$request->mes}-01"), date("{$request->ano}-{$request->mes}-t")]);
+            $model->where('vendas.status', 0);
+            $model->groupBy('vendas.cliente_id');
+            $clientes = $model->get();
+        }
+
+        return view('relatorio.periodo')->with(['clientes' => $clientes ?? null, 'grupos' => $grupos, 'request' => $request]);
+    }
+
     public function venda(Request $request)
     {
         $clientes = Cliente::all();

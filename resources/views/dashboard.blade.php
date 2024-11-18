@@ -5,7 +5,7 @@
 @section('content')
     <div class="container">
         <div class="row mb-2">
-            <div class="col-md-4 col-sm-4 col-xs-4 mb-3">
+            <div class="col-md-3 col-sm-6 col-xs-6 mb-3">
                 <div class="card">
                     <a href="{{ url('relatorio/cliente') }}" class="card-body bg-theme-light-hover border border-2 p-2">
                         <div class="text-center py-3">
@@ -16,7 +16,18 @@
                 </div>
             </div>
 
-            <div class="col-md-4 col-sm-4 col-xs-4 mb-3">
+            <div class="col-md-3 col-sm-6 col-xs-6 mb-3">
+                <div class="card">
+                    <a href="{{ url('relatorio/periodo') }}" class="card-body bg-theme-light-hover border border-2 p-2">
+                        <div class="text-center py-3">
+                            <i class="fal fa-calendar-alt text-theme fs-36px mb-2"></i>
+                            <h4 class="mb-1 text-theme fs-18px mt-3">Relatórios por Período</h4>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-md-3 col-sm-6 col-xs-6 mb-3">
                 <div class="card">
                     <a href="{{ url('relatorio/financeiro') }}" class="card-body bg-theme-light-hover border border-2 p-2">
                         <div class="text-center py-3">
@@ -27,7 +38,7 @@
                 </div>
             </div>
 
-            <div class="col-md-4 col-sm-4 col-xs-4 mb-3">
+            <div class="col-md-3 col-sm-6 col-xs-6 mb-3">
                 <div class="card">
                     <a href="{{ url('relatorio/venda') }}" class="card-body bg-theme-light-hover border border-2 p-2">
                         <div class="text-center py-3">

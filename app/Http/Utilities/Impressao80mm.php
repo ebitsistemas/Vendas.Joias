@@ -616,9 +616,17 @@ class Impressao80mm
             $pdf->setY($height);
             $pdf->setX(2);
             $pdf->SetFont('Arial', '', 8);
-            $pdf->Cell(59, 1, utf8_decode('VENDA:'), 0, 0, 'L', true);
+            $pdf->Cell(59, 1, utf8_decode('VENDA #'.$venda->id), 0, 0, 'L', true);
             $pdf->Cell(18, 1, 'R$ ' . number_format($venda->total_liquido, 2, ',', '.'), 0, 0, 'R', true);
 
+            foreach ($venda->faturas as $fatura) {
+                $height += 4;
+                $pdf->setY($height);
+                $pdf->setX(2);
+                $pdf->SetFont('Arial', '', 8);
+                $pdf->Cell(59, 1, utf8_decode('PAGAMENTO'), 0, 0, 'L', true);
+                $pdf->Cell(18, 1, 'R$ ' . number_format($fatura->valor_recebido, 2, ',', '.'), 0, 0, 'R', true);
+            }
         }
 
         $height += 4;

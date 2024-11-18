@@ -625,7 +625,7 @@ class Impressao80mm
                 $pdf->setX(2);
                 $pdf->SetFont('Arial', '', 8);
                 $pdf->Cell(59, 1, utf8_decode('PAGAMENTO'), 0, 0, 'L', true);
-                $pdf->Cell(18, 1, 'R$ ' . number_format($fatura->valor_recebido, 2, ',', '.'), 0, 0, 'R', true);
+                $pdf->Cell(18, 1, ' - R$ ' . number_format($fatura->valor_recebido, 2, ',', '.'), 0, 0, 'R', true);
             }
         }
 

@@ -250,15 +250,17 @@ class ClienteController extends Controller
         foreach ($clientes as $cliente) {
             $vendas = Venda::where('cliente_id', $cliente->id)
                 ->where('status', 0)
-                ->get();
+                ->first();
 
             echo '<pre>';
-            print_r($vendas); exit;
+            print_r($vendas->id);
 
+            /*
             if (empty($vendas)) {
+                print_r($vendas); exit;
                 $modelCliente = Cliente::find($cliente->id);
                 $modelCliente->update(['status' => '2']);
-            }
+            }*/
         }
     }
 }

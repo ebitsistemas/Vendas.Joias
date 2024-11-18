@@ -214,7 +214,9 @@ class ClienteController extends Controller
             'faturas',
             'situacao',
         ]);
-        $vendas = $model->where('cliente_id', $request->id)->get();
+        $vendas = $model->where('cliente_id', $request->id)
+            ->limit(5)
+            ->get();
 
         if (empty($vendas)) {
             return redirect()->back();

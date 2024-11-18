@@ -41,6 +41,15 @@
                                             </div>
                                         </div>
 
+                                        <div class="chat-user-info w-150px">
+                                            <h6 class="mb-0 fs-18px mb-1">Saldo</h6>
+                                            <div class="last-chat">
+                                                <p class="mb-0 text-truncate fs-16px">
+                                                    R$ {{ number_format($venda->saldo, 2, ',', '.') }}
+                                                </p>
+                                            </div>
+                                        </div>
+
                                         <div class="chat-user-info w-200px">
                                             <h6 class="mb-0 fs-18px mb-1">Data da Venda</h6>
                                             <div class="last-chat">

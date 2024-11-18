@@ -557,7 +557,7 @@ class Impressao80mm
         $pdf->setY($height);
         $pdf->setX(0);
         $pdf->SetFont('Arial','B',10);
-        $pdf->Cell($width, 3, "CADASTRO", 0, 0, 'C', true);
+        $pdf->Cell($width, 3, "SALDO DEVEDOR", 0, 0, 'C', true);
 
         $height += 5;
         $pdf->setY($height);
@@ -565,7 +565,6 @@ class Impressao80mm
         $pdf->SetFont('Arial','',8);
         $pdf->SetTextColor(100, 100, 100);
         $pdf->Cell($width, 1, Str::padBoth('', $width, '-'), 0, 0, 'L', true);
-
 
         /* DADOS DO CLIENTE */
         $height += 3;
@@ -599,12 +598,17 @@ class Impressao80mm
         $pdf->SetTextColor(100, 100, 100);
         $pdf->Cell($width, 1, Str::padBoth('', $width, '-'), 0, 0, 'L', true);
 
-        $height += 4;
+        $height += 3;
+        $pdf->setY($height);
+        $pdf->setX(0);
+        $pdf->SetFont('Arial','B',10);
+        $pdf->Cell($width, 3, "ÚLTIMAS MOVIMENTAÇÕES", 0, 0, 'C', true);
+
+        $height += 3;
         $pdf->setY($height);
         $pdf->setX(2);
-        $pdf->SetFont('Arial', '', 8);
-        $pdf->Cell(59, 1, utf8_decode('NÚMERO PEDIDOS:'), 0, 0, 'L', true);
-        $pdf->Cell(18, 1, str($pedidos)->padLeft(3,0), 0, 0, 'R', true);
+        $pdf->SetTextColor(100, 100, 100);
+        $pdf->Cell($width, 1, Str::padBoth('', $width, '-'), 0, 0, 'L', true);
 
         $height += 4;
         $pdf->setY($height);

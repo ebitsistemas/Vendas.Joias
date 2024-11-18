@@ -114,15 +114,19 @@ class Impressao80mm
                 $pdf->Cell($width, 1, utf8_decode("DOCUMENTO: " . $venda->cliente->documento), 0, 0, 'L', true);
             }
 
-            $height += 3;
-            $pdf->setY($height);
-            $pdf->setX(2);
-            $pdf->Cell($width, 1, utf8_decode($venda->cliente->logradouro . ", " . $venda->cliente->numero), 0, 0, 'L', true);
+            if (!empty($venda->cliente->logradouro)) {
+                $height += 3;
+                $pdf->setY($height);
+                $pdf->setX(2);
+                $pdf->Cell($width, 1, utf8_decode($venda->cliente->logradouro . ", " . $venda->cliente->numero), 0, 0, 'L', true);
+            }
 
-            $height += 3;
-            $pdf->setY($height);
-            $pdf->setX(2);
-            $pdf->Cell($width, 1, utf8_decode($venda->cliente->bairro . " - " . $venda->cliente->cidade . " - " . $venda->cliente->uf), 0, 0, 'L', true);
+            if (!empty($venda->cliente->cidade)) {
+                $height += 3;
+                $pdf->setY($height);
+                $pdf->setX(2);
+                $pdf->Cell($width, 1, utf8_decode($venda->cliente->bairro . " - " . $venda->cliente->cidade . " - " . $venda->cliente->uf), 0, 0, 'L', true);
+            }
 
             $height += 3;
             $pdf->setY($height);
@@ -358,15 +362,19 @@ class Impressao80mm
                 $pdf->Cell($width, 1, utf8_decode("DOCUMENTO: " . $venda->cliente->documento), 0, 0, 'L', true);
             }
 
-            $height += 3;
-            $pdf->setY($height);
-            $pdf->setX(2);
-            $pdf->Cell($width, 1, utf8_decode($venda->cliente->logradouro . ", " . $venda->cliente->numero), 0, 0, 'L', true);
+            if (!empty($venda->cliente->logradouro)) {
+                $height += 3;
+                $pdf->setY($height);
+                $pdf->setX(2);
+                $pdf->Cell($width, 1, utf8_decode($venda->cliente->logradouro . ", " . $venda->cliente->numero), 0, 0, 'L', true);
+            }
 
-            $height += 3;
-            $pdf->setY($height);
-            $pdf->setX(2);
-            $pdf->Cell($width, 1, utf8_decode($venda->cliente->bairro . " - " . $venda->cliente->cidade . " - " . $venda->cliente->uf), 0, 0, 'L', true);
+            if (!empty($venda->cliente->cidade)) {
+                $height += 3;
+                $pdf->setY($height);
+                $pdf->setX(2);
+                $pdf->Cell($width, 1, utf8_decode($venda->cliente->bairro . " - " . $venda->cliente->cidade . " - " . $venda->cliente->uf), 0, 0, 'L', true);
+            }
 
             $height += 3;
             $pdf->setY($height);
@@ -582,15 +590,19 @@ class Impressao80mm
             $pdf->Cell($width, 1, utf8_decode("DOCUMENTO: " . $cliente->documento), 0, 0, 'L', true);
         }
 
-        $height += 3;
-        $pdf->setY($height);
-        $pdf->setX(2);
-        $pdf->Cell($width, 1, utf8_decode($venda->cliente->logradouro . ", " . $venda->cliente->numero), 0, 0, 'L', true);
+        if (!empty($venda->cliente->logradouro)) {
+            $height += 3;
+            $pdf->setY($height);
+            $pdf->setX(2);
+            $pdf->Cell($width, 1, utf8_decode($venda->cliente->logradouro . ", " . $venda->cliente->numero), 0, 0, 'L', true);
+        }
 
-        $height += 3;
-        $pdf->setY($height);
-        $pdf->setX(2);
-        $pdf->Cell($width, 1, utf8_decode($venda->cliente->bairro . " - " . $venda->cliente->cidade . " - " . $venda->cliente->uf), 0, 0, 'L', true);
+        if (!empty($venda->cliente->cidade)) {
+            $height += 3;
+            $pdf->setY($height);
+            $pdf->setX(2);
+            $pdf->Cell($width, 1, utf8_decode($venda->cliente->bairro . " - " . $venda->cliente->cidade . " - " . $venda->cliente->uf), 0, 0, 'L', true);
+        }
 
         $height += 3;
         $pdf->setY($height);

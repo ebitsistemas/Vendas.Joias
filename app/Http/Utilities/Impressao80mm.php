@@ -611,12 +611,15 @@ class Impressao80mm
         $pdf->SetTextColor(100, 100, 100);
         $pdf->Cell($width, 1, Str::padBoth('', $width, '-'), 0, 0, 'L', true);
 
-        $height += 4;
-        $pdf->setY($height);
-        $pdf->setX(2);
-        $pdf->SetFont('Arial', '', 8);
-        $pdf->Cell(59, 1, utf8_decode('VALOR TOTAL DAS VENDAS:'), 0, 0, 'L', true);
-        $pdf->Cell(18, 1, 'R$ ' . number_format($total, 2, ',', '.'), 0, 0, 'R', true);
+        foreach ($vendas as $venda) {
+            $height += 4;
+            $pdf->setY($height);
+            $pdf->setX(2);
+            $pdf->SetFont('Arial', '', 8);
+            $pdf->Cell(59, 1, utf8_decode('VENDA:'), 0, 0, 'L', true);
+            $pdf->Cell(18, 1, 'R$ ' . number_format($venda->total_liquido, 2, ',', '.'), 0, 0, 'R', true);
+
+        }
 
         $height += 4;
         $pdf->setY($height);

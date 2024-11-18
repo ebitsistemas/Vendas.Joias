@@ -252,15 +252,10 @@ class ClienteController extends Controller
                 ->where('status', 0)
                 ->first();
 
-            echo '<pre>';
-            print_r($vendas->id);
-
-            /*
             if (empty($vendas)) {
-                print_r($vendas); exit;
                 $modelCliente = Cliente::find($cliente->id);
                 $modelCliente->update(['status' => '2']);
-            }*/
+            }
         }
     }
 }

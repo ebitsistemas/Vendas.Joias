@@ -602,11 +602,12 @@ class Impressao80mm
         $pdf->setY($height);
         $pdf->setX(0);
         $pdf->SetFont('Arial','B',10);
-        $pdf->Cell($width, 3, "ÚLTIMAS MOVIMENTAÇÕES", 0, 0, 'C', true);
+        $pdf->Cell($width, 3, utf8_decode("ÚLTIMAS MOVIMENTAÇÕES"), 0, 0, 'C', true);
 
         $height += 3;
         $pdf->setY($height);
         $pdf->setX(2);
+        $pdf->SetFont('Arial', '', 8);
         $pdf->SetTextColor(100, 100, 100);
         $pdf->Cell($width, 1, Str::padBoth('', $width, '-'), 0, 0, 'L', true);
 

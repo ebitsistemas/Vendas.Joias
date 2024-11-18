@@ -630,13 +630,6 @@ class Impressao80mm
         }
 
         $height += 4;
-        $pdf->setY($height);
-        $pdf->setX(2);
-        $pdf->SetFont('Arial', '', 8);
-        $pdf->Cell(59, 1, utf8_decode('VALOR TOTAL DOS PAGAMENTOS:'), 0, 0, 'L', true);
-        $pdf->Cell(18, 1, 'R$ ' . number_format($total - $saldo, 2, ',', '.'), 0, 0, 'R', true);
-
-        $height += 4;
         $pdf->setY($height); $pdf->setX(2);
         $pdf->SetFont('Arial','',8);
         $pdf->SetTextColor(100, 100, 100);

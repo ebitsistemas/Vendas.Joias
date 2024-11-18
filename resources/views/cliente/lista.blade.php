@@ -35,7 +35,7 @@
                                     <h6 class="mb-0 fs-18px mb-1">{{ $cliente->nome }} - {{ $cliente->documento }}</h6>
                                     <div class="last-chat">
                                         <p class="mb-0 text-truncate fs-16px">
-                                            {{ $cliente->logradouro }}, {{ $cliente->numero }} - {{ $cliente->cidade }}-{{ $cliente->uf }}
+                                            @if (!empty($cliente->logradouro)) {{ $cliente->logradouro }}, {{ $cliente->numero }} - @endif @if (!empty($cliente->cidade)) {{ $cliente->cidade }}-{{ $cliente->uf }}@endif
                                         </p>
                                     </div>
                                 </div>

@@ -102,7 +102,7 @@
                                     <th>Código</th>
                                     <th>Cliente</th>
                                     <th>Valor</th>
-                                    <th>Data Venda</th>
+                                    <th>Data Lançamento</th>
                                     <th>Status</th>
                                 </tr>
                                 </thead>
@@ -118,7 +118,7 @@
                                         <td>
                                             R$ {{ number_format($fatura->valor_subtotal, 2, ',', '.') }}
                                         </td>
-                                        <td>{{ date('d/m/Y', strtotime($fatura->data_vencimento)) }}</td>
+                                        <td>{{ date('d/m/Y', strtotime($fatura->created_at)) }}</td>
                                         <td>{!! $fatura->situacaoFatura->label !!}</td>
                                     </tr>
                                 @endforeach

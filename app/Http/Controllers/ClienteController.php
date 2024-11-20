@@ -49,9 +49,9 @@ class ClienteController extends Controller
     {
         $config = Configuracao::first();
         if (empty($request->pesquisa)) {
-            $clientes = Cliente::where('status', 1)->paginate($config->itens_pagina);
+            $clientes = Cliente::paginate($config->itens_pagina);
         } else {
-            $model = Cliente::where('status', 1);
+            $model = Cliente::select('*');
 
             $pesquisa = $request->pesquisa;
             $model->where(function($query) use ($pesquisa) {
@@ -257,6 +257,9 @@ class ClienteController extends Controller
             if (empty($vendas)) {
                 $modelCliente = Cliente::find($cliente->id);
                 $modelCliente->update(['status' => '2']);
+            } else {
+                $modelCliente = Cliente::find($cliente->id);
+                $modelCliente->update(['status' => '1']);
             }
         }
     }

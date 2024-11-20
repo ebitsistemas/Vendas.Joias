@@ -55,6 +55,13 @@
     </div>
 
     <div class="row mb-2">
+        <div class="col-md-3">
+            <label class="form-label" for="data_nascimento">Dia de Cobrança</label>
+            <input type="number" class="form-control form-control-lg mask-date text-center" min="1" max="31" id="dia_cobranca" name="dia_cobranca" value="{{ $cliente->dia_cobranca ?? '10' }}">
+        </div>
+    </div>
+
+    <div class="row mb-2 d-none">
         <div class="col-md-6">
             <label class="form-label" for="renda">Renda Mensal</label>
             <div class="input-group mb-3">

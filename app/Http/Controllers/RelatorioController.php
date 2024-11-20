@@ -92,11 +92,10 @@ class RelatorioController extends Controller
             $model = Cliente::select([
                 'clientes.id',
                 'clientes.nome',
-                'clientes.logradouro',
-                'clientes.numero',
-                'clientes.cidade',
-                'clientes.uf',
-                'clientes.status'
+                'clientes.status',
+                'vendas.id as venda_id',
+                'vendas.data_cobranca',
+                'vendas.saldo'
             ]);
             $model->leftjoin('vendas', 'vendas.cliente_id', 'clientes.id');
             if (!empty($request->tipo_pessoa)) {
@@ -114,9 +113,9 @@ class RelatorioController extends Controller
             if (!empty($request->status)) {
                 $model->where('clientes.status', $request->status);
             }
-            $model->whereBetween('vendas.data_cobranca', [date("{$request->ano}-{$request->mes}-01"), date("{$request->ano}-{$request->mes}-t")]);
-            $model->where('vendas.status', 0);
-            $model->groupBy('vendas.cliente_id');
+            $model->whereBetween('vendas.data_venda', [date("{$request->ano}-{$request->mes}-01"), date("{$request->ano}-{$request->mes}-t")]);
+            $model->where('vendas.saldo', '>', 0);
+            $model->groupBy('vendas.cliente_id', 'vendas.id', 'vendas.data_cobranca');
             $clientes = $model->get();
         }
 

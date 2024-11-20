@@ -88,8 +88,10 @@
                                 <tr>
                                     <th>Código</th>
                                     <th>Nome</th>
-                                    <th>Endereço</th>
-                                    <th>Status</th>
+                                    <th>Venda #</th>
+                                    <th>Data Cobrança</th>
+                                    <th>Saldo</th>
+                                    <th>Cobrado?</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -101,15 +103,20 @@
                                                 {{ str($cliente->id)->padLeft(6,0) }}
                                             </td>
                                             <td>{{ $cliente->nome }}</td>
-                                            <td>
-                                                @if (!empty($cliente->logradouro)) {{ $cliente->logradouro }}, {{ $cliente->numero }} @endif
-                                                @if (!empty($cliente->cidade)) - {{ $cliente->cidade }}-{{ $cliente->uf }} @endif
+                                            <td class="text-center">
+                                                {{ $cliente->venda_id }}
+                                            </td>
+                                            <td class="text-center">
+                                                {{ \Carbon\Carbon::parse($cliente->data_cobranca)->format('d/m/Y') }}
+                                            </td>
+                                            <td class="text-center">
+                                                {{ number_format($cliente->saldo, 2, ',', '') }}
                                             </td>
                                             <td>
-                                                @if($cliente->status == 1)
-                                                    <span class="badge bg-success ms-2">Ativo</span>
+                                                @if($cliente->cobrado == 1)
+                                                    <btn class="btn btn-success ms-2"><i class="fal fa-check-circle"></i> Sim</btn>
                                                 @else
-                                                    <span class="badge bg-danger ms-2">Inativo</span>
+                                                    <span class="btn btn-danger ms-2"><i class="fal fa-times-circle"></i> Não</span>
                                                 @endif
                                             </td>
                                         </tr>

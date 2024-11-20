@@ -46,6 +46,7 @@
         </div>
     </div>
 
+
     @if(empty($venda->itens))
         <div class="alert custom-alert-three alert-info alert-dismissible fade show" role="alert">
             <div class="row">

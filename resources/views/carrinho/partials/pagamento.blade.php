@@ -91,7 +91,7 @@
                         <tr>
                             <th class="text-start w-175px">Tipo Pagamento</th>
                             <th class="text-center w-225px">Forma Pagamento</th>
-                            <th class="text-center w-175px">Data Vencimento</th>
+                            <th class="text-center w-175px">Data Pagamento</th>
                             <th class="text-center w-175px">Parcelas</th>
                             <th class="text-center w-175px">Valor Fatura</th>
                             <th class="text-center w-100px">Status</th>
@@ -128,7 +128,7 @@
                                     @endif
                                 </td>
                                 <td class="text-center fs-18px">
-                                    {{ \Illuminate\Support\Carbon::parse($fatura->data_vencimento)->format('d/m/Y') }}
+                                    {{ \Illuminate\Support\Carbon::parse($fatura->created_at)->format('d/m/Y') }}
                                 </td>
                                 <td class="text-center fs-18px">
                                     {{ str($fatura->numero_parcela)->padLeft(2,0) }}/{{ str($fatura->total_parcelas)->padLeft(2,0) }}

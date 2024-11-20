@@ -257,9 +257,6 @@ class ClienteController extends Controller
             if (empty($vendas)) {
                 $modelCliente = Cliente::find($cliente->id);
                 $modelCliente->update(['status' => '2']);
-            } else {
-                $modelCliente = Cliente::find($cliente->id);
-                $modelCliente->update(['status' => '1']);
             }
         }
     }

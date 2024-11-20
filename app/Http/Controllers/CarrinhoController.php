@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cliente;
 use App\Models\FaturaItem;
 use App\Models\Situacao;
 use App\Models\Venda;
@@ -45,6 +46,9 @@ class CarrinhoController extends Controller
         $venda = Venda::find($request->venda_id);
         $venda->cliente_id = $request->cliente_id;
         $response = $venda->save();
+
+        Cliente::find($request->cliente_id)
+            ->update(['status' => 1]);
 
         if ($response) {
             toastr()->success('Cliente adicionado com sucesso!');

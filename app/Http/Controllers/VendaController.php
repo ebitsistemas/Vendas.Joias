@@ -7,6 +7,7 @@ use App\Models\Venda;
 use App\Models\Produto;
 use App\Models\FaturaItem;
 use App\Models\Configuracao;
+use App\Models\VendaCobrado;
 use App\Models\VendaItem;
 use Illuminate\Http\Request;
 use App\Http\Utilities\Impressao80mm;
@@ -128,6 +129,18 @@ class VendaController extends Controller
                 $this->saldo($venda->id);
             }
         }
+        return redirect()->back();
+    }
+
+    public function cobrado(Request $request)
+    {
+        $venda = VendaCobrado::firstOrCreate([
+            'venda_id' => $request->venda_id,
+            'mes' => $request->mes,
+        ]);
+        $venda->status = $request->status;
+        $venda->save();
+
         return redirect()->back();
     }
 

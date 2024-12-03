@@ -95,9 +95,11 @@ class RelatorioController extends Controller
                 'clientes.status',
                 'vendas.id as venda_id',
                 'vendas.data_cobranca',
-                'vendas.saldo'
+                'vendas.saldo',
+                'vendas_cobrado.status as cobrado_status',
             ]);
             $model->leftjoin('vendas', 'vendas.cliente_id', 'clientes.id');
+            $model->leftjoin('vendas_cobrado', 'vendas_cobrado.venda_id', 'vendas.id');
             if (!empty($request->tipo_pessoa)) {
                 $model->where('clientes.tipo_pessoa', $request->tipo_pessoa);
             }
@@ -115,7 +117,7 @@ class RelatorioController extends Controller
             }
             $model->whereBetween('vendas.data_venda', [date("{$request->ano}-{$request->mes}-01"), date("{$request->ano}-{$request->mes}-t")]);
             $model->where('vendas.saldo', '>', 0);
-            $model->groupBy('vendas.cliente_id', 'vendas.id', 'vendas.data_cobranca');
+            $model->groupBy('vendas.cliente_id', 'vendas.id', 'vendas.data_cobranca', 'vendas_cobrado.status');
             $clientes = $model->get();
         }
 

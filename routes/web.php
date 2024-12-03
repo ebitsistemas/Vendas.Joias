@@ -131,6 +131,7 @@ Route::prefix('venda')->group(function () {
 
     Route::get('status', [\App\Http\Controllers\VendaController::class, 'status'])->name('venda.status');
     Route::get('cadastrar', [\App\Http\Controllers\VendaController::class, 'index'])->name('venda.cadastrar')->middleware('auth');
+    Route::post('cobrado', [\App\Http\Controllers\VendaController::class, 'cobrado'])->name('venda.cobrado')->middleware('auth');
 });
 
 /* FATURAS */

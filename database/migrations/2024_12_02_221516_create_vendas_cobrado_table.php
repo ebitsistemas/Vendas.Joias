@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('grupos', function (Blueprint $table) {
+        Schema::create('vendas_cobrado', function (Blueprint $table) {
             $table->id();
-            $table->string('nome', 60)->nullable();
-            $table->text('descricao')->nullable();
-            $table->integer('grupo_id')->nullable();
-            $table->boolean('status')->default(1)->comment('2 - Bloqueado; 1 - Ativo; 0 - Inativo;');
+            $table->integer('venda_id');
+            $table->string('mes', 2);
+            $table->tinyInteger('status');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('grupo');
+        Schema::dropIfExists('vendas_cobrado');
     }
 };

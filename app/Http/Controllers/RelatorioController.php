@@ -116,7 +116,7 @@ class RelatorioController extends Controller
                 $model->where('clientes.status', $request->status);
             }
             //$model->whereBetween('vendas.data_venda', [date("{$request->ano}-{$request->mes}-01"), date("{$request->ano}-{$request->mes}-t")]);
-            $model->whereDate('vendas.data_venda', '>= ', date("{$request->ano}-{$request->mes}-01 00:00:00"));
+            $model->whereDate('vendas.created_at', '>= ', date("{$request->ano}-{$request->mes}-01 00:00:00"));
             $model->where('vendas.saldo', '>', 0);
             //$model->groupBy('vendas.cliente_id', 'vendas.id', 'vendas.data_cobranca', 'vendas_cobrado.status');
             $clientes = $model->get();

@@ -95,9 +95,7 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                    @php($total = 0)
                                     @foreach($clientes as $cliente)
-                                        @php($total += 1)
                                         <tr>
                                             <td>
                                                 {{ str($cliente->id)->padLeft(6,0) }}

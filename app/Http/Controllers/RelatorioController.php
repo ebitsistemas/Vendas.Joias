@@ -100,7 +100,6 @@ class RelatorioController extends Controller
             ]);
             $model->leftjoin('vendas', 'vendas.cliente_id', 'clientes.id');
             $model->leftjoin('vendas_cobrado', 'vendas_cobrado.venda_id', 'vendas.id');
-            /*
             if (!empty($request->tipo_pessoa)) {
                 $model->where('clientes.tipo_pessoa', $request->tipo_pessoa);
             }
@@ -115,13 +114,15 @@ class RelatorioController extends Controller
             }
             if (!empty($request->status)) {
                 $model->where('clientes.status', $request->status);
-            }*/
+            }
             //$model->whereBetween('vendas.data_venda', [date("{$request->ano}-{$request->mes}-01"), date("{$request->ano}-{$request->mes}-t")]);
             $model->whereDate('vendas.created_at', '>= ', "{$request->ano}-{$request->mes}-01 00:00:00");
             $model->where('vendas.saldo', '>', 0);
             $model->groupBy('vendas.cliente_id', 'vendas.id', 'vendas.data_cobranca', 'vendas_cobrado.status');
             $clientes = $model->get();
         }
+
+        print_r($clientes);
 
         return view('relatorio.periodo')->with(['clientes' => $clientes ?? null, 'grupos' => $grupos, 'request' => $request]);
     }

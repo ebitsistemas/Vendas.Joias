@@ -124,7 +124,7 @@ class RelatorioController extends Controller
         $sql = "select `clientes`.`id`, `clientes`.`nome`, `clientes`.`status`, `vendas`.`id` as `venda_id`, `vendas`.`data_cobranca`, `vendas`.`saldo`, `vendas_cobrado`.`status` as `cobrado_status`
             from `clientes`
                 left join `vendas` on `vendas`.`cliente_id` = `clientes`.`id`
-                left join `vendas_cobrado` on `vendas_cobrado`.`venda_id` = `vendas`.`id` where";
+                left join `vendas_cobrado` on `vendas_cobrado`.`venda_id` = `vendas`.`id` where ";
         $sql .= "date(`vendas`.`data_venda`) >= '{$request->ano}-{$request->mes}-01 00:00:00' ";
         if (!empty($request->tipo_pessoa)) {
             $sql .= "and clientes.tipo_pessoa = {$request->tipo_pessoa}";

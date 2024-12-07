@@ -121,16 +121,30 @@ class RelatorioController extends Controller
             $clientes = $model->get();*/
         }
 
-        $clientes = \DB::select("
-            select `clientes`.`id`, `clientes`.`nome`, `clientes`.`status`, `vendas`.`id` as `venda_id`, `vendas`.`data_cobranca`, `vendas`.`saldo`, `vendas_cobrado`.`status` as `cobrado_status`
+        $sql = "select `clientes`.`id`, `clientes`.`nome`, `clientes`.`status`, `vendas`.`id` as `venda_id`, `vendas`.`data_cobranca`, `vendas`.`saldo`, `vendas_cobrado`.`status` as `cobrado_status`
             from `clientes`
                 left join `vendas` on `vendas`.`cliente_id` = `clientes`.`id`
-                left join `vendas_cobrado` on `vendas_cobrado`.`venda_id` = `vendas`.`id`
-            where
-                date(`vendas`.`data_venda`) >= '2024-10-01 00:00:00' and
-                `clientes`.`deleted_at` is null
-            group by `vendas`.`cliente_id`, `vendas`.`id`, `vendas`.`data_cobranca`, `vendas_cobrado`.`status`
-            ");
+                left join `vendas_cobrado` on `vendas_cobrado`.`venda_id` = `vendas`.`id` where";
+        $sql .= "date(`vendas`.`data_venda`) >= '{$request->ano}-{$request->mes}-01 00:00:00' ";
+        if (!empty($request->tipo_pessoa)) {
+            $sql .= "and clientes.tipo_pessoa = {$request->tipo_pessoa}";
+        }
+        if (!empty($request->grupo_id)) {
+            $sql .= "and clientes.grupo_id = {$request->grupo_id}";
+        }
+        if (!empty($request->cidade)) {
+            $sql .= "and clientes.cidade = {$request->cidade}";
+        }
+        if (!empty($request->bairro)) {
+            $sql .= "and clientes.bairro = {$request->bairro}";
+        }
+        if (!empty($request->status)) {
+            $sql .= "and clientes.status = {$request->status}";
+        }
+        $sql .= "and `clientes`.`deleted_at` is null ";
+        $sql .= "group by `vendas`.`cliente_id`, `vendas`.`id`, `vendas`.`data_cobranca`, `vendas_cobrado`.`status`";
+
+        $clientes = \DB::select($sql);
 
         return view('relatorio.periodo')->with(['clientes' => $clientes ?? null, 'grupos' => $grupos, 'request' => $request]);
     }

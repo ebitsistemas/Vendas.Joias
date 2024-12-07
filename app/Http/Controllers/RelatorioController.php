@@ -122,8 +122,6 @@ class RelatorioController extends Controller
             $clientes = $model->get();
         }
 
-        print_r($clientes);
-
         return view('relatorio.periodo')->with(['clientes' => $clientes ?? null, 'grupos' => $grupos, 'request' => $request]);
     }
 

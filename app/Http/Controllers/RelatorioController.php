@@ -89,7 +89,7 @@ class RelatorioController extends Controller
         $grupos = Grupo::all();
 
         if (!empty($request->has('_token'))) {
-            $model = Cliente::select([
+            /*$model = Cliente::select([
                 'clientes.id',
                 'clientes.nome',
                 'clientes.status',
@@ -118,10 +118,10 @@ class RelatorioController extends Controller
             $model->whereDate('vendas.data_venda', '>= ', "'{$request->ano}-{$request->mes}-01 00:00:00'");
             $model->where('vendas.saldo', '>', 0);
             $model->groupBy('vendas.cliente_id', 'vendas.id', 'vendas.data_cobranca', 'vendas_cobrado.status');
-            $clientes = $model->get();
+            $clientes = $model->get();*/
         }
 
-        $vendas = \DB::raw("
+        $clientes = \DB::select("
             select `clientes`.`id`, `clientes`.`nome`, `clientes`.`status`, `vendas`.`id` as `venda_id`, `vendas`.`data_cobranca`, `vendas`.`saldo`, `vendas_cobrado`.`status` as `cobrado_status`
             from `clientes`
                 left join `vendas` on `vendas`.`cliente_id` = `clientes`.`id`
@@ -131,8 +131,6 @@ class RelatorioController extends Controller
                 `clientes`.`deleted_at` is null
             group by `vendas`.`cliente_id`, `vendas`.`id`, `vendas`.`data_cobranca`, `vendas_cobrado`.`status`
             ");
-
-        print_r($vendas);
 
         return view('relatorio.periodo')->with(['clientes' => $clientes ?? null, 'grupos' => $grupos, 'request' => $request]);
     }

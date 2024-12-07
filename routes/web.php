@@ -142,7 +142,7 @@ Route::prefix('fatura')->group(function () {
     Route::post('delete', [\App\Http\Controllers\FaturaController::class, 'destroy'])->name('fatura.destroy')->middleware('auth');
 });
 
-/* USUÁRIO */
+/* RELATÓRIOS */
 Route::prefix('relatorio')->group(function () {
     Route::get('', function () {
         return redirect()->route('dashboard.index');

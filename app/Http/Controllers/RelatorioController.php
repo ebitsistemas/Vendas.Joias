@@ -115,12 +115,24 @@ class RelatorioController extends Controller
             if (!empty($request->status)) {
                 $model->where('clientes.status', $request->status);
             }
-            //$model->whereBetween('vendas.data_venda', [date("{$request->ano}-{$request->mes}-01"), date("{$request->ano}-{$request->mes}-t")]);
             $model->whereDate('vendas.data_venda', '>= ', "'{$request->ano}-{$request->mes}-01 00:00:00'");
             $model->where('vendas.saldo', '>', 0);
             $model->groupBy('vendas.cliente_id', 'vendas.id', 'vendas.data_cobranca', 'vendas_cobrado.status');
             $clientes = $model->get();
         }
+
+        $vendas = \DB::raw("
+            select `clientes`.`id`, `clientes`.`nome`, `clientes`.`status`, `vendas`.`id` as `venda_id`, `vendas`.`data_cobranca`, `vendas`.`saldo`, `vendas_cobrado`.`status` as `cobrado_status`
+            from `clientes`
+                left join `vendas` on `vendas`.`cliente_id` = `clientes`.`id`
+                left join `vendas_cobrado` on `vendas_cobrado`.`venda_id` = `vendas`.`id`
+            where
+                date(`vendas`.`data_venda`) >= '2024-10-01 00:00:00' and
+                `clientes`.`deleted_at` is null
+            group by `vendas`.`cliente_id`, `vendas`.`id`, `vendas`.`data_cobranca`, `vendas_cobrado`.`status`
+            ");
+
+        print_r($vendas);
 
         return view('relatorio.periodo')->with(['clientes' => $clientes ?? null, 'grupos' => $grupos, 'request' => $request]);
     }

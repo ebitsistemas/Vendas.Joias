@@ -141,7 +141,7 @@ class VendaController extends Controller
             $venda->status = $request->status;
             $venda->save();
         } else {
-            Venda::create([
+            VendaCobrado::create([
                 'venda_id' => $request->venda_id,
                 'mes' => $request->mes,
                 'status' => $request->status,

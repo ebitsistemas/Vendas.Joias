@@ -134,12 +134,19 @@ class VendaController extends Controller
 
     public function cobrado(Request $request)
     {
-        $venda = VendaCobrado::firstOrCreate([
-            'venda_id' => $request->venda_id,
-            'mes' => $request->mes,
-        ]);
-        $venda->status = $request->status;
-        $venda->save();
+        $venda = VendaCobrado::where('venda_id', $request->venda_id)
+            ->where('mes', $request->mes)
+            ->first();
+        if ($venda) {
+            $venda->status = $request->status;
+            $venda->save();
+        } else {
+            Venda::create([
+                'venda_id' => $request->venda_id,
+                'mes' => $request->mes,
+                'status' => $request->status,
+            ]);
+        }
 
         return redirect()->back();
     }

@@ -59,6 +59,14 @@
             <label class="form-label" for="data_nascimento">Dia de Cobrança</label>
             <input type="number" class="form-control form-control-lg mask-date text-center" min="1" max="31" id="dia_cobranca" name="dia_cobranca" value="{{ $cliente->dia_cobranca ?? '1' }}">
         </div>
+        <div class="col-md-3">
+            <label class="form-label" for="status">Status</label>
+            <select class="form-select form-select-lg" id="status" name="status" data-selected="{{ $cliente->status ?? '' }}">
+                <option value="0">Selecione...</option>
+                <option value="1">Ativo</option>
+                <option value="2">Inativo</option>
+            </select>
+        </div>
     </div>
 
     <div class="row mb-2 d-none">

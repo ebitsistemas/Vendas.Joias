@@ -233,7 +233,6 @@ class ClienteController extends Controller
     /* */
     public static function disable()
     {
-        $config = Configuracao::first();
         $clientes = Cliente::where('status', '1')->get();
 
         foreach ($clientes as $cliente) {

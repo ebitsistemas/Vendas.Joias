@@ -144,7 +144,7 @@ class RelatorioController extends Controller
             $sql .= "and clientes.status = {$request->status}";
         }
         $sql .= "and `clientes`.`deleted_at` is null ";
-        $sql .= "group by `vendas`.`cliente_id`, `vendas`.`id`, `vendas`.`data_cobranca`, `vendas_cobrado`.`status`";
+        $sql .= "group by `clientes`.`id`, `vendas`.`id`, `vendas`.`data_cobranca`, `vendas_cobrado`.`status`";
 
         $clientes = \DB::select($sql);
 

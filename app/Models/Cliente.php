@@ -32,6 +32,8 @@ class Cliente extends Model
         'codigo_ibge',
         'uf',
 
+        'dia_cobranca',
+
         'email',
         'telefone',
         'rede_social',

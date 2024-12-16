@@ -91,7 +91,7 @@ class RelatorioController extends Controller
         $ano = ($request->ano) ? $request->ano : date('Y');
         $mes = ($request->mes) ? $request->mes : date('m');
 
-        $sql = "select `clientes`.`id`, `clientes`.`nome`, `clientes`.`status`, `vendas`.`data_cobranca`, SUM(`vendas`.`saldo`) as saldoTotal, `vendas_cobrado`.`status` as `cobrado_status`
+        $sql = "select `clientes`.`id`, `clientes`.`nome`, `clientes`.`status`, `clientes`.`dia_cobranca`, SUM(`vendas`.`saldo`) as saldoTotal, `vendas_cobrado`.`status` as `cobrado_status`
             from `clientes`
             join `vendas` on `vendas`.`cliente_id` = `clientes`.`id`
             left join `vendas_cobrado` on `vendas_cobrado`.`venda_id` = `vendas`.`id`
@@ -113,7 +113,7 @@ class RelatorioController extends Controller
             $sql .= "and clientes.status = {$request->status}";
         }
         $sql .= "and `clientes`.`deleted_at` is null ";
-        $sql .= "group by `clientes`.`id`, `vendas`.`data_cobranca`, `vendas`.`saldo`, `vendas_cobrado`.`status`";
+        $sql .= "group by `clientes`.`id`, `clientes`.`dia_cobranca`, `vendas`.`saldo`, `vendas_cobrado`.`status`";
 
         $clientes = \DB::select($sql);
 

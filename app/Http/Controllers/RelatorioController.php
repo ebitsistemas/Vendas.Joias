@@ -90,42 +90,10 @@ class RelatorioController extends Controller
 
         $ano = ($request->ano) ? $request->ano : date('Y');
         $mes = ($request->mes) ? $request->mes : date('m');
-        if (!empty($request->has('_token'))) {
-            /*$model = Cliente::select([
-                'clientes.id',
-                'clientes.nome',
-                'clientes.status',
-                'vendas.id as venda_id',
-                'vendas.data_cobranca',
-                'vendas.saldo',
-                'vendas_cobrado.status as cobrado_status',
-            ]);
-            $model->leftjoin('vendas', 'vendas.cliente_id', 'clientes.id');
-            $model->leftjoin('vendas_cobrado', 'vendas_cobrado.venda_id', 'vendas.id');
-            if (!empty($request->tipo_pessoa)) {
-                $model->where('clientes.tipo_pessoa', $request->tipo_pessoa);
-            }
-            if (!empty($request->grupo_id)) {
-                $model->where('clientes.grupo_id', $request->grupo_id);
-            }
-            if (!empty($request->cidade)) {
-                $model->where('clientes.logradouro', 'like', "%{$request->cidade}%");
-            }
-            if (!empty($request->bairro)) {
-                $model->where('clientes.bairro', 'like', "%{$request->bairro}%");
-            }
-            if (!empty($request->status)) {
-                $model->where('clientes.status', $request->status);
-            }
-            $model->whereDate('vendas.data_venda', '>= ', "'{$request->ano}-{$request->mes}-01 00:00:00'");
-            $model->where('vendas.saldo', '>', 0);
-            $model->groupBy('vendas.cliente_id', 'vendas.id', 'vendas.data_cobranca', 'vendas_cobrado.status');
-            $clientes = $model->get();*/
-        }
 
         $sql = "select `clientes`.`id`, `clientes`.`nome`, `clientes`.`status`, `vendas`.`id` as `venda_id`, `vendas`.`data_cobranca`, `vendas`.`saldo`, `vendas_cobrado`.`status` as `cobrado_status`
             from `clientes`
-                left join `vendas` on `vendas`.`cliente_id` = `clientes`.`id`
+                join `vendas` on `vendas`.`cliente_id` = `clientes`.`id`
                 left join `vendas_cobrado` on `vendas_cobrado`.`venda_id` = `vendas`.`id` where ";
         $sql .= "date(`vendas`.`data_venda`) >= '{$ano}-{$mes}-01 00:00:00' ";
         if (!empty($request->tipo_pessoa)) {

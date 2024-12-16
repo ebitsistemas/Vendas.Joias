@@ -101,7 +101,7 @@
                                             </td>
                                             <td>{{ $cliente->nome }}</td>
                                             <td class="text-center">
-                                                {{ date('d/m/Y', strtotime('Y-m-'.$cliente->dia_cobranca)) }}
+                                                {{ date($cliente->dia_cobranca.'/m/Y') }}
                                             </td>
                                             <td class="text-center">
                                                 {{ number_format($cliente->saldoTotal, 2, ',', '') }}

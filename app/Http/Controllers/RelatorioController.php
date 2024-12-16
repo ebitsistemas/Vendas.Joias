@@ -76,26 +76,23 @@ class RelatorioController extends Controller
             }
             $faturas = $model->get();
         }
-        /*
-        echo '<pre>';
-        print_r($faturas);
-        exit();*/
 
         return view('relatorio.financeiro')->with(['faturas' => $faturas ?? null, 'clientes' => $clientes, 'situacoes' => $situacoes, 'request' => $request]);
     }
 
     public function periodo(Request $request)
     {
+        /* add dia na pesquisa do periodo */
         $grupos = Grupo::all();
 
         $ano = ($request->ano) ? $request->ano : date('Y');
         $mes = ($request->mes) ? $request->mes : date('m');
 
-        $sql = "select `clientes`.`id`, `clientes`.`nome`, `clientes`.`status`, `clientes`.`dia_cobranca`, SUM(`vendas`.`saldo`) as saldoTotal, `vendas_cobrado`.`status` as `cobrado_status`
-            from `clientes`
-            join `vendas` on `vendas`.`cliente_id` = `clientes`.`id`
-            left join `vendas_cobrado` on `vendas_cobrado`.`venda_id` = `vendas`.`id`
-            where ";
+        $sql = "SELECT `clientes`.`id`, `clientes`.`nome`, `clientes`.`status`, `clientes`.`dia_cobranca`, SUM(`vendas`.`saldo`) as saldoTotal, `vendas_cobrado`.`status` as `cobrado_status`
+            FROM `clientes`
+            JOIN `vendas` ON `vendas`.`cliente_id` = `clientes`.`id`
+            LEFT JOIN `vendas_cobrado` ON `vendas_cobrado`.`venda_id` = `vendas`.`id`
+            WHERE ";
         $sql .= "date(`vendas`.`data_venda`) >= '{$ano}-{$mes}-01 00:00:00' ";
         if (!empty($request->tipo_pessoa)) {
             $sql .= "and clientes.tipo_pessoa = {$request->tipo_pessoa}";

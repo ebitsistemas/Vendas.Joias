@@ -91,10 +91,11 @@ class RelatorioController extends Controller
         $ano = ($request->ano) ? $request->ano : date('Y');
         $mes = ($request->mes) ? $request->mes : date('m');
 
-        $sql = "select `clientes`.`id`, `clientes`.`nome`, `clientes`.`status`, `vendas`.`data_cobranca`, `vendas`.`saldo`, `vendas_cobrado`.`status` as `cobrado_status`
+        $sql = "select `clientes`.`id`, `clientes`.`nome`, `clientes`.`status`, `vendas`.`data_cobranca`, SUM(`vendas`.`saldo`), `vendas_cobrado`.`status` as `cobrado_status`
             from `clientes`
-                join `vendas` on `vendas`.`cliente_id` = `clientes`.`id`
-                left join `vendas_cobrado` on `vendas_cobrado`.`venda_id` = `vendas`.`id` where ";
+            join `vendas` on `vendas`.`cliente_id` = `clientes`.`id`
+            left join `vendas_cobrado` on `vendas_cobrado`.`venda_id` = `vendas`.`id`
+            where ";
         $sql .= "date(`vendas`.`data_venda`) >= '{$ano}-{$mes}-01 00:00:00' ";
         if (!empty($request->tipo_pessoa)) {
             $sql .= "and clientes.tipo_pessoa = {$request->tipo_pessoa}";

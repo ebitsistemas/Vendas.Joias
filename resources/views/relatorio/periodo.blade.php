@@ -104,7 +104,7 @@
                                                 {{ \Carbon\Carbon::parse($cliente->data_cobranca)->format('d/m/Y') }}
                                             </td>
                                             <td class="text-center">
-                                                {{ number_format($cliente->saldo, 2, ',', '') }}
+                                                {{ number_format($cliente->saldoTotal, 2, ',', '') }}
                                             </td>
                                             <td>
                                                 @if($cliente->cobrado_status == 1)

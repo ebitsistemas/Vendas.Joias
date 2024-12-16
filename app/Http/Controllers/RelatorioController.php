@@ -117,6 +117,8 @@ class RelatorioController extends Controller
 
         $clientes = \DB::select($sql);
 
+        dd($clientes);
+
         return view('relatorio.periodo')->with(['clientes' => $clientes ?? null, 'grupos' => $grupos, 'request' => $request]);
     }
 

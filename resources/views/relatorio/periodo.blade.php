@@ -88,7 +88,6 @@
                                 <tr>
                                     <th>Código</th>
                                     <th>Nome</th>
-                                    <th>Venda #</th>
                                     <th>Data Cobrança</th>
                                     <th>Saldo</th>
                                     <th>Cobrado?</th>
@@ -101,9 +100,6 @@
                                                 {{ str($cliente->id)->padLeft(6,0) }}
                                             </td>
                                             <td>{{ $cliente->nome }}</td>
-                                            <td class="text-center">
-                                                {{ $cliente->venda_id }}
-                                            </td>
                                             <td class="text-center">
                                                 {{ \Carbon\Carbon::parse($cliente->data_cobranca)->format('d/m/Y') }}
                                             </td>

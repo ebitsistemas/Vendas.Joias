@@ -101,7 +101,7 @@
                                             </td>
                                             <td>{{ $cliente->nome }}</td>
                                             <td class="text-center">
-                                                {{ \Carbon\Carbon::parse($cliente->data_cobranca)->format('d/m/Y') }}
+                                                {{ date('d/m/Y', strtotime('Y-m-'.$cliente->dia_cobranca)) }}
                                             </td>
                                             <td class="text-center">
                                                 {{ number_format($cliente->saldoTotal, 2, ',', '') }}

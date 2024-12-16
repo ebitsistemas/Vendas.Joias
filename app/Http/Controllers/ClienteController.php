@@ -231,22 +231,9 @@ class ClienteController extends Controller
     }
 
     /* */
-    public function disable()
+    public static function disable()
     {
         $config = Configuracao::first();
-        /*
-        if ($config->inativar_cadastro > 0) {
-            $data = Carbon::now(); //Carbon::now()->subDays($config->inativar_cadastro);
-            $model = Cliente::select('clientes.id, vendas.data_venda');
-            $model->leftJoin('vendas', 'vendas.cliente_id', '=', 'clientes.id');
-            $model->whereRaw("((SELECT count(1) FROM vendas WHERE vendas.cliente_id = clientes.id AND vendas.data_venda >= '{$data}') = 0)");
-            $clientes = $model->get();
-
-            foreach ($clientes as $cliente) {
-                $modelCliente = Cliente::find($cliente->id);
-                $modelCliente->update(['status' => '2']);
-            }
-        }*/
         $clientes = Cliente::where('status', '1')->get();
 
         foreach ($clientes as $cliente) {

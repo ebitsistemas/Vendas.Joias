@@ -37,6 +37,8 @@ class LoginController extends Controller
         if (!$authenticated) {
             return redirect()->route('login')->withErrors(['error' => 'E-mail e/ou senha invalido!']);
         }
+        ClienteController::disable();
+
         return redirect()->to('');
     }
 

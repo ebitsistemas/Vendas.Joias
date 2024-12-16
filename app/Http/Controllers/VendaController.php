@@ -134,7 +134,7 @@ class VendaController extends Controller
 
     public function cobrado(Request $request)
     {
-        $venda = VendaCobrado::where('venda_id', $request->venda_id)
+        $venda = VendaCobrado::where('cliente_id', $request->cliente_id)
             ->where('mes', $request->mes)
             ->first();
         if ($venda) {
@@ -142,7 +142,7 @@ class VendaController extends Controller
             $venda->save();
         } else {
             VendaCobrado::create([
-                'venda_id' => $request->venda_id,
+                'cliente_id' => $request->cliente_id,
                 'mes' => $request->mes,
                 'status' => $request->status,
             ]);

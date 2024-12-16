@@ -110,7 +110,7 @@
                                                 @if($cliente->cobrado_status == 1)
                                                     <form action="{{ url('venda/cobrado') }}" method="post">
                                                         @csrf
-                                                        <input type="hidden" name="venda_id" value="{{ $cliente->venda_id }}">
+                                                        <input type="hidden" name="cliente_id" value="{{ $cliente->id }}">
                                                         <input type="hidden" name="mes" value="{{ $request->mes ?? date('n') }}">
                                                         <input type="hidden" name="status" value="2">
                                                         <button type="submit" class="btn btn-success ms-2"><i class="fal fa-check-circle"></i> Sim</button>

@@ -90,7 +90,7 @@ class RelatorioController extends Controller
 
         $sqlCobrado = '';
         if ($request->cobrado != "") {
-            $sqlCobrado .= "and vendas_cobrado.cobrado_status = {$request->cobrado}";
+            $sqlCobrado .= "and vendas_cobrado.status = {$request->cobrado}";
         }
         $sql = "SELECT * FROM (
                     SELECT `clientes`.`id`,

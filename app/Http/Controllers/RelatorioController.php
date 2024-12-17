@@ -88,13 +88,17 @@ class RelatorioController extends Controller
         $ano = ($request->ano) ? $request->ano : date('Y');
         $mes = ($request->mes) ? $request->mes : date('m');
 
+        $sqlCobrado = '';
+        if ($request->cobrado != "") {
+            $sqlCobrado .= "and vendas_cobrado.cobrado_status = {$request->cobrado}";
+        }
         $sql = "SELECT * FROM (
                     SELECT `clientes`.`id`,
                            `clientes`.`nome`,
                            `clientes`.`status`,
                            `clientes`.`dia_cobranca`,
                            (SELECT SUM(vendas.saldo) FROM vendas WHERE `vendas`.`cliente_id` = `clientes`.`id`) as saldo,  /* AND date(`vendas`.`data_venda`) >= '{$ano}-{$mes}-01' */
-                           (SELECT vendas_cobrado.status FROM vendas_cobrado WHERE vendas_cobrado.cliente_id = clientes.id AND vendas_cobrado.data = '{$ano}-{$mes}-01') as cobrado_status
+                           (SELECT vendas_cobrado.status FROM vendas_cobrado WHERE vendas_cobrado.cliente_id = clientes.id AND vendas_cobrado.data = '{$ano}-{$mes}-01' {$sqlCobrado}) as cobrado_status
                     FROM `clientes` WHERE true ";
         if (!empty($request->tipo_pessoa)) {
             $sql .= "and clientes.tipo_pessoa = {$request->tipo_pessoa}";
@@ -104,9 +108,6 @@ class RelatorioController extends Controller
         }
         if (!empty($request->status)) {
             $sql .= "and clientes.status = {$request->status}";
-        }
-        if ($request->cobrado != "") {
-            $sql .= "and vendas_cobrado.cobrado_status = {$request->cobrado}";
         }
         $sql .= "and `clientes`.`deleted_at` is null ";
         $sql .= "group by `clientes`.`id`) as dados WHERE saldo > 0";

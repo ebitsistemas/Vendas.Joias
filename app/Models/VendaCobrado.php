@@ -15,7 +15,7 @@ class VendaCobrado extends Model
     protected $fillable = [
         'venda_id',
         'cliente_id',
-        'mes',
+        'data',
         'status',
     ];
 }

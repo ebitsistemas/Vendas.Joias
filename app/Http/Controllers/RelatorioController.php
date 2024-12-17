@@ -94,7 +94,7 @@ class RelatorioController extends Controller
                            `clientes`.`status`,
                            `clientes`.`dia_cobranca`,
                            (SELECT SUM(vendas.saldo) FROM vendas WHERE `vendas`.`cliente_id` = `clientes`.`id` AND date(`vendas`.`data_venda`) >= '{$ano}-{$mes}-01') as saldo,
-                           (SELECT vendas_cobrado.status FROM vendas_cobrado WHERE vendas_cobrado.cliente_id = clientes.id AND vendas_cobrado.data = '{$ano}-{$mes}-01') as cobrado
+                           (SELECT vendas_cobrado.status FROM vendas_cobrado WHERE vendas_cobrado.cliente_id = clientes.id AND vendas_cobrado.data = '{$ano}-{$mes}-01') as cobrado_status
                     FROM `clientes` WHERE true ";
         if (!empty($request->tipo_pessoa)) {
             $sql .= "and clientes.tipo_pessoa = {$request->tipo_pessoa}";

@@ -43,21 +43,21 @@
 
                     <div class="row mb-2">
                         <div class="col-sm-4">
+                            <label class="fs-6 form-label">Cidade</label>
+                            <input class="form-control form-control-lg" id="cidade" name="cidade" value="{{ $request->cidade ?? '' }}">
+                        </div>
+
+                        <div class="col-sm-4">
+                            <label class="fs-6 form-label">Bairro</label>
+                            <input class="form-control form-control-lg" id="bairro" name="bairro" value="{{ $request->bairro ?? '' }}">
+                        </div>
+                        <div class="col-sm-4">
                             <label class="fs-6 form-label">Status</label>
                             <select class="form-select form-select-lg" name="status" id="status" data-control="select2"
                                     data-hide-search="true">
                                 <option value="">Todos</option>
                                 <option value="1" @if($request->status == 1) selected @endif>Ativo</option>
                                 <option value="2" @if($request->status == 2) selected @endif>Inativo</option>
-                            </select>
-                        </div>
-                        <div class="col-sm-4">
-                            <label class="fs-6 form-label">Cobrado</label>
-                            <select class="form-select form-select-lg" name="cobrado" id="cobrado" data-control="select2"
-                                    data-hide-search="true">
-                                <option value="">Todos</option>
-                                <option value="1" @if($request->cobrado == 1) selected @endif>Sim</option>
-                                <option value="0" @if($request->cobrado === 0) selected @endif>Não</option>
                             </select>
                         </div>
                     </div>

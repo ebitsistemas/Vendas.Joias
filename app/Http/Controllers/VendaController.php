@@ -135,7 +135,7 @@ class VendaController extends Controller
     public function cobrado(Request $request)
     {
         $venda = VendaCobrado::where('cliente_id', $request->cliente_id)
-            ->where('data', date('Y-'.$request->mes."-d"))
+            ->where('data', date('Y-'.$request->mes."-01"))
             ->first();
         if ($venda) {
             $venda->status = $request->status;
@@ -143,7 +143,7 @@ class VendaController extends Controller
         } else {
             VendaCobrado::create([
                 'cliente_id' => $request->cliente_id,
-                'mes' => $request->mes,
+                'data' => date('Y-'.$request->mes."-01"),
                 'status' => $request->status,
             ]);
         }

@@ -104,7 +104,7 @@
                                                 {{ date(str($cliente->dia_cobranca)->padLeft(2,0).'/m/Y') }}
                                             </td>
                                             <td class="text-center">
-                                                {{ number_format($cliente->saldoTotal, 2, ',', '') }}
+                                                {{ number_format($cliente->saldo, 2, ',', '') }}
                                             </td>
                                             <td>
                                                 @if($cliente->cobrado_status == 1)

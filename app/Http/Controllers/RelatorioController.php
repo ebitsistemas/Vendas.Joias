@@ -106,7 +106,7 @@ class RelatorioController extends Controller
             $sql .= "and clientes.status = {$request->status}";
         }
         if ($request->cobrado != "") {
-            $sql .= "and vendas_cobrado.status = {$request->cobrado}";
+            $sql .= "and vendas_cobrado.cobrado_status = {$request->cobrado}";
         }
         $sql .= "and `clientes`.`deleted_at` is null ";
         $sql .= "group by `clientes`.`id`) as dados WHERE saldo > 0";

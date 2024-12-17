@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('vendas_cobrado', function (Blueprint $table) {
             $table->id();
             $table->integer('venda_id');
-            $table->string('mes', 2);
+            $table->date('data');
             $table->tinyInteger('status');
             $table->timestamps();
             $table->softDeletes();

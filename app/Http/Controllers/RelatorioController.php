@@ -88,12 +88,14 @@ class RelatorioController extends Controller
         $ano = ($request->ano) ? $request->ano : date('Y');
         $mes = ($request->mes) ? $request->mes : date('m');
 
-        $sql = "SELECT `clientes`.`id`, `clientes`.`nome`, `clientes`.`status`, `clientes`.`dia_cobranca`, SUM(`vendas`.`saldo`) as saldoTotal, `vendas_cobrado`.`status` as `cobrado_status`
-            FROM `clientes`
-            JOIN `vendas` ON `vendas`.`cliente_id` = `clientes`.`id`
-            LEFT JOIN `vendas_cobrado` ON `vendas_cobrado`.`venda_id` = `vendas`.`id`
-            WHERE ";
-        $sql .= "date(`vendas`.`data_venda`) >= '{$ano}-{$mes}-01 00:00:00' ";
+        $sql = "SELECT * FROM (
+                    SELECT `clientes`.`id`,
+                           `clientes`.`nome`,
+                           `clientes`.`status`,
+                           `clientes`.`dia_cobranca`,
+                           (SELECT SUM(vendas.saldo) FROM vendas WHERE `vendas`.`cliente_id` = `clientes`.`id` AND date(`vendas`.`data_venda`) >= '{$ano}-{$mes}-01') as saldo,
+                           (SELECT vendas_cobrado.status FROM vendas_cobrado WHERE vendas_cobrado.cliente_id = clientes.id AND vendas_cobrado.data = '{$ano}-{$mes}-01') as cobrado
+                    FROM `clientes` WHERE true ";
         if (!empty($request->tipo_pessoa)) {
             $sql .= "and clientes.tipo_pessoa = {$request->tipo_pessoa}";
         }
@@ -110,7 +112,7 @@ class RelatorioController extends Controller
             $sql .= "and clientes.status = {$request->status}";
         }
         $sql .= "and `clientes`.`deleted_at` is null ";
-        $sql .= "group by `clientes`.`id`, `clientes`.`dia_cobranca`, `vendas`.`saldo`, `vendas_cobrado`.`status`";
+        $sql .= "group by `clientes`.`id`) as dados WHERE saldo > 0";
 
         $clientes = \DB::select($sql);
 

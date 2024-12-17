@@ -135,7 +135,7 @@ class VendaController extends Controller
     public function cobrado(Request $request)
     {
         $venda = VendaCobrado::where('cliente_id', $request->cliente_id)
-            ->where('mes', $request->mes)
+            ->where('data', date('Y-'.$request->mes."-d"))
             ->first();
         if ($venda) {
             $venda->status = $request->status;

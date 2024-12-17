@@ -57,7 +57,7 @@
                                     data-hide-search="true">
                                 <option value="">Todos</option>
                                 <option value="1" @if($request->cobrado == 1) selected @endif>Sim</option>
-                                <option value="2" @if($request->cobrado == 0 OR $request->cobrado == null) selected @endif>Não</option>
+                                <option value="2" @if($request->cobrado == 0) selected @endif>Não</option>
                             </select>
                         </div>
                     </div>

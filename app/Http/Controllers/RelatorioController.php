@@ -102,14 +102,11 @@ class RelatorioController extends Controller
         if (!empty($request->grupo_id)) {
             $sql .= "and clientes.grupo_id = {$request->grupo_id}";
         }
-        if (!empty($request->cidade)) {
-            $sql .= "and clientes.cidade = {$request->cidade}";
-        }
-        if (!empty($request->bairro)) {
-            $sql .= "and clientes.bairro = {$request->bairro}";
-        }
         if (!empty($request->status)) {
             $sql .= "and clientes.status = {$request->status}";
+        }
+        if ($request->cobrado != "") {
+            $sql .= "and vendas_cobrado.status = {$request->cobrado}";
         }
         $sql .= "and `clientes`.`deleted_at` is null ";
         $sql .= "group by `clientes`.`id`) as dados WHERE saldo > 0";

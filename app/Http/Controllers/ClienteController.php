@@ -215,7 +215,7 @@ class ClienteController extends Controller
             'situacao',
         ]);
         $vendas = $model->where('cliente_id', $request->id)
-            ->limit(5)
+            ->limit(10)
             ->get();
 
         if (empty($vendas)) {

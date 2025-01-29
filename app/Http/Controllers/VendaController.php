@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Utilities\Helper;
 use App\Models\Situacao;
 use App\Models\Venda;
 use App\Models\Produto;
@@ -9,9 +10,11 @@ use App\Models\FaturaItem;
 use App\Models\Configuracao;
 use App\Models\VendaCobrado;
 use App\Models\VendaItem;
+use App\Models\VendaPagamento;
 use Illuminate\Http\Request;
 use App\Http\Utilities\Impressao80mm;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class VendaController extends Controller
 {
@@ -96,40 +99,70 @@ class VendaController extends Controller
      */
     public function baixar(Request $request)
     {
-        $vendas = Venda::where('cliente_id', $request->cliente_id)
-            ->where('status', 0)
-            ->get();
+        try {
+            DB::beginTransaction();
 
-        $valorRecebido = str_replace('.', '', $request->valor_recebido);
-        $valorRecebido = floatval(str_replace(',', '.', $valorRecebido));
-        foreach ($vendas as $venda) {
-            if($valorRecebido > 0) {
-                $saldo = $venda->saldo;
-                $valorPagamento = floatval($valorRecebido > $saldo ? $saldo : $valorRecebido);
-                $valorRecebido = $valorRecebido - $valorPagamento;
-                $dataPagamento = empty($request->data_pagamento) ? date('Y-m-d') : date('Y-m-d', strtotime($request->data_pagamento));
+            $vendas = Venda::where('cliente_id', $request->cliente_id)
+                ->where('status', 0)
+                ->get();
 
-                $data = [
-                    'venda_id' => $venda->id,
-                    'tipo_pagamento' => $request->tipo_pagamento,
-                    'forma_pagamento' => $request->forma_pagamento,
-                    'valor_parcela' => str_replace(',', '.', str_replace('.', '', $valorPagamento)),
-                    'numero_parcela' => 1,
-                    'total_parcelas' => 1,
-                    'dias_parcelas' => 30,
-                    'data_vencimento' => $request->data_vencimento,
-                    'data_pagamento' => ($request->tipo_pagamento == 0) ? $dataPagamento : date('Y-m-d'),
-                    'valor_recebido' => str_replace(',', '.', str_replace('.', '', $valorPagamento)),
-                    'valor_subtotal' => str_replace(',', '.', str_replace('.', '', $valorPagamento)),
-                    'troco' => 0.00,
-                    'situacao' => ($request->tipo_pagamento == 0) ? '4' : '0',
-                    'status' => 1,
-                ];
-                FaturaItem::create($data);
-                $this->saldo($venda->id);
+            $valorRecebido = str_replace('.', '', $request->valor_recebido);
+            $valorRecebido = floatval(str_replace(',', '.', $valorRecebido));
+            $dataPagamento = empty($request->data_pagamento) ? date('Y-m-d') : date('Y-m-d', strtotime($request->data_pagamento));
+
+            $dadosPagamento = [
+                'venda_id' => null,
+                'tipo_pagamento' => $request->tipo_pagamento,
+                'forma_pagamento' => $request->forma_pagamento,
+                'valor_parcela' => str_replace(',', '.', str_replace('.', '', $valorRecebido)),
+                'numero_parcela' => 1,
+                'total_parcelas' => 1,
+                'dias_parcelas' => 30,
+                'data_vencimento' => $request->data_vencimento,
+                'data_pagamento' => ($request->tipo_pagamento == 0) ? $dataPagamento : date('Y-m-d'),
+                'valor_recebido' => str_replace(',', '.', str_replace('.', '', $valorRecebido)),
+                'valor_subtotal' => str_replace(',', '.', str_replace('.', '', $valorRecebido)),
+                'troco' => 0.00,
+                'situacao' => ($request->tipo_pagamento == 0) ? '4' : '0',
+                'status' => 1,
+            ];
+            VendaPagamento::create($dadosPagamento);
+
+            foreach ($vendas as $venda) {
+                if ($valorRecebido > 0) {
+                    $saldo = $venda->saldo;
+                    $valorPagamento = floatval($valorRecebido > $saldo ? $saldo : $valorRecebido);
+                    $valorRecebido = $valorRecebido - $valorPagamento;
+
+                    $data = [
+                        'venda_id' => $venda->id,
+                        'tipo_pagamento' => $request->tipo_pagamento,
+                        'forma_pagamento' => $request->forma_pagamento,
+                        'valor_parcela' => str_replace(',', '.', str_replace('.', '', $valorPagamento)),
+                        'numero_parcela' => 1,
+                        'total_parcelas' => 1,
+                        'dias_parcelas' => 30,
+                        'data_vencimento' => $request->data_vencimento,
+                        'data_pagamento' => ($request->tipo_pagamento == 0) ? $dataPagamento : date('Y-m-d'),
+                        'valor_recebido' => str_replace(',', '.', str_replace('.', '', $valorPagamento)),
+                        'valor_subtotal' => str_replace(',', '.', str_replace('.', '', $valorPagamento)),
+                        'troco' => 0.00,
+                        'situacao' => ($request->tipo_pagamento == 0) ? '4' : '0',
+                        'status' => 1,
+                    ];
+                    FaturaItem::create($data);
+                    $this->saldo($venda->id);
+                }
             }
+
+            DB::commit();
+
+            return redirect()->back();
+        } catch (\Exception $e) {
+            DB::rollback();
+            dd($e);
+            //return redirect()->back();
         }
-        return redirect()->back();
     }
 
     public function cobrado(Request $request)

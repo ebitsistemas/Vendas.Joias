@@ -11,6 +11,7 @@ use App\Models\Configuracao;
 use App\Models\VendaCobrado;
 use App\Models\VendaItem;
 use App\Models\VendaPagamento;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Utilities\Impressao80mm;
 use Illuminate\Support\Facades\Cache;
@@ -120,7 +121,7 @@ class VendaController extends Controller
                 'total_parcelas' => 1,
                 'dias_parcelas' => 30,
                 'data_vencimento' => $request->data_vencimento,
-                'data_pagamento' => ($request->tipo_pagamento == 0) ? $dataPagamento : date('Y-m-d'),
+                'data_pagamento' => (!empty($dataPagamento) ? $dataPagamento : Carbon::now()->format('Y-m-d H:i:s')),
                 'valor_recebido' => str_replace(',', '.', str_replace('.', '', $valorRecebido)),
                 'valor_subtotal' => str_replace(',', '.', str_replace('.', '', $valorRecebido)),
                 'troco' => 0.00,

@@ -157,6 +157,7 @@ class ClienteController extends Controller
                 $totais['faturas'] += $somaFaturas;
             }
         }
+        self::disable();
 
         return view('cliente.partials.historico')->with([
             'method' => 'update',

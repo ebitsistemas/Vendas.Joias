@@ -15,6 +15,7 @@ class VendaPagamento extends Model
     protected $primaryKey = 'id';
 
     protected $fillable = [
+        'cliente_id',
         'venda_id',
         'tipo_pagamento',
         'forma_pagamento',

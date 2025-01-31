@@ -40,6 +40,7 @@ class ClienteController extends Controller
             });
             $clientes = $model->paginate($config->itens_pagina);
         }
+        self::disable();
         return view('cliente.lista')->with(['clientes' => $clientes, 'pesquisa' => $pesquisa ?? '']);
     }
 

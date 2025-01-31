@@ -85,6 +85,8 @@ class CarrinhoController extends Controller
                 ->update(['status' => 1]);
 
             $vendaPagamento = VendaPagamento::where('venda_id', $request->venda_id)->first();
+            print_r($vendaPagamento);
+            exit;
             $vendaPagamento->cliente_id = $request->cliente_id;
             $vendaPagamento->save();
 

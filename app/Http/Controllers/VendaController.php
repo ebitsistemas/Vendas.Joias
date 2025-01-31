@@ -111,7 +111,7 @@ class VendaController extends Controller
             $dataPagamento = empty($request->data_pagamento) ? date('Y-m-d') : date('Y-m-d', strtotime($request->data_pagamento));
 
             $dadosPagamento = [
-                'cliente_id' => $vendas->cliente_id,
+                'cliente_id' => $request->cliente_id,
                 'venda_id' => null,
                 'tipo_pagamento' => $request->tipo_pagamento,
                 'forma_pagamento' => $request->forma_pagamento,

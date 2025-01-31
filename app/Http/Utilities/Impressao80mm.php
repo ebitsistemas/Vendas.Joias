@@ -640,7 +640,7 @@ class Impressao80mm
             $pdf->setX(2);
             $pdf->SetFont('Arial', '', 8);
             $pdf->Cell(35, 1, utf8_decode('PAGAMENTO'), 0, 0, 'L', true);
-            $pdf->Cell(24, 1, date('d/m/Y', strtotime($pagamento->created_at)), 0, 0, 'L', true);
+            $pdf->Cell(24, 1, date('d/m/Y', strtotime($pagamento->data_pagamento)), 0, 0, 'L', true);
             $pdf->Cell(18, 1, ' - R$ ' . number_format($pagamento->valor_recebido, 2, ',', '.'), 0, 0, 'R', true);
         }
 

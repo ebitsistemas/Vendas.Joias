@@ -95,7 +95,7 @@ class RelatorioController extends Controller
                            `clientes`.`dia_cobranca`,
                            (SELECT SUM(vendas.saldo) FROM vendas WHERE `vendas`.`cliente_id` = `clientes`.`id`) as saldo,  /* AND date(`vendas`.`data_venda`) >= '{$ano}-{$mes}-01' */
                            (SELECT vendas_cobrado.status FROM vendas_cobrado WHERE vendas_cobrado.cliente_id = clientes.id AND vendas_cobrado.data = '{$ano}-{$mes}-01') as cobrado_status
-                    FROM `clientes` WHERE true ";
+                    FROM `clientes` WHERE `clientes`.`deleted_at` is null ";
         if (!empty($request->tipo_pessoa)) {
             $sql .= "and clientes.tipo_pessoa = {$request->tipo_pessoa}";
         }
@@ -111,7 +111,7 @@ class RelatorioController extends Controller
         if (!empty($request->status)) {
             $sql .= "and clientes.status = {$request->status}";
         }
-        $sql .= "and `clientes`.`deleted_at` is null ";
+        //$sql .= "and `clientes`.`deleted_at` is null ";
         $sql .= "group by `clientes`.`id`) as dados WHERE saldo > 0";
 
         $clientes = \DB::select($sql);

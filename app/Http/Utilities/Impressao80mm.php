@@ -635,6 +635,7 @@ class Impressao80mm
         }*/
 
         foreach ($pagamentos as $pagamento) {
+            print_r($pagamento);exit;
             if (!empty($pagamento->venda_id)) {
                 $height += 5;
                 $pdf->setY($height);

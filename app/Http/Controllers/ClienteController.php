@@ -8,6 +8,7 @@ use App\Models\Configuracao;
 use App\Models\FaturaItem;
 use App\Models\Grupo;
 use App\Models\Venda;
+use App\Models\VendaPagamento;
 use App\Traits\TraitDatatables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -217,6 +218,9 @@ class ClienteController extends Controller
         $vendas = $model->where('cliente_id', $request->id)
             ->limit(10)
             ->get();
+        $pagamentos = VendaPagamento::where('cliente_id', $request->id)
+            ->limit(10)
+            ->get();
 
         if (empty($vendas)) {
             return redirect()->back();
@@ -225,7 +229,7 @@ class ClienteController extends Controller
         $cliente = Cliente::find($request->id);
 
         $impressao = new Impressao80mm();
-        $pdf = $impressao->saldo($config, $vendas, $cliente);
+        $pdf = $impressao->saldo($config, $vendas, $pagamentos, $cliente);
 
         return response($pdf)->header('Content-Type', 'application/pdf')->header('filename', 'inline');
     }

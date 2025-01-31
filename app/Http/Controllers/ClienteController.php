@@ -220,7 +220,7 @@ class ClienteController extends Controller
             ->get();
         $pagamentos = VendaPagamento::with('venda')
             ->where('cliente_id', $request->id)
-            ->limit(10)
+            ->limit(20)
             ->orderBy('data_pagamento')
             ->orderBy('id')
             ->get();

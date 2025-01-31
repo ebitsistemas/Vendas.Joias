@@ -36,7 +36,7 @@ class VendaPagamento extends Model
 
     public function venda()
     {
-        return $this->hasOne(Venda::class, 'id', 'venda_id');
+        return $this->belongsTo(Venda::class, 'id', 'venda_id');
     }
 
     public function formaPagamento()

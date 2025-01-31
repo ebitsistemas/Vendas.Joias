@@ -12,7 +12,6 @@ use App\Models\VendaPagamento;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Traits\TraitDatatables;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class CarrinhoController extends Controller

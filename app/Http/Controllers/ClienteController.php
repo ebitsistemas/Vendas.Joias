@@ -218,7 +218,8 @@ class ClienteController extends Controller
         $vendas = $model->where('cliente_id', $request->id)
             ->limit(10)
             ->get();
-        $pagamentos = VendaPagamento::where('cliente_id', $request->id)
+        $pagamentos = VendaPagamento::with('venda')
+            ->where('cliente_id', $request->id)
             ->limit(10)
             ->get();
 

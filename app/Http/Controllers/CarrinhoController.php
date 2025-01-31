@@ -84,8 +84,8 @@ class CarrinhoController extends Controller
             Cliente::find($request->cliente_id)
                 ->update(['status' => 1]);
 
-            VendaPagamento::where('venda_id', $request->venda_id)
-                ->update([
+            $vendaPagamento = VendaPagamento::where('venda_id', $request->venda_id)->first();
+            $vendaPagamento->update([
                     'cliente_id' => $request->cliente_id
                 ]);
 

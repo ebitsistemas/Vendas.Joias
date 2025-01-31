@@ -74,8 +74,6 @@ class CarrinhoController extends Controller
     public function clienteAdicionar(Request $request)
     {
         try {
-            DB::beginTransaction();
-
             $cliente_id = $request->cliente_id;
             $venda_id = $request->venda_id;
 
@@ -99,8 +97,6 @@ class CarrinhoController extends Controller
                 toastr()->success('Cliente adicionado com sucesso!');
                 return redirect()->to('carrinho/pedido/' . $venda->id);
             }
-
-            DB::commit();
 
             toastr()->error('Erro ao adicionar cliente!');
             return redirect()->to('carrinho/pedido/' . $venda->id);

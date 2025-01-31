@@ -112,7 +112,7 @@ class VendaController extends Controller
             if (empty($request->data_pagamento) OR $request->data_pagamento == '1970-01-01' OR $request->data_pagamento == '01/01/1970') {
                 $dataPagamento = Carbon::now()->format('Y-m-d');
             } else {
-                $dataPagamento = Carbon::parse($request->data_pagamento)->format('Y-m-d');
+                $dataPagamento = Carbon::createFromFormat('d/m/Y', $request->data_pagamento)->format('Y-m-d');
             }
 
             $dadosPagamento = [

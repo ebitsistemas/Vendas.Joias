@@ -221,7 +221,8 @@ class ClienteController extends Controller
         $pagamentos = VendaPagamento::with('venda')
             ->where('cliente_id', $request->id)
             ->limit(10)
-            ->orderBy(['data_pagamento', 'id'])
+            ->orderBy('data_pagamento')
+            ->orderBy('id')
             ->get();
 
         if (empty($vendas)) {

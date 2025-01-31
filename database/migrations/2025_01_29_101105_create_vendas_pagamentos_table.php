@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('vendas_pagamentos', function (Blueprint $table) {
             $table->id();
+            $table->integer('cliente_id')->nullable();
             $table->integer('venda_id')->nullable();
             $table->tinyInteger('tipo_pagamento')->nullable()->comment('0 - Pagamento à vista; 1 - Pagamento à prazo;');
             $table->string('forma_pagamento', 2)->nullable()->comment('01 - Dinheiro; 02 - Cheque; 03 - Cartão de Crédito; 04 - Cartão de Débito; 05 - Crédito Loja/Duplicata; DP: Depósito; TF: Transferência; 10 - Vale Alimentação; 11 - Vale Refeição; 12 - Vale Presente; 13 - Vale Combustível; 15 - Boleto Bancário; 90 - Sem Pagamento; 99 - Outros;');

@@ -109,7 +109,11 @@ class VendaController extends Controller
 
             $valorRecebido = str_replace('.', '', $request->valor_recebido);
             $valorRecebido = floatval(str_replace(',', '.', $valorRecebido));
-            $dataPagamento = empty($request->data_pagamento) ? date('Y-m-d') : date('Y-m-d', strtotime($request->data_pagamento));
+            if (empty($request->data_pagamento) OR $request->data_pagamento == '1970-01-01' OR $request->data_pagamento == '01/01/1970') {
+                $dataPagamento = Carbon::now()->format('Y-m-d');
+            } else {
+                $dataPagamento = Carbon::parse($request->data_pagamento)->format('Y-m-d');
+            }
 
             $dadosPagamento = [
                 'cliente_id' => $request->cliente_id,
@@ -121,7 +125,7 @@ class VendaController extends Controller
                 'total_parcelas' => 1,
                 'dias_parcelas' => 30,
                 'data_vencimento' => $request->data_vencimento,
-                'data_pagamento' => Carbon::parse('d/m/Y', $dataPagamento)->format('Y-m-d'),
+                'data_pagamento' => $dataPagamento,
                 'valor_recebido' => str_replace(',', '.', str_replace('.', '', $valorRecebido)),
                 'valor_subtotal' => str_replace(',', '.', str_replace('.', '', $valorRecebido)),
                 'troco' => 0.00,
@@ -145,7 +149,7 @@ class VendaController extends Controller
                         'total_parcelas' => 1,
                         'dias_parcelas' => 30,
                         'data_vencimento' => $request->data_vencimento,
-                        'data_pagamento' => ($request->tipo_pagamento == 0) ? $dataPagamento : date('Y-m-d'),
+                        'data_pagamento' => ($request->tipo_pagamento == 0) ? $dataPagamento : Carbon::now()->format('Y-m-d'),
                         'valor_recebido' => str_replace(',', '.', str_replace('.', '', $valorPagamento)),
                         'valor_subtotal' => str_replace(',', '.', str_replace('.', '', $valorPagamento)),
                         'troco' => 0.00,

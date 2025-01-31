@@ -512,7 +512,7 @@ class Impressao80mm
         return response($pdf);
     }
 
-    public function saldo(Configuracao $config, Venda $vendas, VendaPagamento $pagamentos, Cliente $cliente)
+    public function saldo(Configuracao $config, $vendas, $pagamentos, Cliente $cliente)
     {
         $total = 0;
         $saldo = 0;

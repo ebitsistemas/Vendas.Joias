@@ -106,7 +106,9 @@ class CarrinhoController extends Controller
             return redirect()->to('carrinho/pedido/' . $venda->id);
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->to('carrinho');
+
+            toastr()->error('Erro ao adicionar cliente: ' . $e->getMessage());
+            return redirect()->to('carrinho/pedido/' . $venda->id);
         }
     }
 

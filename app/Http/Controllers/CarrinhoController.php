@@ -85,11 +85,12 @@ class CarrinhoController extends Controller
                 ->update(['status' => 1]);
 
             $vendaPagamento = VendaPagamento::where('venda_id', $request->venda_id)->first();
-            echo '<pre>';
-            print_r($vendaPagamento);
-            exit;
             $vendaPagamento->cliente_id = $request->cliente_id;
             $vendaPagamento->save();
+            echo '<pre>';
+            print_r($request->cliente_id);
+            print_r($vendaPagamento);
+            exit;
 
             if ($response) {
                 toastr()->success('Cliente adicionado com sucesso!');

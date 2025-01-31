@@ -77,15 +77,18 @@ class CarrinhoController extends Controller
         try {
             DB::beginTransaction();
 
-            $venda = Venda::find($request->venda_id);
-            $venda->cliente_id = $request->cliente_id;
+            $cliente_id = $request->cliente_id;
+            $venda_id = $request->venda_id;
+
+            $venda = Venda::find($venda_id);
+            $venda->cliente_id = $cliente_id;
             $venda->save();
 
-            Cliente::find($request->cliente_id)
+            Cliente::find($cliente_id)
                 ->update(['status' => 1]);
 
-            $vendaPagamento = VendaPagamento::where('venda_id', $request->venda_id)->first();
-            $vendaPagamento->cliente_id = $request->cliente_id;
+            $vendaPagamento = VendaPagamento::where('venda_id', $venda_id)->first();
+            $vendaPagamento->cliente_id = $cliente_id;
             $response = $vendaPagamento->save();
 
             if ($response) {

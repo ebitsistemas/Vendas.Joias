@@ -82,14 +82,19 @@ class CarrinhoController extends Controller
 
             $venda = Venda::find($venda_id);
             $venda->cliente_id = $cliente_id;
-            $venda->save();
+            $result = $venda->save();
 
             Cliente::find($cliente_id)
                 ->update(['status' => 1]);
 
-            $vendaPagamento = VendaPagamento::where('venda_id', $venda_id)->first();
-            $vendaPagamento->cliente_id = $cliente_id;
-            $response = $vendaPagamento->save();
+            if ($result) {
+                $vendaPagamento = VendaPagamento::where('venda_id', $venda_id)->first();
+                $vendaPagamento->cliente_id = $cliente_id;
+                $response = $vendaPagamento->save();
+            } else {
+                toastr()->error('Erro ao adicionar cliente!');
+                return redirect()->to('carrinho/pedido/' . $venda->id);
+            }
 
             if ($response) {
                 toastr()->success('Cliente adicionado com sucesso!');

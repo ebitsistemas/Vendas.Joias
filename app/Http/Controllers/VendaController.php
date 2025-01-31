@@ -148,7 +148,7 @@ class VendaController extends Controller
                 'total_parcelas' => 1,
                 'dias_parcelas' => 30,
                 'data_vencimento' => $request->data_vencimento,
-                'data_pagamento' => (!empty($dataPagamento) ? $dataPagamento : Carbon::now()->format('Y-m-d H:i:s')),
+                'data_pagamento' => ($dataPagamento != '01/01/1970' ? Carbon::parse($dataPagamento)->format('Y-m-d H:i:s') : Carbon::now()->format('Y-m-d H:i:s')),
                 'valor_recebido' => str_replace(',', '.', str_replace('.', '', $valorRecebido)),
                 'valor_subtotal' => str_replace(',', '.', str_replace('.', '', $valorRecebido)),
                 'troco' => 0.00,
@@ -188,7 +188,10 @@ class VendaController extends Controller
 
     public function saldo($venda_id)
     {
-        $faturas = FaturaItem::where('venda_id', $venda_id)->where('status', '>', 0)->sum('valor_subtotal');
+        $faturas = FaturaItem::where('venda_id', $venda_id)
+            ->where('status', '>', 0)
+            ->sum('valor_subtotal');
+
         $venda = Venda::find($venda_id);
         $venda->saldo = $venda->total_liquido - $faturas;
         $venda->status = ($venda->total_liquido - $faturas) <= 0 ? 1 : 0;

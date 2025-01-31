@@ -74,23 +74,34 @@ class CarrinhoController extends Controller
      */
     public function clienteAdicionar(Request $request)
     {
-        $venda = Venda::find($request->venda_id);
-        $venda->cliente_id = $request->cliente_id;
-        $response = $venda->save();
+        try {
+            DB::beginTransaction();
 
-        Cliente::find($request->cliente_id)
-            ->update(['status' => 1]);
+            $venda = Venda::find($request->venda_id);
+            $venda->cliente_id = $request->cliente_id;
+            $response = $venda->save();
 
-        VendaPagamento::where('venda_id', $venda->id)->update([
-            'cliente_id' => $request->cliente_id
-        ]);
+            Cliente::find($request->cliente_id)
+                ->update(['status' => 1]);
 
-        if ($response) {
-            toastr()->success('Cliente adicionado com sucesso!');
+            VendaPagamento::where('venda_id', $request->venda_id)
+                ->update([
+                    'cliente_id' => $request->cliente_id
+                ]);
+
+            if ($response) {
+                toastr()->success('Cliente adicionado com sucesso!');
+                return redirect()->to('carrinho/pedido/' . $venda->id);
+            }
+
+            DB::commit();
+
+            toastr()->error('Erro ao adicionar cliente!');
             return redirect()->to('carrinho/pedido/' . $venda->id);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->to('carrinho');
         }
-        toastr()->error('Erro ao adicionar cliente!');
-        return redirect()->to('carrinho/pedido/' . $venda->id);
     }
 
     /**

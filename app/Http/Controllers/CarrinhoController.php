@@ -79,7 +79,7 @@ class CarrinhoController extends Controller
 
             $venda = Venda::find($request->venda_id);
             $venda->cliente_id = $request->cliente_id;
-            $response = $venda->save();
+            $venda->save();
 
             Cliente::find($request->cliente_id)
                 ->update(['status' => 1]);

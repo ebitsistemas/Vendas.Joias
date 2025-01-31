@@ -121,7 +121,7 @@ class VendaController extends Controller
                 'total_parcelas' => 1,
                 'dias_parcelas' => 30,
                 'data_vencimento' => $request->data_vencimento,
-                'data_pagamento' => Carbon::createFromFormat('d/m/Y', $dataPagamento)->format('Y-m-d H:i:s'),
+                'data_pagamento' => Carbon::createFromFormat('d/m/Y', $dataPagamento)->format('Y-m-d'),
                 'valor_recebido' => str_replace(',', '.', str_replace('.', '', $valorRecebido)),
                 'valor_subtotal' => str_replace(',', '.', str_replace('.', '', $valorRecebido)),
                 'troco' => 0.00,

@@ -31,7 +31,7 @@ class ClienteController extends Controller
 
             $pesquisa = $request->pesquisa;
             $model->where(function($query) use ($pesquisa) {
-                $query->orWhere('id', 'like', "%{$pesquisa}")
+                $query->orWhere('id', 'like', "%{$pesquisa}%")
                     ->orWhere('nome', 'like', "%{$pesquisa}%")
                     ->orWhere('documento', 'like', "%{$pesquisa}%")
                     ->orWhere('celular', 'like', "%{$pesquisa}%")

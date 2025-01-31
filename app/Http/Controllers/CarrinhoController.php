@@ -8,6 +8,8 @@ use App\Models\Situacao;
 use App\Models\Venda;
 use App\Models\Produto;
 use App\Models\VendaItem;
+use App\Models\VendaPagamento;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Traits\TraitDatatables;
 use Illuminate\Support\Facades\Cache;
@@ -26,6 +28,25 @@ class CarrinhoController extends Controller
             'user_id' => auth()->user()->id,
             'status' => 0,
         ]);
+
+        $dadosPagamento = [
+            'cliente_id' => null,
+            'venda_id' => $venda->id,
+            'tipo_pagamento' => null,
+            'forma_pagamento' => null,
+            'valor_parcela' => null,
+            'numero_parcela' => 1,
+            'total_parcelas' => 1,
+            'dias_parcelas' => 30,
+            'data_vencimento' => null,
+            'data_pagamento' => Carbon::now()->format('Y-m-d'),
+            'valor_recebido' => null,
+            'valor_subtotal' => null,
+            'troco' => 0.00,
+            'situacao' => '0',
+            'status' => 1,
+        ];
+        VendaPagamento::create($dadosPagamento);
 
         return redirect()->to('carrinho/pedido/' . $venda->id);
     }

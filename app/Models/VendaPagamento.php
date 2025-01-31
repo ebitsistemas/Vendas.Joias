@@ -34,6 +34,11 @@ class VendaPagamento extends Model
         'status',
     ];
 
+    public function venda()
+    {
+        return $this->hasOne(Venda::class, 'id', 'venda_id');
+    }
+
     public function formaPagamento()
     {
         return $this->hasOne(FormaPagamento::class, 'codigo', 'forma_pagamento');

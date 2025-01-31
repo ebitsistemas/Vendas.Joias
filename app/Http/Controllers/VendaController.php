@@ -226,6 +226,7 @@ class VendaController extends Controller
         $result = Venda::destroy($request->id);
         FaturaItem::where('venda_id', $request->id)->delete();
         VendaItem::where('venda_id', $request->id)->delete();
+        VendaPagamento::where('venda_id', $request->id)->delete();
 
         \DB::commit();
 

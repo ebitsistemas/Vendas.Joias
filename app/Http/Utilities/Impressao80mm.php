@@ -658,7 +658,7 @@ class Impressao80mm
                 $pdf->SetFont('Arial', '', 8);
                 $pdf->Cell(35, 1, utf8_decode('SALDO ANTERIOR'), 0, 0, 'L', true);
                 $pdf->Cell(24, 1, ' ', 0, 0, 'L', true);
-                $pdf->Cell(18, 1, ' - R$ ' . number_format($pagamento->valor_recebido, 2, ',', '.'), 0, 0, 'R', true);
+                $pdf->Cell(18, 1, ' R$ ' . number_format($pagamento->valor_recebido, 2, ',', '.'), 0, 0, 'R', true);
             }
         }
 

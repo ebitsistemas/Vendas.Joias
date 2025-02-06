@@ -163,6 +163,13 @@ class VendaController extends Controller
                     $valorPagamento = $valorRecebido > $saldo ? $saldo : $valorRecebido;
                     $valorRecebido = floatval($valorRecebido) - $valorPagamento;
 
+                    print_r($saldo);
+                    echo ' - ';
+                    print_r($valorPagamento);
+                    echo ' - ';
+                    print_r($valorRecebido);
+                    exit;
+
                     $data = [
                         'tipo' => 'venda',
                         'venda_id' => $venda->id,

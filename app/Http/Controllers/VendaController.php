@@ -225,6 +225,7 @@ class VendaController extends Controller
         echo '-';
         $venda = Venda::find($venda_id);
         print_r($venda->total_liquido);
+        print_r(floatval($venda->total_liquido) - floatval($faturas));
         exit;
         $venda->saldo = floatval($venda->total_liquido) - floatval($faturas);
         $venda->status = (floatval($venda->total_liquido) - floatval($faturas)) <= 0 ? 1 : 0;

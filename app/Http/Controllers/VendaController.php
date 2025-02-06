@@ -160,7 +160,7 @@ class VendaController extends Controller
             foreach ($vendas as $venda) {
                 if ($valorRecebido > 0) {
                     $saldo = $venda->saldo;
-                    $valorPagamento = floatval($valorRecebido > $saldo ? $saldo : $valorRecebido);
+                    $valorPagamento = doubleval($valorRecebido > $saldo ? $saldo : $valorRecebido);
                     $valorRecebido = $valorRecebido - $valorPagamento;
 
                     $data = [

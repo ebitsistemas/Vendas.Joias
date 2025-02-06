@@ -107,17 +107,14 @@ class VendaController extends Controller
                 ->where('status', 0)
                 ->get();
 
+            $saldoAnterior = Venda::where('cliente_id', $request->cliente_id)->sum('saldo');
+
             $valorRecebido = str_replace('.', '', $request->valor_recebido);
             $valorRecebido = floatval(str_replace(',', '.', $valorRecebido));
             if (empty($request->data_pagamento) OR $request->data_pagamento == '1970-01-01' OR $request->data_pagamento == '01/01/1970') {
                 $dataPagamento = Carbon::now()->format('Y-m-d');
             } else {
                 $dataPagamento = Carbon::createFromFormat('d/m/Y', $request->data_pagamento)->format('Y-m-d');
-            }
-
-            $saldoAnterior = 0;
-            foreach ($vendas as $venda) {
-                $saldoAnterior += $venda->saldo;
             }
 
             $dadosPagamentoSaldo = [

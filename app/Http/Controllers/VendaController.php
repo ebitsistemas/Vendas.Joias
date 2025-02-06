@@ -181,7 +181,7 @@ class VendaController extends Controller
                         'status' => 1,
                     ];
                     FaturaItem::create($data);
-                    $this->saldo($venda->id);
+                    return $this->saldo($venda->id);
                 }
             }
 

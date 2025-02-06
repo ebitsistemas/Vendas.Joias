@@ -120,7 +120,7 @@ class VendaController extends Controller
                 $saldoAnterior += $venda->saldo;
             }
 
-            $dadosPagamento = [
+            $dadosPagamentoSaldo = [
                 'tipo' => 'saldo',
                 'cliente_id' => $request->cliente_id,
                 'venda_id' => null,
@@ -138,7 +138,7 @@ class VendaController extends Controller
                 'situacao' => ($request->tipo_pagamento == 0) ? '4' : '0',
                 'status' => 1,
             ];
-            VendaPagamento::create($dadosPagamento);
+            VendaPagamento::create($dadosPagamentoSaldo);
 
             $dadosPagamento = [
                 'tipo' => 'pagamento',
@@ -167,6 +167,7 @@ class VendaController extends Controller
                     $valorRecebido = $valorRecebido - $valorPagamento;
 
                     $data = [
+                        'tipo' => 'venda',
                         'venda_id' => $venda->id,
                         'tipo_pagamento' => $request->tipo_pagamento,
                         'forma_pagamento' => $request->forma_pagamento,

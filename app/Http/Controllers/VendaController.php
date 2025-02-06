@@ -111,6 +111,7 @@ class VendaController extends Controller
 
             $valorRecebido = str_replace('.', '', $request->valor_recebido);
             $valorRecebido = floatval(str_replace(',', '.', $valorRecebido));
+            print_r($valorRecebido); exit;
             if (empty($request->data_pagamento) OR $request->data_pagamento == '1970-01-01' OR $request->data_pagamento == '01/01/1970') {
                 $dataPagamento = Carbon::now()->format('Y-m-d');
             } else {

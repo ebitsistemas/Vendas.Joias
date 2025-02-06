@@ -33,6 +33,7 @@ class CarrinhoController extends Controller
             ]);
 
             $dadosPagamento = [
+                'tipo' => 'venda',
                 'cliente_id' => null,
                 'venda_id' => $venda->id,
                 'tipo_pagamento' => null,

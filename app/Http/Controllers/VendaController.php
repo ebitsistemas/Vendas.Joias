@@ -115,7 +115,33 @@ class VendaController extends Controller
                 $dataPagamento = Carbon::createFromFormat('d/m/Y', $request->data_pagamento)->format('Y-m-d');
             }
 
+            $saldoAnterior = 0;
+            foreach ($vendas as $venda) {
+                $saldoAnterior += $venda->saldo;
+            }
+
             $dadosPagamento = [
+                'tipo' => 'saldo',
+                'cliente_id' => $request->cliente_id,
+                'venda_id' => null,
+                'tipo_pagamento' => null,
+                'forma_pagamento' => null,
+                'valor_parcela' => $saldoAnterior,
+                'numero_parcela' => 1,
+                'total_parcelas' => 1,
+                'dias_parcelas' => 30,
+                'data_vencimento' => Carbon::now()->format('Y-m-d'),
+                'data_pagamento' => Carbon::now()->format('Y-m-d'),
+                'valor_recebido' => $saldoAnterior,
+                'valor_subtotal' => $saldoAnterior,
+                'troco' => 0.00,
+                'situacao' => ($request->tipo_pagamento == 0) ? '4' : '0',
+                'status' => 1,
+            ];
+            VendaPagamento::create($dadosPagamento);
+
+            $dadosPagamento = [
+                'tipo' => 'pagamento',
                 'cliente_id' => $request->cliente_id,
                 'venda_id' => null,
                 'tipo_pagamento' => $request->tipo_pagamento,

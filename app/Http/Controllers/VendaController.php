@@ -221,8 +221,8 @@ class VendaController extends Controller
             ->sum('valor_subtotal');
 
         $venda = Venda::find($venda_id);
-        $venda->saldo = $venda->total_liquido - $faturas;
-        $venda->status = ($venda->total_liquido - $faturas) <= 0 ? 1 : 0;
+        $venda->saldo = $venda->total_liquido - floatval($faturas);
+        $venda->status = ($venda->total_liquido - floatval($faturas)) <= 0 ? 1 : 0;
         $venda->save();
     }
 

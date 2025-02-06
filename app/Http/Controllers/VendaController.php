@@ -181,7 +181,7 @@ class VendaController extends Controller
                         'status' => 1,
                     ];
                     FaturaItem::create($data);
-                    return $this->saldo($venda->id);
+                    $this->saldo($venda->id);
                 }
             }
 
@@ -220,13 +220,7 @@ class VendaController extends Controller
             ->where('status', '>', 0)
             ->sum('valor_subtotal');
 
-        print_r($faturas);
-
-        echo '-';
         $venda = Venda::find($venda_id);
-        print_r($venda->total_liquido);
-        print_r(floatval($venda->total_liquido) - floatval($faturas));
-        exit;
         $venda->saldo = floatval($venda->total_liquido) - floatval($faturas);
         $venda->status = (floatval($venda->total_liquido) - floatval($faturas)) <= 0 ? 1 : 0;
         $venda->save();

@@ -111,7 +111,6 @@ class VendaController extends Controller
 
             $valorRecebido = str_replace('.', '', $request->valor_recebido);
             $valorRecebido = floatval(str_replace(',', '.', $valorRecebido));
-            print_r($valorRecebido); exit;
             if (empty($request->data_pagamento) OR $request->data_pagamento == '1970-01-01' OR $request->data_pagamento == '01/01/1970') {
                 $dataPagamento = Carbon::now()->format('Y-m-d');
             } else {
@@ -144,14 +143,14 @@ class VendaController extends Controller
                 'venda_id' => null,
                 'tipo_pagamento' => $request->tipo_pagamento,
                 'forma_pagamento' => $request->forma_pagamento,
-                'valor_parcela' => str_replace(',', '.', str_replace('.', '', $valorRecebido)),
+                'valor_parcela' => $valorRecebido,
                 'numero_parcela' => 1,
                 'total_parcelas' => 1,
                 'dias_parcelas' => 30,
                 'data_vencimento' => $request->data_vencimento,
                 'data_pagamento' => $dataPagamento,
-                'valor_recebido' => str_replace(',', '.', str_replace('.', '', $valorRecebido)),
-                'valor_subtotal' => str_replace(',', '.', str_replace('.', '', $valorRecebido)),
+                'valor_recebido' => $valorRecebido,
+                'valor_subtotal' => $valorRecebido,
                 'troco' => 0.00,
                 'situacao' => ($request->tipo_pagamento == 0) ? '4' : '0',
                 'status' => 1,
@@ -169,14 +168,14 @@ class VendaController extends Controller
                         'venda_id' => $venda->id,
                         'tipo_pagamento' => $request->tipo_pagamento,
                         'forma_pagamento' => $request->forma_pagamento,
-                        'valor_parcela' => str_replace(',', '.', str_replace('.', '', $valorPagamento)),
+                        'valor_parcela' => $valorPagamento,
                         'numero_parcela' => 1,
                         'total_parcelas' => 1,
                         'dias_parcelas' => 30,
                         'data_vencimento' => $request->data_vencimento,
                         'data_pagamento' => ($request->tipo_pagamento == 0) ? $dataPagamento : Carbon::now()->format('Y-m-d'),
-                        'valor_recebido' => str_replace(',', '.', str_replace('.', '', $valorPagamento)),
-                        'valor_subtotal' => str_replace(',', '.', str_replace('.', '', $valorPagamento)),
+                        'valor_recebido' => $valorPagamento,
+                        'valor_subtotal' => $valorPagamento,
                         'troco' => 0.00,
                         'situacao' => ($request->tipo_pagamento == 0) ? '4' : '0',
                         'status' => 1,

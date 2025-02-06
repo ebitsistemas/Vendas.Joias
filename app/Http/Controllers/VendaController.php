@@ -156,22 +156,12 @@ class VendaController extends Controller
                 'status' => 1,
             ];
             VendaPagamento::create($dadosPagamento);
-            echo ' - ';
-            print_r($valorRecebido);
 
             foreach ($vendas as $venda) {
                 if ($valorRecebido > 0) {
                     $saldo = floatval($venda->saldo);
                     $valorPagamento = $valorRecebido > $saldo ? $saldo : $valorRecebido;
                     $valorRecebido = floatval($valorRecebido) - $valorPagamento;
-
-                    echo ' - ';
-                    print_r($saldo);
-                    echo ' - ';
-                    print_r($valorPagamento);
-                    echo ' - ';
-                    print_r($valorRecebido);
-                    exit;
 
                     $data = [
                         'tipo' => 'venda',

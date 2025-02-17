@@ -149,7 +149,8 @@ class ClienteController extends Controller
         $totais['saldo'] = 0;
         $totais['vendas'] = 0;
         $totais['faturas'] = 0;
-        foreach ($vendas as $venda) {
+        $vendasTotal = Venda::where('cliente_id', $id)->get();
+        foreach ($vendasTotal as $venda) {
             $somaFaturas = FaturaItem::where('venda_id', $venda->id)->sum('valor_subtotal');
             if ($venda->status != 3) {
                 $totais['saldo'] += $venda->saldo;

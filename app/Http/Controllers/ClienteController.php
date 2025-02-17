@@ -246,6 +246,11 @@ class ClienteController extends Controller
         $clientes = Cliente::where('status', '1')->get();
 
         foreach ($clientes as $cliente) {
+            $vendaSaldo = Venda::where('cliente_id', $cliente->id)->where('saldo', '>' , 0)->get();
+            foreach ($vendaSaldo as $venda) {
+                VendaController::saldoAnterior($cliente->id, $venda->tipo_pagamento);
+            }
+
             $vendas = Venda::where('cliente_id', $cliente->id)
                 ->where('status', 0)
                 ->first();

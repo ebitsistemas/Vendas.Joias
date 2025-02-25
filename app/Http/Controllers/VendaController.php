@@ -107,8 +107,6 @@ class VendaController extends Controller
                 ->where('status', 0)
                 ->get();
 
-            $saldoAnterior = Venda::where('cliente_id', $request->cliente_id)->sum('saldo');
-
             $valorRecebido = str_replace('.', '', $request->valor_recebido);
             $valorRecebido = floatval(str_replace(',', '.', $valorRecebido));
             if (empty($request->data_pagamento) OR $request->data_pagamento == '1970-01-01' OR $request->data_pagamento == '01/01/1970') {
@@ -119,64 +117,57 @@ class VendaController extends Controller
 
             $this->saldoAnterior($request->cliente_id, $request->tipo_pagamento);
 
-            $now = Carbon::now()->format('Y-m-d H:i:s');
-            $pagamentoAnterior = VendaPagamento::where('cliente_id', $request->cliente_id)->where('tipo', 'pagamento')->first();
-            $horaPagamento = Carbon::parse($pagamentoAnterior->created_at)->format('Y-m-d H:i:s');
-            $diff = $now->diffInSeconds($horaPagamento);
+            $dadosPagamento = [
+                'tipo' => 'pagamento',
+                'cliente_id' => $request->cliente_id,
+                'venda_id' => null,
+                'tipo_pagamento' => $request->tipo_pagamento,
+                'forma_pagamento' => $request->forma_pagamento,
+                'valor_parcela' => $valorRecebido,
+                'numero_parcela' => 1,
+                'total_parcelas' => 1,
+                'dias_parcelas' => 30,
+                'data_vencimento' => $request->data_vencimento,
+                'data_pagamento' => $dataPagamento,
+                'valor_recebido' => $valorRecebido,
+                'valor_subtotal' => $valorRecebido,
+                'troco' => 0.00,
+                'situacao' => ($request->tipo_pagamento == 0) ? '4' : '0',
+                'status' => 1,
+            ];
+            VendaPagamento::create($dadosPagamento);
 
-            if ($diff >= 20) {
-                $dadosPagamento = [
-                    'tipo' => 'pagamento',
-                    'cliente_id' => $request->cliente_id,
-                    'venda_id' => null,
-                    'tipo_pagamento' => $request->tipo_pagamento,
-                    'forma_pagamento' => $request->forma_pagamento,
-                    'valor_parcela' => $valorRecebido,
-                    'numero_parcela' => 1,
-                    'total_parcelas' => 1,
-                    'dias_parcelas' => 30,
-                    'data_vencimento' => $request->data_vencimento,
-                    'data_pagamento' => $dataPagamento,
-                    'valor_recebido' => $valorRecebido,
-                    'valor_subtotal' => $valorRecebido,
-                    'troco' => 0.00,
-                    'situacao' => ($request->tipo_pagamento == 0) ? '4' : '0',
-                    'status' => 1,
-                ];
-                VendaPagamento::create($dadosPagamento);
+            foreach ($vendas as $venda) {
+                if ($valorRecebido > 0) {
+                    $saldo = floatval($venda->saldo);
+                    $valorPagamento = $valorRecebido > $saldo ? $saldo : $valorRecebido;
+                    $valorRecebido = floatval($valorRecebido) - $valorPagamento;
 
-                foreach ($vendas as $venda) {
-                    if ($valorRecebido > 0) {
-                        $saldo = floatval($venda->saldo);
-                        $valorPagamento = $valorRecebido > $saldo ? $saldo : $valorRecebido;
-                        $valorRecebido = floatval($valorRecebido) - $valorPagamento;
-
-                        $data = [
-                            'tipo' => 'venda',
-                            'venda_id' => $venda->id,
-                            'tipo_pagamento' => $request->tipo_pagamento,
-                            'forma_pagamento' => $request->forma_pagamento,
-                            'valor_parcela' => $valorPagamento,
-                            'numero_parcela' => 1,
-                            'total_parcelas' => 1,
-                            'dias_parcelas' => 30,
-                            'data_vencimento' => $request->data_vencimento,
-                            'data_pagamento' => ($request->tipo_pagamento == 0) ? $dataPagamento : Carbon::now()->format('Y-m-d'),
-                            'valor_recebido' => $valorPagamento,
-                            'valor_subtotal' => $valorPagamento,
-                            'troco' => 0.00,
-                            'situacao' => ($request->tipo_pagamento == 0) ? '4' : '0',
-                            'status' => 1,
-                        ];
-                        FaturaItem::create($data);
-                        $this->saldo($venda->id);
-                    }
+                    $data = [
+                        'tipo' => 'venda',
+                        'venda_id' => $venda->id,
+                        'tipo_pagamento' => $request->tipo_pagamento,
+                        'forma_pagamento' => $request->forma_pagamento,
+                        'valor_parcela' => $valorPagamento,
+                        'numero_parcela' => 1,
+                        'total_parcelas' => 1,
+                        'dias_parcelas' => 30,
+                        'data_vencimento' => $request->data_vencimento,
+                        'data_pagamento' => ($request->tipo_pagamento == 0) ? $dataPagamento : Carbon::now()->format('Y-m-d'),
+                        'valor_recebido' => $valorPagamento,
+                        'valor_subtotal' => $valorPagamento,
+                        'troco' => 0.00,
+                        'situacao' => ($request->tipo_pagamento == 0) ? '4' : '0',
+                        'status' => 1,
+                    ];
+                    FaturaItem::create($data);
+                    $this->saldo($venda->id);
                 }
-
-                DB::commit();
             }
 
-            return redirect()->back();
+            DB::commit();
+
+            return redirect()->to('cliente/historico/'.$request->cliente_id);
         } catch (\Exception $e) {
             DB::rollback();
             dd($e);

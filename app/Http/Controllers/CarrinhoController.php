@@ -52,6 +52,8 @@ class CarrinhoController extends Controller
             ];
             VendaPagamento::create($dadosPagamento);
 
+            VendaController::saldoAnterior($venda->id, 1);
+
             DB::commit();
 
             return redirect()->to('carrinho/pedido/' . $venda->id);

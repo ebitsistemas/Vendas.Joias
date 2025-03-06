@@ -58,8 +58,8 @@ class RelatorioController extends Controller
             $model->leftjoin('vendas', 'vendas.id', '=', 'faturas_itens.venda_id');
             $model->leftjoin('clientes', 'clientes.id', '=', 'vendas.cliente_id');
             if (!empty($request->data_inicial) AND !empty($request->data_final)) {
-                $inicio = Carbon::createFromFormat('d/m/Y', $request->data_inicial)->format('Y-m-d');
-                $fim = Carbon::createFromFormat('d/m/Y', $request->data_final)->format('Y-m-d');
+                $inicio = Carbon::parse($request->data_inicial)->format('Y-m-d');
+                $fim = Carbon::parse($request->data_final)->format('Y-m-d');
                 if ($request->tipo_data == 1) {
                     $model->whereBetween('faturas_itens.created_at', [$inicio, $fim]);
                 } else if ($request->tipo_data == 2) {
@@ -127,8 +127,8 @@ class RelatorioController extends Controller
         if (!empty($request->has('_token'))) {
             $model = Venda::select('*');
             if (!empty($request->data_inicial) AND !empty($request->data_final)) {
-                $inicio = Carbon::createFromFormat('d/m/Y', $request->data_inicial)->format('Y-m-d');
-                $fim = Carbon::createFromFormat('d/m/Y', $request->data_final)->format('Y-m-d');
+                $inicio = Carbon::parse($request->data_inicial)->format('Y-m-d');
+                $fim = Carbon::parse($request->data_final)->format('Y-m-d');
                 if ($request->tipo_data == 1) {
                     $model->whereBetween('data_venda', [$inicio, $fim]);
                 } else if ($request->tipo_data == 2) {

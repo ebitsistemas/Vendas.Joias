@@ -19,12 +19,12 @@
                         </div>
                         <div class="col-sm-4">
                             <label class="fs-6 form-label">Data Inicial</label>
-                            <input class="form-control form-control-lg mask-date" id="data_inicial" name="data_inicial" value="{{ $request->data_inicial ?? '' }}">
+                            <input class="form-control form-control-lg" type="date" id="data_inicial" name="data_inicial" value="{{ $request->data_inicial ?? '' }}">
                         </div>
 
                         <div class="col-sm-4">
                             <label class="fs-6 form-label">Data Final</label>
-                            <input class="form-control form-control-lg mask-date" id="data_final" name="data_final" value="{{ $request->data_final ?? '' }}">
+                            <input class="form-control form-control-lg" type="date" id="data_final" name="data_final" value="{{ $request->data_final ?? '' }}">
                         </div>
                     </div>
 

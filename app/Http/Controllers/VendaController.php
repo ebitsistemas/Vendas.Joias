@@ -148,33 +148,33 @@ class VendaController extends Controller
                     'status' => 1,
                 ];
                 VendaPagamento::create($dadosPagamento);
-            }
 
-            foreach ($vendas as $venda) {
-                if ($valorRecebido > 0) {
-                    $saldo = floatval($venda->saldo);
-                    $valorPagamento = $valorRecebido > $saldo ? $saldo : $valorRecebido;
-                    $valorRecebido = floatval($valorRecebido) - $valorPagamento;
+                foreach ($vendas as $venda) {
+                    if ($valorRecebido > 0) {
+                        $saldo = floatval($venda->saldo);
+                        $valorPagamento = $valorRecebido > $saldo ? $saldo : $valorRecebido;
+                        $valorRecebido = floatval($valorRecebido) - $valorPagamento;
 
-                    $data = [
-                        'tipo' => 'venda',
-                        'venda_id' => $venda->id,
-                        'tipo_pagamento' => $request->tipo_pagamento,
-                        'forma_pagamento' => $request->forma_pagamento,
-                        'valor_parcela' => $valorPagamento,
-                        'numero_parcela' => 1,
-                        'total_parcelas' => 1,
-                        'dias_parcelas' => 30,
-                        'data_vencimento' => $request->data_vencimento,
-                        'data_pagamento' => ($request->tipo_pagamento == 0) ? $dataPagamento : Carbon::now()->format('Y-m-d'),
-                        'valor_recebido' => $valorPagamento,
-                        'valor_subtotal' => $valorPagamento,
-                        'troco' => 0.00,
-                        'situacao' => ($request->tipo_pagamento == 0) ? '4' : '0',
-                        'status' => 1,
-                    ];
-                    FaturaItem::create($data);
-                    $this->saldo($venda->id);
+                        $data = [
+                            'tipo' => 'venda',
+                            'venda_id' => $venda->id,
+                            'tipo_pagamento' => $request->tipo_pagamento,
+                            'forma_pagamento' => $request->forma_pagamento,
+                            'valor_parcela' => $valorPagamento,
+                            'numero_parcela' => 1,
+                            'total_parcelas' => 1,
+                            'dias_parcelas' => 30,
+                            'data_vencimento' => $request->data_vencimento,
+                            'data_pagamento' => ($request->tipo_pagamento == 0) ? $dataPagamento : Carbon::now()->format('Y-m-d'),
+                            'valor_recebido' => $valorPagamento,
+                            'valor_subtotal' => $valorPagamento,
+                            'troco' => 0.00,
+                            'situacao' => ($request->tipo_pagamento == 0) ? '4' : '0',
+                            'status' => 1,
+                        ];
+                        FaturaItem::create($data);
+                        $this->saldo($venda->id);
+                    }
                 }
             }
 

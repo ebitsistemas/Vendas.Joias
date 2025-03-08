@@ -117,25 +117,38 @@ class VendaController extends Controller
 
             $this->saldoAnterior($request->cliente_id, $request->tipo_pagamento);
 
-            $dadosPagamento = [
-                'tipo' => 'pagamento',
-                'cliente_id' => $request->cliente_id,
-                'venda_id' => null,
-                'tipo_pagamento' => $request->tipo_pagamento,
-                'forma_pagamento' => $request->forma_pagamento,
-                'valor_parcela' => $valorRecebido,
-                'numero_parcela' => 1,
-                'total_parcelas' => 1,
-                'dias_parcelas' => 30,
-                'data_vencimento' => $request->data_vencimento,
-                'data_pagamento' => $dataPagamento,
-                'valor_recebido' => $valorRecebido,
-                'valor_subtotal' => $valorRecebido,
-                'troco' => 0.00,
-                'situacao' => ($request->tipo_pagamento == 0) ? '4' : '0',
-                'status' => 1,
-            ];
-            VendaPagamento::create($dadosPagamento);
+            $now = Carbon::now()->format('Y-m-d H:i:s');
+            $created = Carbon::now()->subMinutes(5)->format('Y-m-d H:i:s');
+
+            $pagamentoAnterior = VendaPagamento::where('cliente_id', $request->cliente_id)
+                ->where('tipo_pagamento', $request->tipo_pagamento)
+                ->where('forma_pagamento', $request->forma_pagamento)
+                ->where('valor_parcela', $valorRecebido)
+                ->whereBetween('created_at', [$created, $now])
+                ->latest()
+                ->first();
+
+            if (empty($pagamentoAnterior)) {
+                $dadosPagamento = [
+                    'tipo' => 'pagamento',
+                    'cliente_id' => $request->cliente_id,
+                    'venda_id' => null,
+                    'tipo_pagamento' => $request->tipo_pagamento,
+                    'forma_pagamento' => $request->forma_pagamento,
+                    'valor_parcela' => $valorRecebido,
+                    'numero_parcela' => 1,
+                    'total_parcelas' => 1,
+                    'dias_parcelas' => 30,
+                    'data_vencimento' => $request->data_vencimento,
+                    'data_pagamento' => $dataPagamento,
+                    'valor_recebido' => $valorRecebido,
+                    'valor_subtotal' => $valorRecebido,
+                    'troco' => 0.00,
+                    'situacao' => ($request->tipo_pagamento == 0) ? '4' : '0',
+                    'status' => 1,
+                ];
+                VendaPagamento::create($dadosPagamento);
+            }
 
             foreach ($vendas as $venda) {
                 if ($valorRecebido > 0) {

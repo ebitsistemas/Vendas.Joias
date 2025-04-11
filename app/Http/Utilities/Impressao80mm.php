@@ -634,7 +634,8 @@ class Impressao80mm
             $pdf->Cell(18, 1, 'R$ ' . number_format($venda->total_liquido, 2, ',', '.'), 0, 0, 'R', true);
         }*/
 
-        $pagamentos = array_reverse($pagamentos->toArray());
+        $pagamentos = $pagamentos->toArray();
+        //$pagamentos = array_reverse($pagamentos->toArray());
         foreach ($pagamentos as $pagamento) {
             if ($pagamento['tipo'] == 'venda') {
                 $height += 5;

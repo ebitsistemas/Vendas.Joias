@@ -58,9 +58,9 @@
                                     <i class="fa fa-ellipsis-v text-theme fs-18px"></i>
                                 </button>
                                 <ul class="dropdown-menu">
-                                    <li class="p-2"><a href="cliente/editar/{{ $cliente->id }}" class="fs-16px"><i class="fad fa-edit fs-16px"></i> Editar </a></li>
-                                    <li class="p-2"><a href="cliente/historico/{{ $cliente->id }}" class="fs-16px"><i class="fad fa-clock-rotate-left fs-16px"></i> Histórico </a></li>
-                                    <li class="p-2"><a class="dropdown-item text-danger fs-16px fn-remover" href="javascript:void(0);" data-content="{{ $cliente->nome }}" data-method="cliente" data-id="{{ $cliente->id }}"><i class="fad fa-trash fs-16px"></i> Remover</a></li>
+                                    <li class="p-2"><a href="cliente/editar/{{ $cliente->id }}" class="fs-20px"><i class="fad fa-edit fs-16px"></i> Editar </a></li>
+                                    <li class="p-2"><a href="cliente/historico/{{ $cliente->id }}" class="fs-20px"><i class="fad fa-clock-rotate-left fs-16px"></i> Histórico </a></li>
+                                    <li class="p-2"><a class="dropdown-item text-danger fs-20px mt-1 fn-remover" href="javascript:void(0);" data-content="{{ $cliente->nome }}" data-method="cliente" data-id="{{ $cliente->id }}"><i class="fad fa-trash fs-16px"></i> Remover</a></li>
                                 </ul>
                             </div>
                         </li>

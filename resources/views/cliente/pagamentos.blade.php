@@ -81,7 +81,7 @@
                                                     <h6 class="fs-18px mb-1">Status</h6>
                                                     <div class="last-chat">
                                                         <p class="mb-0 fs-16px">
-                                                            <span class="badge bg-success badge-inline font-weight-bolder" data-status="4">Pago</span>
+                                                            {!! $venda->situacao_fatura->label !!}
                                                         </p>
                                                     </div>
                                                 </div>

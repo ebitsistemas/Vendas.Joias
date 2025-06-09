@@ -20,7 +20,7 @@ class PagamentoController extends Controller
         $config = Configuracao::first();
 
         $cliente = Cliente::find($request->id);
-        $pagamentos = VendaPagamento::with('cliente')
+        $pagamentos = VendaPagamento::with(['cliente', 'situacao'])
             ->where('cliente_id', $cliente->id)
             ->where('tipo', 'pagamento')
             ->where('id', '>', 1683)
@@ -152,7 +152,7 @@ class PagamentoController extends Controller
             // Encontra o pagamento e já carrega as faturas e vendas relacionadas para evitar múltiplas queries
             $pagamento = VendaPagamento::with('faturasQuitadas.venda')->findOrFail($pagamentoId);
 
-            if ($pagamento->situacao != 4) { // 1 = Concluído
+            if ($pagamento->situacao != 4) { // 4 = Concluído
                 throw new Exception('Este pagamento não pode ser revertido (possivelmente já foi estornado).');
             }
 

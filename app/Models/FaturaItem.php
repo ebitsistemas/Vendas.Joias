@@ -33,6 +33,18 @@ class FaturaItem extends Model
         'status',
     ];
 
+    public function venda()
+    {
+        return $this->belongsTo(Venda::class);
+    }
+
+    public function pagamentos()
+    {
+        return $this->belongsToMany(VendaPagamento::class, 'fatura_pagamento', 'fatura_item_id', 'venda_pagamento_id')
+            ->withPivot('valor_aplicado') // Informa ao Laravel sobre a coluna extra
+            ->withTimestamps();
+    }
+
     public function formaPagamento()
     {
         return $this->hasOne(FormaPagamento::class, 'codigo', 'forma_pagamento');

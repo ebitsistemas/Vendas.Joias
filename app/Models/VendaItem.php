@@ -24,4 +24,9 @@ class VendaItem extends Model
         'valor_total',
         'status',
     ];
+
+    public function venda()
+    {
+        return $this->belongsTo(Venda::class);
+    }
 }

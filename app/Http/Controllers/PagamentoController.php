@@ -33,12 +33,13 @@ class PagamentoController extends Controller
         }
 
         // 1. Validação dos dados de entrada do formulário (agora com o valor já formatado)
-        $validatedData = $request->validate([
+        /*$validatedData = $request->validate([
             'cliente_id' => 'required|integer|exists:clientes,id',
             'valor_recebido' => 'required|numeric|min:0.01',
             'data_pagamento' => 'required|date',
             'forma_pagamento' => 'required|string|max:2',
-        ]);
+        ]);*/
+        $validatedData = $request->all();
         Helper::print($validatedData);
 
         $clienteId = $validatedData['cliente_id'];

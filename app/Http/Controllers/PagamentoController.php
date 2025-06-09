@@ -55,7 +55,6 @@ class PagamentoController extends Controller
             'data_pagamento' => 'required|date',
             'forma_pagamento' => 'required|string|max:2',
         ]);
-        //Helper::print($validatedData);
 
         $clienteId = $validatedData['cliente_id'];
         $valorTotalPago = $validatedData['valor_recebido']; // Pega o valor já validado e formatado
@@ -174,7 +173,10 @@ class PagamentoController extends Controller
 
             DB::commit();
 
-            return response()->json(['message' => 'Pagamento revertido com sucesso!'], 200);
+            return response()->json([
+                'success' => true,
+                'message' => 'Pagamento revertido com sucesso!'
+            ]);
 
         } catch (Exception $e) {
             DB::rollBack();

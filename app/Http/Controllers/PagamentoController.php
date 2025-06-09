@@ -26,8 +26,6 @@ class PagamentoController extends Controller
             ->where('id', '>', 1683)
             ->paginate($config->itens_pagina);
 
-        Helper::print($pagamentos);
-
         return view('cliente.pagamentos')->with(['cliente' => $cliente, 'pagamentos' => $pagamentos]);
     }
 

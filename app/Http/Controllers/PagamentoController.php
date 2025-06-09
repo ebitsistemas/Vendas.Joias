@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Utilities\Helper;
 use App\Models\Venda;
 use App\Models\VendaPagamento;
 use App\Models\FaturaItem;
@@ -94,7 +95,7 @@ class PagamentoController extends Controller
             DB::commit();
 
             return response()->json([
-                'message' => 'Pagamento processado com sucesso!',
+                'sucesso' => 'Pagamento processado com sucesso!',
                 'pagamento_id' => $pagamento->id,
                 'cliente_id' => $clienteId,
                 'detalhes_pagamento' => [
@@ -108,7 +109,8 @@ class PagamentoController extends Controller
 
         } catch (Exception $e) {
             DB::rollBack();
-            return response()->json(['message' => 'Ocorreu um erro ao processar o pagamento.', 'error' => $e->getMessage()], 500);
+            Helper::print($e->getMessage());
+            return response()->json(['erro' => 'Ocorreu um erro ao processar o pagamento.', 'error' => $e->getMessage()], 500);
         }
     }
 

@@ -100,7 +100,7 @@ class PagamentoController extends Controller
             DB::commit();
 
             return response()->json([
-                'sucesso' => 'Pagamento processado com sucesso!',
+                'success' => 'Pagamento processado com sucesso!',
                 'pagamento_id' => $pagamento->id,
                 'cliente_id' => $clienteId,
                 'detalhes_pagamento' => [
@@ -114,7 +114,6 @@ class PagamentoController extends Controller
 
         } catch (Exception $e) {
             DB::rollBack();
-            Helper::print($e->getMessage());
             return response()->json(['erro' => 'Ocorreu um erro ao processar o pagamento.', 'error' => $e->getMessage()], 500);
         }
     }

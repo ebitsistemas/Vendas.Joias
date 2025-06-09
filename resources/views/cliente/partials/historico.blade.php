@@ -4,6 +4,33 @@
 
 @section('content')
     <div class="container">
+        @if (session('success'))
+            <div class="row">
+                <div class="col-6">
+                    <div class="alert alert-success d-flex align-items-center p-5">
+                        <span class="svg-icon me-3"><i class="fad fa-check-circle text-success fs-1"></i></span>
+
+                        <div class="d-flex flex-column">
+                            <h4 class="mb-1 text-dark">Sucesso</h4>
+                            <span>{{ session('mensagem') }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @elseif(session('erro'))
+            <div class="row">
+                <div class="col-6">
+                    <div class="alert alert-danger d-flex align-items-center p-5">
+                        <span class="svg-icon me-3"><i class="fad fa-check-circle text-danger fs-1"></i></span>
+
+                        <div class="d-flex flex-column">
+                            <h4 class="mb-1 text-dark">Erro</h4>
+                            <span>{{ session('erro') }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
         <div class="row">
             <div class="col-md-12">
                 <div class="card">

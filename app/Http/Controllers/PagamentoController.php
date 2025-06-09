@@ -91,7 +91,7 @@ class PagamentoController extends Controller
 
                 $detalhesQuitacao[] = [
                     'venda_id' => $venda->id,
-                    'data_venda' => $venda->data_venda->format('d/m/Y'),
+                    'data_venda' => $venda->data_venda,
                     'valor_original' => $venda->total_liquido,
                     'valor_quitado' => $valorAplicar,
                     'saldo_restante_venda' => $venda->saldo

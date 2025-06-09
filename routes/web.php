@@ -78,7 +78,7 @@ Route::prefix('cliente')->group(function () {
     Route::post('update', [\App\Http\Controllers\ClienteController::class, 'update'])->name('cliente.update')->middleware('auth');
     Route::post('delete', [\App\Http\Controllers\ClienteController::class, 'destroy'])->name('cliente.delete')->middleware('auth');
 
-    Route::post('pagamentos', [\App\Http\Controllers\PagamentoController::class, 'index'])->name('pagamentos');
+    Route::get('pagamentos/{id}', [\App\Http\Controllers\PagamentoController::class, 'index'])->name('pagamentos');
 
     Route::get('disable', [\App\Http\Controllers\ClienteController::class, 'disable'])->name('cliente.disable');
 });

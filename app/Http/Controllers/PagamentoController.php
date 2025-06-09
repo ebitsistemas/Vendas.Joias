@@ -6,6 +6,7 @@ use App\Http\Utilities\Helper;
 use App\Models\Venda;
 use App\Models\VendaPagamento;
 use App\Models\FaturaItem;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Exception;
@@ -25,6 +26,10 @@ class PagamentoController extends Controller
             $valorFormatado = str_replace('.', '', $request->input('valor')); // Remove o separador de milhares (.)
             $valorFormatado = str_replace(',', '.', $valorFormatado); // Substitui a vírgula (,) por ponto (.)
             $request->merge(['valor' => $valorFormatado]);
+        }
+        if ($request->has('data_pagamento')) {
+            $dataFormatada = Carbon::parse($request->input('data_pagamento'))->format('Y-m-d');
+            $request->merge(['data_pagamento' => $dataFormatada]);
         }
 
         // 1. Validação dos dados de entrada do formulário (agora com o valor já formatado)

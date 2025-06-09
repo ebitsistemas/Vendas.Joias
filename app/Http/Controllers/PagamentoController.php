@@ -32,6 +32,10 @@ class PagamentoController extends Controller
             $request->merge(['data_pagamento' => $dataFormatada]);
         }
 
+        echo '<pre>';
+        print_r($request->all());
+        exit;
+
         // 1. Validação dos dados de entrada do formulário (agora com o valor já formatado)
         $validatedData = $request->validate([
             'cliente_id' => 'required|integer|exists:clientes,id',
@@ -39,10 +43,6 @@ class PagamentoController extends Controller
             'data_pagamento' => 'required|date',
             'forma_pagamento' => 'required|string|max:2',
         ]);
-
-        echo '<pre>';
-        print_r($validatedData);
-        exit;
 
         $clienteId = $validatedData['cliente_id'];
         $valorTotalPago = $validatedData['valor']; // Pega o valor já validado e formatado

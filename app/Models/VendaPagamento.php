@@ -55,4 +55,13 @@ class VendaPagamento extends Model
     {
         return $this->hasOne(FaturaSituacao::class, 'codigo', 'situacao');
     }
+
+    /**
+     * Define a relação onde um Pagamento pode ter quitado várias Faturas.
+     * Este é o método que está em falta.
+     */
+    public function faturasQuitadas()
+    {
+        return $this->hasMany(FaturaItem::class);
+    }
 }

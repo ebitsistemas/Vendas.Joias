@@ -99,6 +99,8 @@ class PagamentoController extends Controller
 
             DB::commit();
 
+            Helper::print($detalhesQuitacao);
+
             return response()->json([
                 'success' => 'Pagamento processado com sucesso!',
                 'pagamento_id' => $pagamento->id,
@@ -114,6 +116,7 @@ class PagamentoController extends Controller
 
         } catch (Exception $e) {
             DB::rollBack();
+            Helper::print($e->getMessage());
             return response()->json(['erro' => 'Ocorreu um erro ao processar o pagamento.', 'error' => $e->getMessage()], 500);
         }
     }

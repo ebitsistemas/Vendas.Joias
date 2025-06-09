@@ -142,6 +142,12 @@ Route::prefix('fatura')->group(function () {
     Route::post('delete', [\App\Http\Controllers\FaturaController::class, 'destroy'])->name('fatura.destroy')->middleware('auth');
 });
 
+/* PAGAMENTOS */
+Route::prefix('pagamentos')->group(function () {
+    Route::post('processar', [\App\Http\Controllers\PagamentoController::class, 'processarPagamentoFifo'])->name('pagamentos.processar');
+    Route::post('reverter/{pagamentoId}', [\App\Http\Controllers\PagamentoController::class, 'reverterPagamento'])->name('pagamentos.reverter');
+});
+
 /* RELATÓRIOS */
 Route::prefix('relatorio')->group(function () {
     Route::get('', function () {

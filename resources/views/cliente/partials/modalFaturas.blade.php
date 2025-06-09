@@ -7,7 +7,7 @@
                 <h1 class="modal-title text-theme fs-5" id="modalFaturasLabel">Baixar Faturas</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form id="form_pagamentos" action="{{ url('venda/baixar/faturas') }}" method="POST">
+            <form id="form_pagamentos" action="{{ route('pagamentos.processar') }}" method="POST">
                 <div class="modal-body">
                     @csrf
                     <input type="hidden" name="cliente_id" id="cliente_id" value="{{ $cliente->id }}">

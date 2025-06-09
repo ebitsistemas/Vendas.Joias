@@ -91,7 +91,7 @@
                                                     <i class="fa fa-ellipsis-v text-theme fs-18px"></i>
                                                 </button>
                                                 <ul class="dropdown-menu">
-                                                    <li class="p-2 mt-3"><a class="dropdown-item text-danger fs-20px mt-1 fn-remover" href="javascript:void(0);" data-content="{{ $pagamento->id }}" data-method="pagamento" data-id="{{ $pagamento->id }}"><i class="fad fa-ban fs-16px"></i> Cancelar</a></li>
+                                                    <li class="p-2 mt-3"><a class="dropdown-item text-danger fs-20px mt-1 fn-remover" href="javascript:void(0);" data-content="{{ $pagamento->id }}" data-method="pagamentos" data-id="{{ $pagamento->id }}"><i class="fad fa-ban fs-16px"></i> Cancelar</a></li>
                                                 </ul>
                                             </div>
                                         </li>

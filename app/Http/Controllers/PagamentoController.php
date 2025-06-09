@@ -39,7 +39,10 @@ class PagamentoController extends Controller
             'data_pagamento' => 'required|date',
             'forma_pagamento' => 'required|string|max:2',
         ]);
-        Helper::print($validatedData);
+
+        echo '<pre>';
+        print_r($validatedData);
+        exit;
 
         $clienteId = $validatedData['cliente_id'];
         $valorTotalPago = $validatedData['valor']; // Pega o valor já validado e formatado

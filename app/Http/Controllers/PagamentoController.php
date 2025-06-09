@@ -23,7 +23,7 @@ class PagamentoController extends Controller
     public function processarPagamentoFifo(Request $request)
     {
         if ($request->has('valor_recebido')) {
-            $valorFormatado = str_replace('.', '', $request->input('valor')); // Remove o separador de milhares (.)
+            $valorFormatado = str_replace('.', '', $request->input('valor_recebido')); // Remove o separador de milhares (.)
             $valorFormatado = str_replace(',', '.', $valorFormatado); // Substitui a vírgula (,) por ponto (.)
             $request->merge(['valor_recebido' => $valorFormatado]);
         }

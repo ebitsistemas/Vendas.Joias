@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Utilities\Helper;
+use App\Models\Cliente;
+use App\Models\Configuracao;
 use App\Models\Venda;
 use App\Models\VendaPagamento;
 use App\Models\FaturaItem;
@@ -13,6 +15,20 @@ use Exception;
 
 class PagamentoController extends Controller
 {
+    public function index(Request $request)
+    {
+        $config = Configuracao::first();
+
+        $cliente = Cliente::find($request->id);
+        $pagamentos = VendaPagamento::with('cliente')
+            ->where('cliente_id', $cliente->id)
+            ->where('tipo', 'pagamento')
+            ->where('id', '>', 1683)
+            ->paginate($config->itens_pagina);
+
+        return view('cliente.pagamentos')->with(['cliente' => $cliente, 'pagamentos' => $pagamentos]);
+    }
+
     /**
      * Processa um pagamento de um cliente, quitando as vendas com saldo devedor
      * mais antigas primeiro (lógica FIFO - First-In, First-Out).
@@ -127,15 +143,16 @@ class PagamentoController extends Controller
      * @param int $pagamentoId
      * @return \Illuminate\Http\JsonResponse
      */
-    public function reverterPagamento($pagamentoId)
+    public function reverterPagamento(Request $request)
     {
+        $pagamentoId = $request->id;
         try {
             DB::beginTransaction();
 
             // Encontra o pagamento e já carrega as faturas e vendas relacionadas para evitar múltiplas queries
             $pagamento = VendaPagamento::with('faturasQuitadas.venda')->findOrFail($pagamentoId);
 
-            if ($pagamento->situacao != 1) { // 1 = Concluído
+            if ($pagamento->situacao != 4) { // 1 = Concluído
                 throw new Exception('Este pagamento não pode ser revertido (possivelmente já foi estornado).');
             }
 
@@ -147,12 +164,12 @@ class PagamentoController extends Controller
                 $venda->save();
 
                 // 3. Marca o registro da fatura como cancelado
-                $faturaItem->situacao = 2; // 2 = Cancelado
+                $faturaItem->situacao = 3; // 2 = Cancelado
                 $faturaItem->save();
             }
 
             // 4. Marca o pagamento principal como cancelado/estornado
-            $pagamento->situacao = 2; // 2 = Cancelado/Estornado
+            $pagamento->situacao = 3; // 2 = Cancelado/Estornado
             $pagamento->save();
 
             DB::commit();

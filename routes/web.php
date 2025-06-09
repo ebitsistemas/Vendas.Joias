@@ -144,8 +144,9 @@ Route::prefix('fatura')->group(function () {
 
 /* PAGAMENTOS */
 Route::prefix('pagamentos')->group(function () {
+    Route::post('', [\App\Http\Controllers\PagamentoController::class, 'index'])->name('pagamentos');
     Route::post('processar', [\App\Http\Controllers\PagamentoController::class, 'processarPagamentoFifo'])->name('pagamentos.processar');
-    Route::post('reverter/{pagamentoId}', [\App\Http\Controllers\PagamentoController::class, 'reverterPagamento'])->name('pagamentos.reverter');
+    Route::post('delete', [\App\Http\Controllers\PagamentoController::class, 'reverterPagamento'])->name('pagamentos.reverter');
 });
 
 /* RELATÓRIOS */

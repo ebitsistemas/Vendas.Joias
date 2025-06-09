@@ -36,6 +36,11 @@ class VendaPagamento extends Model
         'status',
     ];
 
+    public function cliente()
+    {
+        return $this->belongsTo(Cliente::class, 'cliente_id', 'id');
+    }
+
     public function venda()
     {
         return $this->belongsTo(Venda::class, 'venda_id', 'id');

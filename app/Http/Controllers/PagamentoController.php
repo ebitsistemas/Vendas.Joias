@@ -59,6 +59,7 @@ class PagamentoController extends Controller
             }
 
             $pagamento = VendaPagamento::create([
+                'tipo' => 'pagamento',
                 'cliente_id' => $clienteId,
                 'valor_recebido' => $valorTotalPago,
                 'data_pagamento' => $validatedData['data_pagamento'],

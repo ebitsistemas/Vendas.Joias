@@ -36,12 +36,17 @@
                 <div class="card">
                     <div class="card-body border card-scroll h100p">
                         <div class="row mb-2">
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-4 mb-3">
                                 <a href="javascript:void(0);" class="btn btn-lg btn-theme w-100" data-bs-toggle="modal" data-bs-target="#modalFaturas">
                                     <i class="fa fa-money-bill-transfer fs-18px me-2"></i> Baixar Faturas
                                 </a>
                             </div>
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-4 mb-3">
+                                <a href="{{ url('cliente/pagamentos/'.$cliente->id) }}" class="btn btn-lg btn-theme w-100">
+                                    <i class="fa fa-print fs-18px me-2"></i> Pagamentos
+                                </a>
+                            </div>
+                            <div class="col-md-4 mb-3">
                                 <a href="{{ url('cliente/imprimir/'.$cliente->id) }}" target="_blank" class="btn btn-lg btn-theme w-100">
                                     <i class="fa fa-print fs-18px me-2"></i> Saldo Conta
                                 </a>

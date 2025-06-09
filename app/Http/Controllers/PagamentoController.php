@@ -22,24 +22,20 @@ class PagamentoController extends Controller
      */
     public function processarPagamentoFifo(Request $request)
     {
-        if ($request->has('valor')) {
+        if ($request->has('valor_recebido')) {
             $valorFormatado = str_replace('.', '', $request->input('valor')); // Remove o separador de milhares (.)
             $valorFormatado = str_replace(',', '.', $valorFormatado); // Substitui a vírgula (,) por ponto (.)
-            $request->merge(['valor' => $valorFormatado]);
+            $request->merge(['valor_recebido' => $valorFormatado]);
         }
         if ($request->has('data_pagamento')) {
             $dataFormatada = Carbon::parse($request->input('data_pagamento'))->format('Y-m-d');
             $request->merge(['data_pagamento' => $dataFormatada]);
         }
 
-        echo '<pre>';
-        print_r($request->all());
-        exit;
-
         // 1. Validação dos dados de entrada do formulário (agora com o valor já formatado)
         $validatedData = $request->validate([
             'cliente_id' => 'required|integer|exists:clientes,id',
-            'valor' => 'required|numeric|min:0.01',
+            'valor_recebido' => 'required|numeric|min:0.01',
             'data_pagamento' => 'required|date',
             'forma_pagamento' => 'required|string|max:2',
         ]);
@@ -102,8 +98,6 @@ class PagamentoController extends Controller
             }
 
             DB::commit();
-
-            Helper::print($detalhesQuitacao);
 
             return response()->json([
                 'success' => 'Pagamento processado com sucesso!',

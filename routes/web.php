@@ -78,6 +78,8 @@ Route::prefix('cliente')->group(function () {
     Route::post('update', [\App\Http\Controllers\ClienteController::class, 'update'])->name('cliente.update')->middleware('auth');
     Route::post('delete', [\App\Http\Controllers\ClienteController::class, 'destroy'])->name('cliente.delete')->middleware('auth');
 
+    Route::post('pagamentos', [\App\Http\Controllers\PagamentoController::class, 'index'])->name('pagamentos');
+
     Route::get('disable', [\App\Http\Controllers\ClienteController::class, 'disable'])->name('cliente.disable');
 });
 
@@ -144,7 +146,6 @@ Route::prefix('fatura')->group(function () {
 
 /* PAGAMENTOS */
 Route::prefix('pagamentos')->group(function () {
-    Route::post('', [\App\Http\Controllers\PagamentoController::class, 'index'])->name('pagamentos');
     Route::post('processar', [\App\Http\Controllers\PagamentoController::class, 'processarPagamentoFifo'])->name('pagamentos.processar');
     Route::post('delete', [\App\Http\Controllers\PagamentoController::class, 'reverterPagamento'])->name('pagamentos.reverter');
 });

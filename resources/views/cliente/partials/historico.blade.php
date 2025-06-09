@@ -43,7 +43,7 @@
                             </div>
                             <div class="col-md-4 mb-3">
                                 <a href="{{ url('cliente/pagamentos/'.$cliente->id) }}" class="btn btn-lg btn-theme w-100">
-                                    <i class="fa fa-print fs-18px me-2"></i> Pagamentos
+                                    <i class="fa fa-usd-circle fs-18px me-2"></i> Pagamentos
                                 </a>
                             </div>
                             <div class="col-md-4 mb-3">

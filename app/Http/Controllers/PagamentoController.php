@@ -20,7 +20,7 @@ class PagamentoController extends Controller
         $config = Configuracao::first();
 
         $cliente = Cliente::find($request->id);
-        $pagamentos = VendaPagamento::with(['cliente', 'situacao'])
+        $pagamentos = VendaPagamento::with(['cliente', 'situacaoFatura'])
             ->where('cliente_id', $cliente->id)
             ->where('tipo', 'pagamento')
             ->where('id', '>', 1683)

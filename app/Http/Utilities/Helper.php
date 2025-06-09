@@ -16,6 +16,13 @@ class Helper
         return uuid_create();
     }
 
+    public static function print($value)
+    {
+        echo '<pre>';
+        print_r($value);
+        exit;
+    }
+
     public function percentColor($value)
     {
         if ($value >= 90) {

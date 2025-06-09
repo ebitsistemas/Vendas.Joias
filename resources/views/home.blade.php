@@ -17,7 +17,7 @@
         </div>
 
         <div class="row mb-4">
-            <div class="col-md-3 col-sm-4 col-xs-4 mb-3">
+            <div class="col-md-4 col-sm-4 col-xs-4 mb-3">
                 <div class="card">
                     <a href="{{ url('') }}" class="card-body bg-theme-light-hover border border-2 p-2">
                         <div class="text-center py-3">
@@ -28,7 +28,7 @@
                 </div>
             </div>
 
-            <div class="col-md-3 col-sm-4 col-xs-4 mb-3">
+            <div class="col-md-4 col-sm-4 col-xs-4 mb-3">
                 <div class="card">
                     <a href="{{ url('dashboard') }}" class="card-body bg-theme-light-hover border border-2 p-2">
                         <div class="text-center py-3">
@@ -39,7 +39,7 @@
                 </div>
             </div>
 
-            <div class="col-md-3 col-sm-4 col-xs-4 mb-3">
+            <div class="col-md-4 col-sm-4 col-xs-4 mb-3">
                 <div class="card">
                     <a href="{{ url('cliente') }}" class="card-body bg-theme-light-hover border border-2 p-2">
                         <div class="text-center py-3">
@@ -50,7 +50,7 @@
                 </div>
             </div>
 
-            <div class="col-md-3 col-sm-4 col-xs-4 mb-3">
+            <div class="col-md-4 col-sm-4 col-xs-4 mb-3">
                 <div class="card">
                     <a href="{{ url('produto') }}" class="card-body bg-theme-light-hover border border-2 p-2">
                         <div class="text-center py-3">
@@ -61,7 +61,7 @@
                 </div>
             </div>
 
-            <div class="col-md-3 col-sm-4 col-xs-4 mb-3">
+            <div class="col-md-4 col-sm-4 col-xs-4 mb-3">
                 <div class="card">
                     <a href="{{ url('categoria') }}" class="card-body bg-theme-light-hover border border-2 p-2">
                         <div class="text-center py-3">
@@ -72,7 +72,7 @@
                 </div>
             </div>
 
-            <div class="col-md-3 col-sm-4 col-xs-4 mb-3">
+            <div class="col-md-4 col-sm-4 col-xs-4 mb-3">
                 <div class="card">
                     <a href="{{ url('grupo') }}" class="card-body bg-theme-light-hover border border-2 p-2">
                         <div class="text-center py-3">
@@ -83,7 +83,7 @@
                 </div>
             </div>
 
-            <div class="col-md-3 col-sm-4 col-xs-4 mb-3">
+            <div class="col-md-4 col-sm-4 col-xs-4 mb-3">
                 <div class="card">
                     <a href="{{ url('venda') }}" class="card-body bg-theme-light-hover border border-2 p-2">
                         <div class="text-center py-3">
@@ -94,7 +94,7 @@
                 </div>
             </div>
 
-            <div class="col-md-3 col-sm-4 col-xs-4 mb-3">
+            <div class="col-md-4 col-sm-4 col-xs-4 mb-3">
                 <div class="card">
                     <a href="{{ url('usuario') }}" class="card-body bg-theme-light-hover border border-2 p-2">
                         <div class="text-center py-3">
@@ -105,7 +105,7 @@
                 </div>
             </div>
 
-            <div class="col-md-3 col-sm-4 col-xs-4 mb-3">
+            <div class="col-md-4 col-sm-4 col-xs-4 mb-3">
                 <div class="card">
                     <a href="{{ url('configuracao') }}" class="card-body bg-theme-light-hover border border-2 p-2">
                         <div class="text-center py-3">

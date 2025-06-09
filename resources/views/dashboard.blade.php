@@ -89,7 +89,7 @@
         </div>
     </div>
 
-    <div class="container pt-3 mb-5">
+    <div class="container pt-3 mb-5 d-none">
         <div class="card mb-3">
             <div class="card-body border">
                 <div class="row">

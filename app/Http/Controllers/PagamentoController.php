@@ -42,7 +42,7 @@ class PagamentoController extends Controller
         //Helper::print($validatedData);
 
         $clienteId = $validatedData['cliente_id'];
-        $valorTotalPago = $validatedData['valor']; // Pega o valor já validado e formatado
+        $valorTotalPago = $validatedData['valor_recebido']; // Pega o valor já validado e formatado
 
         $detalhesQuitacao = [];
         try {

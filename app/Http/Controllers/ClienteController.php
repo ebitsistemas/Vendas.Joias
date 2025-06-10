@@ -222,17 +222,18 @@ class ClienteController extends Controller
             ->limit(15)
             ->get();
 
-        $ultimasMovimentacoes = VendaPagamento::where('cliente_id', $request->id)
+        $todasAsMovimentacoes = VendaPagamento::with('venda')
+            ->where('cliente_id', $request->id)
             ->where('situacao', '!=', 3)
-            ->orderBy('data_pagamento', 'desc') // Ordena pela data do extrato (mais nova primeiro)
-            ->orderBy('id', 'desc')
-            ->limit(15)
             ->get();
-
-        $pagamentos = $ultimasMovimentacoes->sortBy([
-            ['data_pagamento', 'asc'],
-            ['id', 'asc'],
-        ]);
+        $movimentacoesOrdenadas = $todasAsMovimentacoes->sortByDesc(function ($mov) {
+            $id = $mov->id;
+            if ($mov->tipo == 'venda' && $mov->venda) {
+                return $mov->venda->data_venda . '.' . $id;
+            }
+            return $mov->data_pagamento . '.' . $id;
+        });
+        $pagamentos = $movimentacoesOrdenadas->take(15);
 
         if (empty($vendas)) {
             return redirect()->back();

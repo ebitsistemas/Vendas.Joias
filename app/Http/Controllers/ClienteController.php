@@ -221,13 +221,19 @@ class ClienteController extends Controller
         $vendas = $model->where('cliente_id', $request->id)
             ->limit(20)
             ->get();
-        $pagamentos = VendaPagamento::with('venda')
+
+        $ultimosPagamentos = VendaPagamento::with('venda')
             ->where('cliente_id', $request->id)
             ->where('situacao', '!=', 3)
-            ->limit(20)
-            ->orderBy('data_pagamento', 'desc')
-            ->orderBy('id', 'desc')
+            ->orderBy('data_pagamento', 'desc') // Ordena pelos mais recentes primeiro
+            ->orderBy('id', 'desc')             // Critério de desempate
+            ->limit(15)
             ->get();
+
+        $pagamentos = $ultimosPagamentos->sortBy([
+            ['data_pagamento', 'asc'],
+            ['id', 'asc'],
+        ]);
 
         if (empty($vendas)) {
             return redirect()->back();

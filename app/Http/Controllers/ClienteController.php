@@ -226,11 +226,13 @@ class ClienteController extends Controller
             ->where('cliente_id', $request->id)
             ->where('situacao', '!=', 3)
             ->orderBy('data_pagamento', 'desc') // Ordena pelos mais recentes primeiro
+            ->orderBy('id', 'desc')             // Critério de desempate
             ->limit(15)
             ->get();
 
         $pagamentos = $ultimosPagamentos->sortBy([
-            ['data_pagamento', 'asc']
+            ['data_pagamento', 'asc'],
+            ['id', 'asc'],
         ]);
 
         if (empty($vendas)) {

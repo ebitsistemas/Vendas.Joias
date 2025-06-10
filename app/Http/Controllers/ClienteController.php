@@ -222,15 +222,14 @@ class ClienteController extends Controller
             ->limit(15)
             ->get();
 
-        $ultimosPagamentos = VendaPagamento::with('venda')
-            ->where('cliente_id', $request->id)
+        $ultimasMovimentacoes = VendaPagamento::where('cliente_id', $request->id)
             ->where('situacao', '!=', 3)
-            ->orderBy('data_pagamento', 'desc') // Ordena pelos mais recentes primeiro
-            ->orderBy('id', 'desc')             // Critério de desempate
+            ->orderBy('data_pagamento', 'desc') // Ordena pela data (mais nova primeiro)
+            ->orderBy('id', 'desc')             // Desempata pelo ID
             ->limit(15)
             ->get();
 
-        $pagamentos = $ultimosPagamentos->sortBy([
+        $pagamentos = $ultimasMovimentacoes->sortBy([
             ['data_pagamento', 'asc'],
             ['id', 'asc'],
         ]);

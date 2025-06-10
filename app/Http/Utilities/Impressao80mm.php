@@ -517,7 +517,7 @@ class Impressao80mm
         $total = 0;
         $saldo = 0;
         $pedidos = 0;
-        $heightPaper = 100;
+        $heightPaper = 50;
         foreach ($vendas as $venda) {
             $saldo += $venda->saldo;
             $pedidos ++;

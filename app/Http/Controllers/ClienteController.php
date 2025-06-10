@@ -219,13 +219,13 @@ class ClienteController extends Controller
             'situacao',
         ]);
         $vendas = $model->where('cliente_id', $request->id)
-            ->limit(15)
+            ->limit(10)
             ->get();
 
         // Busca os pagamentos do cliente
         $pagamentosDoBanco = VendaPagamento::where('cliente_id', $request->id)
             ->where('situacao', '!=', 3)
-            ->limit(15)
+            ->limit(10)
             ->get();
 
         $movimentacoes = collect([]);

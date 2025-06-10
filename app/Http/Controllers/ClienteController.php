@@ -226,14 +226,16 @@ class ClienteController extends Controller
             ->where('cliente_id', $request->id)
             ->where('situacao', '!=', 3)
             ->get();
-        $movimentacoesOrdenadas = $todasAsMovimentacoes->sortByDesc(function ($mov) {
-            $id = $mov->id;
+        $funcaoOrdenadora = function ($mov) {
             if ($mov->tipo == 'venda' && $mov->venda) {
-                return $mov->venda->data_venda . '.' . $id;
+                return $mov->venda->data_venda;
             }
-            return $mov->data_pagamento . '.' . $id;
-        });
-        $pagamentos = $movimentacoesOrdenadas->take(15);
+            return $mov->data_pagamento;
+        };
+        $ultimas15 = $todasAsMovimentacoes
+            ->sortByDesc($funcaoOrdenadora)
+            ->take(15);
+        $pagamentos = $ultimas15->sortBy($funcaoOrdenadora);
 
         if (empty($vendas)) {
             return redirect()->back();

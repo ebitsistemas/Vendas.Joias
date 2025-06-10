@@ -219,29 +219,24 @@ class ClienteController extends Controller
             'situacao',
         ]);
         $vendas = $model->where('cliente_id', $request->id)
-            ->limit(20)
+            ->limit(15)
             ->get();
 
         // Busca os pagamentos do cliente
         $pagamentosDoBanco = VendaPagamento::where('cliente_id', $request->id)
             ->where('situacao', '!=', 3)
+            ->limit(15)
             ->get();
 
-
-// --- PASSO 2: UNIFICAR TUDO EM UMA ÚNICA COLEÇÃO
         $movimentacoes = collect([]);
 
-// Adiciona as VENDAS à lista
         foreach ($vendas as $venda) {
-            // Usamos o 'with('venda')' para ter acesso aos dados da venda no próprio objeto
-            // e criamos um objeto temporário para unificar
             $movimentacoes->push([
                 'tipo' => 'venda',
                 'venda' => $venda, // Passa o objeto completo da venda
             ]);
         }
 
-// Adiciona os PAGAMENTOS à lista
         foreach ($pagamentosDoBanco as $pagamento) {
             $movimentacoes->push([
                 'tipo' => 'pagamento',
@@ -251,16 +246,11 @@ class ClienteController extends Controller
             ]);
         }
 
-
-// --- PASSO 3: ORDENAR A LISTA UNIFICADA PELA DATA
         $movimentacoesOrdenadas = $movimentacoes->sortBy(function ($item) {
             // Retorna a data correta dependendo do tipo de item
             return $item['tipo'] === 'venda' ? $item['venda']['data_venda'] : $item['data_pagamento'];
         });
 
-
-// --- PASSO 4: ALIMENTE SEU LOOP EXISTENTE COM OS DADOS CORRETOS
-// A variável $pagamentos agora é a nossa lista unificada e ordenada
         $pagamentos = $movimentacoesOrdenadas;
 
         if (empty($vendas)) {

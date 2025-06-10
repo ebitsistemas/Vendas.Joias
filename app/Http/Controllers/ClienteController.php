@@ -224,8 +224,8 @@ class ClienteController extends Controller
 
         $ultimasMovimentacoes = VendaPagamento::where('cliente_id', $request->id)
             ->where('situacao', '!=', 3)
-            ->orderBy('data_pagamento', 'desc') // Ordena pela data (mais nova primeiro)
-            ->orderBy('id', 'desc')             // Desempata pelo ID
+            ->orderBy('data_pagamento', 'desc') // Ordena pela data do extrato (mais nova primeiro)
+            ->orderBy('id', 'desc')
             ->limit(15)
             ->get();
 

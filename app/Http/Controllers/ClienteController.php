@@ -219,39 +219,21 @@ class ClienteController extends Controller
             'situacao',
         ]);
         $vendas = $model->where('cliente_id', $request->id)
-            ->limit(10)
+            ->limit(15)
             ->get();
 
-        // Busca os pagamentos do cliente
-        $pagamentosDoBanco = VendaPagamento::where('cliente_id', $request->id)
+        $ultimosPagamentos = VendaPagamento::with('venda')
+            ->where('cliente_id', $request->id)
             ->where('situacao', '!=', 3)
-            ->limit(10)
+            ->orderBy('data_pagamento', 'desc') // Ordena pelos mais recentes primeiro
+            ->orderBy('id', 'desc')             // Critério de desempate
+            ->limit(15)
             ->get();
 
-        $movimentacoes = collect([]);
-
-        foreach ($vendas as $venda) {
-            $movimentacoes->push([
-                'tipo' => 'venda',
-                'venda' => $venda, // Passa o objeto completo da venda
-            ]);
-        }
-
-        foreach ($pagamentosDoBanco as $pagamento) {
-            $movimentacoes->push([
-                'tipo' => 'pagamento',
-                'data_pagamento' => $pagamento->data_pagamento,
-                'valor_recebido' => $pagamento->valor_recebido,
-                // Adicione aqui qualquer outro campo do pagamento que o PDF precise
-            ]);
-        }
-
-        $movimentacoesOrdenadas = $movimentacoes->sortBy(function ($item) {
-            // Retorna a data correta dependendo do tipo de item
-            return $item['tipo'] === 'venda' ? $item['venda']['data_venda'] : $item['data_pagamento'];
-        });
-
-        $pagamentos = $movimentacoesOrdenadas;
+        $pagamentos = $ultimosPagamentos->sortBy([
+            ['data_pagamento', 'asc'],
+            ['id', 'asc'],
+        ]);
 
         if (empty($vendas)) {
             return redirect()->back();

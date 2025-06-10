@@ -222,18 +222,46 @@ class ClienteController extends Controller
             ->limit(20)
             ->get();
 
-        $ultimosPagamentos = VendaPagamento::with('venda')
-            ->where('cliente_id', $request->id)
+        // Busca os pagamentos do cliente
+        $pagamentosDoBanco = VendaPagamento::where('cliente_id', $request->id)
             ->where('situacao', '!=', 3)
-            ->orderBy('data_pagamento', 'desc') // Ordena pelos mais recentes primeiro
-            ->orderBy('id', 'desc')             // Critério de desempate
-            ->limit(15)
             ->get();
 
-        $pagamentos = $ultimosPagamentos->sortBy([
-            ['data_pagamento', 'asc'],
-            ['id', 'asc'],
-        ]);
+
+// --- PASSO 2: UNIFICAR TUDO EM UMA ÚNICA COLEÇÃO
+        $movimentacoes = collect([]);
+
+// Adiciona as VENDAS à lista
+        foreach ($vendas as $venda) {
+            // Usamos o 'with('venda')' para ter acesso aos dados da venda no próprio objeto
+            // e criamos um objeto temporário para unificar
+            $movimentacoes->push([
+                'tipo' => 'venda',
+                'venda' => $venda, // Passa o objeto completo da venda
+            ]);
+        }
+
+// Adiciona os PAGAMENTOS à lista
+        foreach ($pagamentosDoBanco as $pagamento) {
+            $movimentacoes->push([
+                'tipo' => 'pagamento',
+                'data_pagamento' => $pagamento->data_pagamento,
+                'valor_recebido' => $pagamento->valor_recebido,
+                // Adicione aqui qualquer outro campo do pagamento que o PDF precise
+            ]);
+        }
+
+
+// --- PASSO 3: ORDENAR A LISTA UNIFICADA PELA DATA
+        $movimentacoesOrdenadas = $movimentacoes->sortBy(function ($item) {
+            // Retorna a data correta dependendo do tipo de item
+            return $item['tipo'] === 'venda' ? $item['venda']['data_venda'] : $item['data_pagamento'];
+        });
+
+
+// --- PASSO 4: ALIMENTE SEU LOOP EXISTENTE COM OS DADOS CORRETOS
+// A variável $pagamentos agora é a nossa lista unificada e ordenada
+        $pagamentos = $movimentacoesOrdenadas;
 
         if (empty($vendas)) {
             return redirect()->back();

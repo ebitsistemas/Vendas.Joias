@@ -628,16 +628,13 @@ class Impressao80mm
 
         foreach ($pagamentos as $pagamento) {
             if ($pagamento['tipo'] == 'saldo') {
-                //if ($pagamento['valor_recebido'] > 0) {
                 $height += 5;
-                    $pdf->setY($height);
-                    $pdf->setX(2);
-                    $pdf->SetFont('Arial', '', 8);
-                    $pdf->Cell(35, 1, utf8_decode('SALDO ANTERIOR'), 0, 0, 'L', true);
-                    $pdf->Cell(24, 1, ' ', 0, 0, 'L', true);
-                    //$pdf->Cell(24, 1, date('d/m/Y', strtotime($pagamento['data_pagamento'])), 0, 0, 'L', true);
-                    $pdf->Cell(18, 1, ' R$ ' . number_format($pagamento['valor_recebido'], 2, ',', '.'), 0, 0, 'R', true);
-                //}
+                $pdf->setY($height);
+                $pdf->setX(2);
+                $pdf->SetFont('Arial', '', 8);
+                $pdf->Cell(35, 1, utf8_decode('SALDO ANTERIOR'), 0, 0, 'L', true);
+                $pdf->Cell(24, 1, ' ', 0, 0, 'L', true);
+                $pdf->Cell(18, 1, ' R$ ' . number_format($pagamento['valor_recebido'], 2, ',', '.'), 0, 0, 'R', true);
             } else if ($pagamento['tipo'] == 'venda') {
                 $height += 5;
                 $pdf->setY($height);

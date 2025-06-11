@@ -175,12 +175,12 @@ class PagamentoController extends Controller
 
             DB::commit();
 
-            return redirect()->to('/cliente/pagamentos/'.$pagamento->cliente_id);
+            //return redirect()->to('/cliente/pagamentos/'.$pagamento->cliente_id);
 
-            /*return response()->json([
+            return response()->json([
                 'success' => true,
                 'message' => 'Pagamento revertido com sucesso!'
-            ]);*/
+            ]);
 
         } catch (Exception $e) {
             DB::rollBack();

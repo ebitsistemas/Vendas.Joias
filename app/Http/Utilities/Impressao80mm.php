@@ -517,12 +517,12 @@ class Impressao80mm
         $total = 0;
         $saldo = 0;
         $pedidos = 0;
-        $heightPaper = 50;
+        $heightPaper = 80;
         foreach ($vendas as $venda) {
             $saldo += $venda->saldo;
             $pedidos ++;
         }
-        $heightPaper += (count($pagamentos) * 10);
+        $heightPaper += (count($pagamentos) * 5);
 
         $pdf = new Fpdf('P', 'mm', [80, $heightPaper]);
         $pdf->SetAutoPageBreak(false);

@@ -234,7 +234,7 @@ class ClienteController extends Controller
         };
         $ultimas15 = $todasAsMovimentacoes
             ->sortByDesc($funcaoOrdenadora)
-            ->take(20);
+            ->take(50);
         $pagamentos = $ultimas15->sortBy($funcaoOrdenadora);
 
         if (empty($vendas)) {

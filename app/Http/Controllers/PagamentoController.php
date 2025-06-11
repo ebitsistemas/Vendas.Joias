@@ -116,7 +116,9 @@ class PagamentoController extends Controller
 
             DB::commit();
 
-            return response()->json([
+            return redirect()->to('/cliente/historico/'.$clienteId);
+
+            /*return response()->json([
                 'success' => 'Pagamento processado com sucesso!',
                 'pagamento_id' => $pagamento->id,
                 'cliente_id' => $clienteId,
@@ -127,7 +129,7 @@ class PagamentoController extends Controller
                     'valor_nao_utilizado' => $valorRestanteDoPagamento,
                 ],
                 'vendas_quitadas' => $detalhesQuitacao
-            ], 200);
+            ], 200);*/
 
         } catch (Exception $e) {
             DB::rollBack();

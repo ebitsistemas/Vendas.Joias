@@ -81,7 +81,7 @@
                                                     <h6 class="fs-18px mb-1">Status</h6>
                                                     <div class="last-chat">
                                                         <p class="mb-0 fs-16px">
-                                                            {!! $pagamento->situacaoFatura->label !!}
+                                                            {!! $pagamento->situacaoFatura->label ?? '' !!}
                                                         </p>
                                                     </div>
                                                 </div>

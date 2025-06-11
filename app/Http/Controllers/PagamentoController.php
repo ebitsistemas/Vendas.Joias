@@ -153,9 +153,9 @@ class PagamentoController extends Controller
             // Encontra o pagamento e já carrega as faturas e vendas relacionadas para evitar múltiplas queries
             $pagamento = VendaPagamento::with('faturasQuitadas.venda')->findOrFail($pagamentoId);
 
-            if ($pagamento->situacao != 4) { // 4 = Concluído
+            /*if ($pagamento->situacao != 4) { // 4 = Concluído
                 throw new Exception('Este pagamento não pode ser revertido (possivelmente já foi estornado).');
-            }
+            }*/
 
             // 1. Itera sobre cada fatura que este pagamento quitou
             foreach ($pagamento->faturasQuitadas as $faturaItem) {

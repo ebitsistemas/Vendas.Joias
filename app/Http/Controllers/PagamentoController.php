@@ -44,7 +44,7 @@ class PagamentoController extends Controller
             $request->merge(['valor_recebido' => $valorFormatado]);
         }
         if ($request->has('data_pagamento')) {
-            $dataFormatada = Carbon::parse($request->input('data_pagamento'))->format('Y-m-d');
+            $dataFormatada = Carbon::createFromFormat('d/m/Y', $request->input('data_pagamento'))->format('Y-m-d');
             $request->merge(['data_pagamento' => $dataFormatada]);
         }
 

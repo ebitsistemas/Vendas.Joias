@@ -648,6 +648,7 @@ class Impressao80mm
                     $height += 5;
                     $pdf->setY($height);
                     $pdf->setX(2);
+                    $pdf->SetTextColor(255, 0, 0);
                     $pdf->SetFont('Arial', '', 8);
                     $pdf->Cell(35, 1, utf8_decode('PAGAMENTO'), 0, 0, 'L', true);
                     $pdf->Cell(24, 1, date('d/m/Y', strtotime($pagamento['data_pagamento'])), 0, 0, 'L', true);

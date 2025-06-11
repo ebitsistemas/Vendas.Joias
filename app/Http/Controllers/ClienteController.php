@@ -243,6 +243,10 @@ class ClienteController extends Controller
 
         $cliente = Cliente::find($request->id);
 
+        if (!$cliente) {
+            exit('Cliente não encontrado');
+        }
+
         $impressao = new Impressao80mm();
         $pdf = $impressao->saldo($config, $vendas, $pagamentos, $cliente);
 

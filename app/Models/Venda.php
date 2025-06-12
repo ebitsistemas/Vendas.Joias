@@ -30,6 +30,15 @@ class Venda extends Model
         'status',
     ];
 
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'data_venda' => 'datetime', // Isso converte a string do banco para um objeto Carbon
+    ];
+
     public function cliente()
     {
         return $this->hasOne(Cliente::class, 'id', 'cliente_id');

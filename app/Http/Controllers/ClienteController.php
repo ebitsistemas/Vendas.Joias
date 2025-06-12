@@ -227,18 +227,15 @@ class ClienteController extends Controller
             ->where('situacao', '!=', 3)
             ->get();
         $funcaoOrdenadora = function ($mov) {
-            // Pega a data principal (seja da venda ou do pagamento)
-            $dataPrincipal = ($mov->tipo == 'venda' && $mov->venda)
-                ? $mov->venda->data_venda
-                : $mov->data_pagamento;
-
-            // Retorna um array. O Laravel usará a data para ordenar e o ID para desempatar.
-            return [$dataPrincipal, $mov->id];
+            if ($mov->tipo == 'venda' && $mov->venda) {
+                return $mov->venda->id;
+            }
+            return $mov->id;
         };
-        $ultimasMovimentacoes = $todasAsMovimentacoes
+        $ultimas15 = $todasAsMovimentacoes
             ->sortByDesc($funcaoOrdenadora)
             ->take(10);
-        $movimentacoesOrdenadas = $ultimasMovimentacoes->sortBy($funcaoOrdenadora);
+        $pagamentos = $ultimas15->sortBy($funcaoOrdenadora);
 
         if (empty($vendas)) {
             return redirect()->back();
@@ -251,7 +248,7 @@ class ClienteController extends Controller
         }
 
         $impressao = new Impressao80mm();
-        $pdf = $impressao->saldo($config, $vendas, $movimentacoesOrdenadas, $cliente);
+        $pdf = $impressao->saldo($config, $vendas, $pagamentos, $cliente);
 
         return response($pdf)->header('Content-Type', 'application/pdf')->header('filename', 'inline');
     }

@@ -158,7 +158,6 @@ class PagamentoController extends Controller
                 $venda = Venda::find($faturaItem->venda_id);
                 $venda->saldo += $faturaItem->valor_recebido;
                 $venda->save();
-                Helper::print($venda);
 
                 // 3. Marca o registro da fatura como cancelado
                 $faturaItem->situacao = 3; // 3 = Cancelado

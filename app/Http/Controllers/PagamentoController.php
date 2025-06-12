@@ -114,9 +114,11 @@ class PagamentoController extends Controller
                 ];
             }
 
-            DB::commit();
+            Helper::print($pagamento);
 
-            return redirect()->to('/cliente/historico/'.$clienteId);
+            //DB::commit();
+
+            //return redirect()->to('/cliente/historico/'.$clienteId);
 
             /*return response()->json([
                 'success' => 'Pagamento processado com sucesso!',

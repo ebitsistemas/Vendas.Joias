@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Utilities\Helper;
 use App\Http\Utilities\Impressao80mm;
 use App\Models\Cliente;
 use App\Models\Configuracao;
@@ -226,6 +227,7 @@ class ClienteController extends Controller
             ->where('cliente_id', $request->id)
             ->where('situacao', '!=', 3)
             ->get();
+
         $funcaoOrdenadora = function ($mov) {
             $dataPrincipal = ($mov->tipo == 'venda' && $mov->venda)
                 ? $mov->venda->data_venda
@@ -239,6 +241,8 @@ class ClienteController extends Controller
             ->sortByDesc($funcaoOrdenadora)
             ->take(10);
         $movimentacoesOrdenadas = $ultimasMovimentacoes->sortBy($funcaoOrdenadora);
+
+        Helper::print($movimentacoesOrdenadas);
 
         if (empty($vendas)) {
             return redirect()->back();

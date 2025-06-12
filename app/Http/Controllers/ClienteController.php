@@ -242,8 +242,6 @@ class ClienteController extends Controller
             ->take(10);
         $movimentacoesOrdenadas = $ultimasMovimentacoes->sortBy($funcaoOrdenadora);
 
-        Helper::print($movimentacoesOrdenadas);
-
         if (empty($vendas)) {
             return redirect()->back();
         }

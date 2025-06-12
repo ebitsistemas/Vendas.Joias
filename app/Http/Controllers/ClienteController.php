@@ -227,15 +227,28 @@ class ClienteController extends Controller
             ->where('situacao', '!=', 3)
             ->get();
         $funcaoOrdenadora = function ($mov) {
-            if ($mov->tipo == 'venda' && $mov->venda) {
-                return $mov->venda->id;
-            }
-            return $mov->id;
+            $dataPrincipal = ($mov->tipo == 'venda' && $mov->venda)
+                ? $mov->venda->data_venda
+                : $mov->data_pagamento;
+
+            // Retorna um array com o tipo da data para verificação
+            return [
+                'data' => $dataPrincipal,
+                'id' => $mov->id,
+                'tipo_data' => gettype($dataPrincipal) // Adicionado para debug
+            ];
         };
-        $ultimas15 = $todasAsMovimentacoes
+
+        // Use map para ver o que está sendo gerado para cada item
+        $debugArray = $todasAsMovimentacoes->map($funcaoOrdenadora);
+
+// Pare a execução e mostre o resultado
+        dd($debugArray->all());
+
+        $ultimas10Movimentacoes = $todasAsMovimentacoes
             ->sortByDesc($funcaoOrdenadora)
             ->take(10);
-        $pagamentos = $ultimas15->sortBy($funcaoOrdenadora);
+        $movimentacoesOrdenadas = $ultimas10Movimentacoes->sortBy($funcaoOrdenadora);
 
         if (empty($vendas)) {
             return redirect()->back();
@@ -248,7 +261,7 @@ class ClienteController extends Controller
         }
 
         $impressao = new Impressao80mm();
-        $pdf = $impressao->saldo($config, $vendas, $pagamentos, $cliente);
+        $pdf = $impressao->saldo($config, $vendas, $movimentacoesOrdenadas, $cliente);
 
         return response($pdf)->header('Content-Type', 'application/pdf')->header('filename', 'inline');
     }

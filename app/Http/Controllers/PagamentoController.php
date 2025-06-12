@@ -152,19 +152,19 @@ class PagamentoController extends Controller
             // Encontra o pagamento e já carrega as faturas e vendas relacionadas para evitar múltiplas queries
             $pagamento = VendaPagamento::with('faturasQuitadas.venda')->findOrFail($pagamentoId);
 
-            Helper::print($pagamento);
-
             // 1. Itera sobre cada fatura que este pagamento quitou
             foreach ($pagamento->faturasQuitadas as $faturaItem) {
                 // 2. Devolve o saldo para a venda original
                 $venda = $faturaItem->venda;
                 $venda->saldo += $faturaItem->valor_recebido;
                 $venda->save();
+                Helper::print($venda);
 
                 // 3. Marca o registro da fatura como cancelado
                 $faturaItem->situacao = 3; // 3 = Cancelado
                 $faturaItem->save();
             }
+            Helper::print($pagamento);
 
             // 4. Marca o pagamento principal como cancelado/estornado
             $pagamento->situacao = 3; // 3 = Cancelado/Estornado

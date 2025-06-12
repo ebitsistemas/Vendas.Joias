@@ -219,7 +219,7 @@ class ClienteController extends Controller
             'situacao',
         ]);
         $vendas = $model->where('cliente_id', $request->id)
-            ->limit(50)
+            ->limit(10)
             ->get();
 
         $todasAsMovimentacoes = VendaPagamento::with('venda')
@@ -234,7 +234,7 @@ class ClienteController extends Controller
         };
         $ultimas15 = $todasAsMovimentacoes
             ->sortByDesc($funcaoOrdenadora)
-            ->take(50);
+            ->take(10);
         $pagamentos = $ultimas15->sortBy($funcaoOrdenadora);
 
         if (empty($vendas)) {

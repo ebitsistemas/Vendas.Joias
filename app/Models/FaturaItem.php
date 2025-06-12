@@ -16,6 +16,7 @@ class FaturaItem extends Model
 
     protected $fillable = [
         'venda_id',
+        'venda_pagamento_id',
         'tipo_pagamento',
         'forma_pagamento',
         'valor_parcela',

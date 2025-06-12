@@ -67,6 +67,6 @@ class VendaPagamento extends Model
      */
     public function faturasQuitadas()
     {
-        return $this->hasMany(FaturaItem::class, 'venda_id', 'venda_id');
+        return $this->hasMany(FaturaItem::class, 'venda_pagamento_id', 'id');
     }
 }

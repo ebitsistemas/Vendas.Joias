@@ -146,16 +146,13 @@ class PagamentoController extends Controller
      */
     public function reverterPagamento(Request $request)
     {
-        $pagamentoId = $request->id;
         try {
             DB::beginTransaction();
-
+            $pagamentoId = $request->id;
             // Encontra o pagamento e já carrega as faturas e vendas relacionadas para evitar múltiplas queries
             $pagamento = VendaPagamento::with('faturasQuitadas.venda')->findOrFail($pagamentoId);
 
-            /*if ($pagamento->situacao != 4) { // 4 = Concluído
-                throw new Exception('Este pagamento não pode ser revertido (possivelmente já foi estornado).');
-            }*/
+            Helper::print($pagamento);
 
             // 1. Itera sobre cada fatura que este pagamento quitou
             foreach ($pagamento->faturasQuitadas as $faturaItem) {
@@ -165,17 +162,15 @@ class PagamentoController extends Controller
                 $venda->save();
 
                 // 3. Marca o registro da fatura como cancelado
-                $faturaItem->situacao = 3; // 2 = Cancelado
+                $faturaItem->situacao = 3; // 3 = Cancelado
                 $faturaItem->save();
             }
 
             // 4. Marca o pagamento principal como cancelado/estornado
-            $pagamento->situacao = 3; // 2 = Cancelado/Estornado
+            $pagamento->situacao = 3; // 3 = Cancelado/Estornado
             $pagamento->save();
 
             DB::commit();
-
-            //return redirect()->to('/cliente/pagamentos/'.$pagamento->cliente_id);
 
             return response()->json([
                 'success' => true,

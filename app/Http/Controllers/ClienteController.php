@@ -231,24 +231,14 @@ class ClienteController extends Controller
                 ? $mov->venda->data_venda
                 : $mov->data_pagamento;
 
-            // Retorna um array com o tipo da data para verificação
-            return [
-                'data' => $dataPrincipal,
-                'id' => $mov->id,
-                'tipo_data' => gettype($dataPrincipal) // Adicionado para debug
-            ];
+            // O desempate pelo ID funcionará, pois o Laravel verá que as datas são iguais.
+            return [$dataPrincipal, $mov->id];
         };
 
-        // Use map para ver o que está sendo gerado para cada item
-        $debugArray = $todasAsMovimentacoes->map($funcaoOrdenadora);
-
-// Pare a execução e mostre o resultado
-        dd($debugArray->all());
-
-        $ultimas10Movimentacoes = $todasAsMovimentacoes
+        $ultimasMovimentacoes = $todasAsMovimentacoes
             ->sortByDesc($funcaoOrdenadora)
             ->take(10);
-        $movimentacoesOrdenadas = $ultimas10Movimentacoes->sortBy($funcaoOrdenadora);
+        $movimentacoesOrdenadas = $ultimasMovimentacoes->sortBy($funcaoOrdenadora);
 
         if (empty($vendas)) {
             return redirect()->back();

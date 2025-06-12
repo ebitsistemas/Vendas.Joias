@@ -36,6 +36,15 @@ class VendaPagamento extends Model
         'status',
     ];
 
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'data_pagamento' => 'datetime', // Isso converte a string do banco para um objeto Carbon
+    ];
+
     public function cliente()
     {
         return $this->belongsTo(Cliente::class, 'cliente_id', 'id');

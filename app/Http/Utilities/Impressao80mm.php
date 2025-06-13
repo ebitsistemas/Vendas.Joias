@@ -520,7 +520,6 @@ class Impressao80mm
         $heightPaper = 80;
         foreach ($vendas as $venda) {
             $saldo += $venda->saldo;
-            $pedidos ++;
         }
         $heightPaper += (count($pagamentos) * 5);
 

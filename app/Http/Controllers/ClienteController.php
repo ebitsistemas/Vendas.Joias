@@ -220,7 +220,6 @@ class ClienteController extends Controller
             'situacao',
         ]);
         $vendas = $model->where('cliente_id', $request->id)
-            ->limit(10)
             ->get();
 
         $todasAsMovimentacoes = VendaPagamento::with('venda')

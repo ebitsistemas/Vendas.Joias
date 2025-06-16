@@ -239,7 +239,7 @@ class ClienteController extends Controller
 
         $ultimasMovimentacoes = $todasAsMovimentacoes
             ->sortByDesc($funcaoOrdenadora)
-            ->take(10);
+            ->take(20);
         $movimentacoesOrdenadas = $ultimasMovimentacoes->sortBy($funcaoOrdenadora);
 
         if (empty($vendas)) {

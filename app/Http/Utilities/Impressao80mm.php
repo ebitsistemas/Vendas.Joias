@@ -565,7 +565,7 @@ class Impressao80mm
         $pdf->setY($height);
         $pdf->setX(0);
         $pdf->SetFont('Arial','B',10);
-        $pdf->Cell($width, 3, utf8_decode("EXTRO DE MOVIMENTAÇÕES"), 0, 0, 'C', true);
+        $pdf->Cell($width, 3, utf8_decode("EXTRATO DE MOVIMENTAÇÕES"), 0, 0, 'C', true);
 
         $height += 5;
         $pdf->setY($height);

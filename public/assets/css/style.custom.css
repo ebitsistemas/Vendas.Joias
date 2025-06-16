@@ -19,5 +19,5 @@
     color: var(--bs-indigo);
 }
 .breadcrumb-item {
-    font-size: 20px;
+    font-size: 20px !important;
 }

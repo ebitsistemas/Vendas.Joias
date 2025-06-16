@@ -641,7 +641,7 @@ class Impressao80mm
                 $pdf->setX(2);
                 $pdf->SetTextColor(0, 0, 0);
                 $pdf->SetFont('Arial', '', 8);
-                $pdf->Cell(35, 1, utf8_decode('VENDA #'.$pagamento['venda']['id']), 0, 0, 'L', true);
+                $pdf->Cell(35, 1, utf8_decode('VENDA '.$pagamento['venda']['id']), 0, 0, 'L', true);
                 $pdf->Cell(24, 1, date('d/m/Y', strtotime($pagamento['venda']['data_venda'])), 0, 0, 'L', true);
                 $pdf->Cell(18, 1, 'R$ ' . number_format($pagamento['venda']['total_liquido'], 2, ',', '.'), 0, 0, 'R', true);
             } else if ($pagamento['tipo'] == 'pagamento') {

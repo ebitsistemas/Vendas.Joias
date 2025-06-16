@@ -581,14 +581,14 @@ class Impressao80mm
         $pdf->SetFont('Arial', '', 8);
         $pdf->Cell($width, 1, utf8_decode("CLIENTE: " . Str::padLeft($cliente->id, 4, 0) . ': ' . $cliente->nome), 0, 0, 'L', true);
 
-        $height += 3;
+        /*$height += 3;
         $pdf->setY($height);
         $pdf->setX(2);
         if ($cliente->tipo_pessoa == 1) {
             $pdf->Cell($width, 1, utf8_decode("DOCUMENTO: " . $cliente->documento), 0, 0, 'L', true);
         } else {
             $pdf->Cell($width, 1, utf8_decode("DOCUMENTO: " . $cliente->documento), 0, 0, 'L', true);
-        }
+        }*/
 
         if (!empty($venda->cliente->logradouro)) {
             $height += 3;

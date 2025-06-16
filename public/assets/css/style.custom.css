@@ -18,3 +18,6 @@
 .text-theme{
     color: var(--bs-indigo);
 }
+.breadcrumb-item {
+    font-size: 20px;
+}

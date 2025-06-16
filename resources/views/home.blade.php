@@ -9,7 +9,7 @@
                 <div class="card">
                     <div class="card-body bg-theme-light-hover border border-2 p-2">
                         <div class="text-center py-3">
-                            <img src="{{ url('assets/images/logo.png') }}" class="img-fluid" style="max-height: 200px">
+                            <img src="{{ url('assets/images/logo.png') }}" class="img-fluid" style="max-height: 300px">
                         </div>
                     </div>
                 </div>

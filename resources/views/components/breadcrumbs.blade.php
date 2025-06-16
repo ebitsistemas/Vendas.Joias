@@ -2,7 +2,7 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb rounded border p-3">
             <li class="breadcrumb-item">
-                <a href="{{ url('') }}" class="text-theme">Home</a>
+                <a href="{{ url('') }}" class="text-theme fs-20px">Home</a>
             </li>
             @if(isset($menu))
                 @php

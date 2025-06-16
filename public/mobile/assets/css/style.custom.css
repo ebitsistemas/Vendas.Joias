@@ -458,3 +458,6 @@ li.page-link > span{
 .modal-backdrop{
     --bs-backdrop-opacity: 0.8;
 }
+.breadcrumb-item {
+    font-size: 20px !important;
+}

@@ -26,13 +26,13 @@
                     }
                 @endphp
                 @if(isset($submenu) AND !empty($submenu))
-                    <li class="breadcrumb-item">
+                    <li class="breadcrumb-item fs-20px">
                         <a href="{{ url($link) }}" class="text-theme">
                             {{ ucfirst($menu) }}
                         </a>
                     </li>
                 @else
-                    <li class="breadcrumb-item">
+                    <li class="breadcrumb-item fs-20px">
                         {{ ucfirst($menu) }}
                     </li>
                 @endif

@@ -1967,8 +1967,8 @@ li {
   width: 100%;
 }
 
-/*===================== 
-    Title CSS start 
+/*=====================
+    Title CSS start
 ==========================*/
 .title {
   display: -webkit-box;
@@ -5927,3 +5927,7 @@ body.dark #coin .apexcharts-xaxis-label {
   fill: rgba(var(--dark-text), 1) !important;
 }
 /*# sourceMappingURL=style.css.map */
+
+.breadcrumb-item {
+    font-size: 20px !important;
+}

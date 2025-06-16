@@ -579,7 +579,7 @@ class Impressao80mm
         $pdf->setY($height);
         $pdf->setX(2);
         $pdf->SetFont('Arial', '', 8);
-        $pdf->Cell($width, 1, utf8_decode("CLIENTE: " . $cliente->nome), 0, 0, 'L', true);
+        $pdf->Cell($width, 1, utf8_decode("CLIENTE: " . Str::padLeft($cliente->id, 4, 0) . ': ' . $cliente->nome), 0, 0, 'L', true);
 
         $height += 3;
         $pdf->setY($height);

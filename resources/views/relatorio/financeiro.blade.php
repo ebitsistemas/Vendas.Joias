@@ -119,7 +119,7 @@
                                             R$ {{ number_format($fatura->valor_subtotal, 2, ',', '.') }}
                                         </td>
                                         <td>{{ date('d/m/Y', strtotime($fatura->created_at)) }}</td>
-                                        <td>{!! $fatura->situacaoFatura->label ?? $fatura->situacao !!}</td>
+                                        <td>{!! $fatura->situacaoFatura->label ?? ' -- ' !!}</td>
                                     </tr>
                                 @endforeach
                                 </tbody>

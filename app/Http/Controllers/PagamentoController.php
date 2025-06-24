@@ -79,7 +79,7 @@ class PagamentoController extends Controller
                 'valor_recebido' => $valorTotalPago,
                 'data_pagamento' => $validatedData['data_pagamento'],
                 'forma_pagamento' => $validatedData['forma_pagamento'],
-                'situacao' => 1,
+                'situacao' => 4,
             ]);
 
             $valorRestanteDoPagamento = $valorTotalPago;
@@ -117,20 +117,6 @@ class PagamentoController extends Controller
             DB::commit();
 
             return redirect()->to('/cliente/historico/'.$clienteId);
-
-            /*return response()->json([
-                'success' => 'Pagamento processado com sucesso!',
-                'pagamento_id' => $pagamento->id,
-                'cliente_id' => $clienteId,
-                'detalhes_pagamento' => [
-                    'valor_pago' => $valorTotalPago,
-                    'data_pagamento' => $validatedData['data_pagamento'],
-                    'forma_pagamento' => $validatedData['forma_pagamento'],
-                    'valor_nao_utilizado' => $valorRestanteDoPagamento,
-                ],
-                'vendas_quitadas' => $detalhesQuitacao
-            ], 200);*/
-
         } catch (Exception $e) {
             DB::rollBack();
             Helper::print($e->getMessage());

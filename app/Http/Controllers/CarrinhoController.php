@@ -240,45 +240,62 @@ class CarrinhoController extends Controller
      */
     public function faturaAdicionar(Request $request)
     {
-        if (empty($request->valor_recebido)) {
-            toastr()->error('Valor da fatura deve ser informado, campo obrigatório!');
+        try {
+            if (empty($request->valor_recebido)) {
+                toastr()->error('Valor da fatura deve ser informado, campo obrigatório!');
+                return redirect()->to('carrinho/pedido/' . $request->venda_id);
+            }
+
+            $venda = Venda::find($request->venda_id);
+
+            $dataPagamento = empty($request->data_pagamento) ? date('Y-m-d') : $request->data_pagamento;
+
+            $data = [
+                'venda_id' => $request->venda_id,
+                'tipo_pagamento' => $request->tipo_pagamento,
+                'forma_pagamento' => $request->forma_pagamento,
+                'valor_parcela' => str_replace(',', '.', str_replace('.', '', $request->valor_parcela)),
+                'numero_parcela' => $request->numero_parcela ?? 1,
+                'total_parcelas' => $request->total_parcelas,
+                'dias_parcelas' => $request->dias_parcelas,
+                'data_vencimento' => $request->data_vencimento,
+                'data_pagamento' => ($request->tipo_pagamento == 0) ? $dataPagamento : date('Y-m-d'),
+                'valor_recebido' => str_replace(',', '.', str_replace('.', '', $request->valor_recebido)),
+                'valor_subtotal' => str_replace(',', '.', str_replace('.', '', $request->valor_recebido)),
+                'troco' => str_replace(',', '.', str_replace('.', '', $request->troco)),
+                'situacao' => ($request->tipo_pagamento == 0) ? '4' : '0',
+                'status' => 1,
+            ];
+
+            if (isset($request->id) && !empty($request->id)) {
+                $vendaItem = FaturaItem::find($request->id);
+                $vendaItem->update($data);
+            } else {
+                $vendaItem = FaturaItem::create($data);
+            }
+
+            VendaPagamento::create([
+                'tipo' => 'pagamento',
+                'cliente_id' => $venda->cliente_id,
+                'valor_recebido' => $request->valor_recebido,
+                'data_pagamento' => ($request->tipo_pagamento == 0) ? $dataPagamento : date('Y-m-d'),
+                'forma_pagamento' => $request->forma_pagamento,
+                'situacao' => 4,
+            ]);
+
+            $this->saldo($request->venda_id);
+
+            if ($vendaItem) {
+                toastr()->success('Fatura adicionada com sucesso!');
+                return redirect()->to('carrinho/pedido/' . $request->venda_id);
+            }
+            toastr()->error('Erro ao adicionar fatura!');
             return redirect()->to('carrinho/pedido/' . $request->venda_id);
-        }
-
-        $dataPagamento = empty($request->data_pagamento) ? date('Y-m-d') : $request->data_pagamento;
-
-        $data = [
-            'venda_id' => $request->venda_id,
-            'tipo_pagamento' => $request->tipo_pagamento,
-            'forma_pagamento' => $request->forma_pagamento,
-            'valor_parcela' => str_replace(',', '.', str_replace('.', '', $request->valor_parcela)),
-            'numero_parcela' => $request->numero_parcela ?? 1,
-            'total_parcelas' => $request->total_parcelas,
-            'dias_parcelas' => $request->dias_parcelas,
-            'data_vencimento' => $request->data_vencimento,
-            'data_pagamento' => ($request->tipo_pagamento == 0) ? $dataPagamento : date('Y-m-d'),
-            'valor_recebido' => str_replace(',', '.', str_replace('.', '', $request->valor_recebido)),
-            'valor_subtotal' => str_replace(',', '.', str_replace('.', '', $request->valor_recebido)),
-            'troco' => str_replace(',', '.', str_replace('.', '', $request->troco)),
-            'situacao' => ($request->tipo_pagamento == 0) ? '4' : '0',
-            'status' => 1,
-        ];
-
-        if (isset($request->id) && !empty($request->id)) {
-            $vendaItem = FaturaItem::find($request->id);
-            $vendaItem->update($data);
-        } else {
-            $vendaItem = FaturaItem::create($data);
-        }
-
-        $this->saldo($request->venda_id);
-
-        if ($vendaItem) {
-            toastr()->success('Fatura adicionada com sucesso!');
+        } catch (\Exception $e) {
+            toastr()->error($e->getMessage());
             return redirect()->to('carrinho/pedido/' . $request->venda_id);
+
         }
-        toastr()->error('Erro ao adicionar fatura!');
-        return redirect()->to('carrinho/pedido/' . $request->venda_id);
     }
 
     /**

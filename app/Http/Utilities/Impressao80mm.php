@@ -652,7 +652,7 @@ class Impressao80mm
             // Verificamos apenas se a movimentação é uma 'venda'.
             // Isso garante que o saldo intermediário sempre será exibido antes de cada venda.
             if ($pagamento['tipo'] == 'venda') {
-                $height += 5;
+                $height += 2;
                 $pdf->setY($height);
                 $pdf->setX(2);
                 $pdf->SetFont('Arial','',8);

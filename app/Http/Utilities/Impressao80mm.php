@@ -514,18 +514,16 @@ class Impressao80mm
 
     public function saldo(Configuracao $config, $vendas, $pagamentos, Cliente $cliente)
     {
-        // --- INÍCIO DA LÓGICA DE CÁLCULO DO SALDO ---
-
-        // 1. Calcula o SALDO FINAL TOTAL do cliente (soma de todas as dívidas)
+        // 1. Calcula o SALDO FINAL TOTAL do cliente
         $saldoFinalTotal = 0;
         foreach ($vendas as $venda) {
             $saldoFinalTotal += $venda->saldo;
         }
 
-        // 2. Calcula o valor total das movimentações que serão exibidas no extrato
+        // 2. Calcula o valor total das movimentações que serão exibidas
         $totalVendasNoExtrato = 0;
         $totalPagamentosNoExtrato = 0;
-        foreach ($pagamentos as $mov) { // $pagamentos aqui são as últimas 20 movimentações
+        foreach ($pagamentos as $mov) {
             if ($mov['tipo'] == 'venda') {
                 $totalVendasNoExtrato += $mov['venda']['total_liquido'];
             } else if ($mov['tipo'] == 'pagamento') {
@@ -533,24 +531,16 @@ class Impressao80mm
             }
         }
 
-        // 3. Calcula o "Saldo Anterior", ou seja, o saldo antes da primeira movimentação da lista
-        // Lógica: Saldo Final = Saldo Anterior + Vendas no Extrato - Pagamentos no Extrato
-        // Portanto: Saldo Anterior = Saldo Final - Vendas no Extrato + Pagamentos no Extrato
+        // 3. Calcula o "Saldo Anterior"
         $saldoAnterior = $saldoFinalTotal - $totalVendasNoExtrato + $totalPagamentosNoExtrato;
 
-        // 4. Inicializa o "Saldo Corrente" que será atualizado a cada linha
+        // 4. Inicializa o "Saldo Corrente"
         $saldoCorrente = $saldoAnterior;
 
-        // --- FIM DA LÓGICA DE CÁLCULO DO SALDO ---
-
-
-        $heightPaper = 80;
-        // Adiciona altura extra para a linha de Saldo Anterior e para os possíveis saldos intermediários
-        $heightPaper += (count($pagamentos) * 5) + 10;
-        if ($config->exibir_saldo_extrato) { // Usando o novo parâmetro
-            $heightPaper += (count($pagamentos) * 5); // Adiciona mais espaço se a opção estiver ativa
-        }
-
+        // Ajuste dinâmico da altura do papel
+        $heightPaper = 100; // Começar com uma base maior
+        $heightPaper += (count($pagamentos) * 5); // Espaço para cada movimentação
+        $heightPaper += (count(array_filter($pagamentos->toArray(), fn($p) => $p['tipo'] == 'venda')) * 5); // Espaço extra para cada saldo intermediário
 
         $pdf = new Fpdf('P', 'mm', [80, $heightPaper]);
         $pdf->SetAutoPageBreak(false);
@@ -559,11 +549,20 @@ class Impressao80mm
         $width = 80;
         $height = 6;
         $pdf->SetFillColor(255, 255, 255);
+
+        /* ... (Todo o cabeçalho do PDF permanece igual) ... */
         $pdf->SetTextColor(94, 98, 120);
-
-        /* ... (Todo o cabeçalho do PDF permanece igual: LOGO, DADOS DO EMITENTE, CLIENTE, etc.) ... */
-        /* ... vou omitir essa parte para focar na alteração, mas ela deve continuar no seu código ... */
-
+        /* LOGO */
+        if (!empty($config->imagem)) {
+            list($widthimg, $heightimg) = $this->resizeToFit('assets/images/logo.png');
+            $pdf->Image(
+                'assets/images/logo.png', (self::A4_HEIGHT - $widthimg) / 2,
+                $height,
+                $widthimg,
+                $heightimg
+            );
+            $height += 24;
+        }
         /* DADOS DO EMITENTE */
         $pdf->setY($height);
         $pdf->setX(0);
@@ -636,34 +635,33 @@ class Impressao80mm
         $pdf->SetTextColor(100, 100, 100);
         $pdf->Cell($width, 1, Str::padBoth('', $width, '-'), 0, 0, 'L', true);
 
-        // --- FIM DA PARTE OMITIDA ---
-
-        // NOVO: Imprimir o "Saldo Anterior" calculado
+        // Imprime o "Saldo Anterior"
         $height += 5;
         $pdf->setY($height);
         $pdf->setX(2);
         $pdf->SetTextColor(0, 0, 0);
         $pdf->SetFont('Arial', '', 8);
         $pdf->Cell(35, 1, utf8_decode('SALDO ANTERIOR'), 0, 0, 'L', true);
-        $pdf->Cell(24, 1, '', 0, 0, 'L', true); // Espaço da data
+        $pdf->Cell(24, 1, '', 0, 0, 'L', true);
         $pdf->Cell(18, 1, 'R$ ' . number_format($saldoAnterior, 2, ',', '.'), 0, 0, 'R', true);
 
-        // --- INÍCIO DO LOOP DE MOVIMENTAÇÕES ALTERADO ---
+        // --- LOOP DE MOVIMENTAÇÕES CORRIGIDO ---
         foreach ($pagamentos as $pagamento) {
 
-            // NOVO: Verifica se a opção está ativa e se a movimentação é uma venda
-            // para imprimir o saldo ANTES da venda.
-            // (Usamos o parâmetro que criamos no Passo 1)
-            if ($config->exibir_saldo_extrato && $pagamento['tipo'] == 'venda') {
+            // ############ ALTERAÇÃO PRINCIPAL ############
+            // Verificamos apenas se a movimentação é uma 'venda'.
+            // Isso garante que o saldo intermediário sempre será exibido antes de cada venda.
+            if ($pagamento['tipo'] == 'venda') {
                 $height += 5;
                 $pdf->setY($height);
                 $pdf->setX(2);
-                $pdf->SetTextColor(0, 0, 128); // Cor azul para diferenciar o saldo
-                $pdf->SetFont('Arial', 'I', 8); // Fonte em itálico para o saldo
+                $pdf->SetTextColor(0, 0, 128);
+                $pdf->SetFont('Arial', 'I', 8);
                 $pdf->Cell(35, 1, utf8_decode('SALDO'), 0, 0, 'L', true);
                 $pdf->Cell(24, 1, '', 0, 0, 'L', true);
                 $pdf->Cell(18, 1, 'R$ ' . number_format($saldoCorrente, 2, ',', '.'), 0, 0, 'R', true);
             }
+            // ############ FIM DA ALTERAÇÃO ############
 
             // A lógica de impressão da movimentação continua a mesma
             if ($pagamento['tipo'] == 'venda') {
@@ -676,7 +674,6 @@ class Impressao80mm
                 $pdf->Cell(24, 1, date('d/m/Y', strtotime($pagamento['venda']['data_venda'])), 0, 0, 'L', true);
                 $pdf->Cell(18, 1, 'R$ ' . number_format($pagamento['venda']['total_liquido'], 2, ',', '.'), 0, 0, 'R', true);
 
-                // ATUALIZA O SALDO CORRENTE
                 $saldoCorrente += $pagamento['venda']['total_liquido'];
 
             } else if ($pagamento['tipo'] == 'pagamento') {
@@ -690,23 +687,18 @@ class Impressao80mm
                     $pdf->Cell(24, 1, date('d/m/Y', strtotime($pagamento['data_pagamento'])), 0, 0, 'L', true);
                     $pdf->Cell(18, 1, ' - R$ ' . number_format($pagamento['valor_recebido'], 2, ',', '.'), 0, 0, 'R', true);
 
-                    // ATUALIZA O SALDO CORRENTE
                     $saldoCorrente -= $pagamento['valor_recebido'];
                 }
             }
         }
-        // --- FIM DO LOOP DE MOVIMENTAÇÕES ---
 
-        /* ... O restante do rodapé (SALDO A PAGAR, EMITIDO EM, etc.) continua igual ... */
-        /* ... Vou omitir novamente, mas ele deve continuar no seu código ... */
-
+        /* ... (O restante do rodapé permanece o mesmo) ... */
         $height += 4;
         $pdf->setY($height); $pdf->setX(2);
         $pdf->SetFont('Arial','',8);
         $pdf->SetTextColor(100, 100, 100);
         $pdf->Cell($width, 1, Str::padBoth('', $width, '-'), 0, 0, 'L', true);
 
-        // ALTERADO: A variável agora é $saldoFinalTotal para evitar confusão.
         $height += 4;
         $pdf->setY($height);
         $pdf->setX(2);
@@ -748,7 +740,6 @@ class Impressao80mm
         $pdf->output('I');
         $pdf = ob_get_clean();
 
-        // O seu controller já trata a response, então aqui retornamos apenas o PDF.
         return $pdf;
     }
 

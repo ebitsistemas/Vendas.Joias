@@ -655,15 +655,22 @@ class Impressao80mm
                 $height += 5;
                 $pdf->setY($height);
                 $pdf->setX(2);
+                $pdf->SetFont('Arial','',8);
+                $pdf->SetTextColor(100, 100, 100);
+                $pdf->Cell($width, 1, Str::padBoth('', $width, '-'), 0, 0, 'L', true);
+
+                // Imprime o Saldo intermediário
+                $height += 3;
+                $pdf->setY($height);
+                $pdf->setX(2);
                 $pdf->SetTextColor(0, 0, 128);
-                $pdf->SetFont('Arial', 'I', 8);
+                $pdf->SetFont('Arial', 'BI', 8); // Negrito e Itálico
                 $pdf->Cell(35, 1, utf8_decode('SALDO'), 0, 0, 'L', true);
                 $pdf->Cell(24, 1, '', 0, 0, 'L', true);
                 $pdf->Cell(18, 1, 'R$ ' . number_format($saldoCorrente, 2, ',', '.'), 0, 0, 'R', true);
             }
             // ############ FIM DA ALTERAÇÃO ############
 
-            // A lógica de impressão da movimentação continua a mesma
             if ($pagamento['tipo'] == 'venda') {
                 $height += 5;
                 $pdf->setY($height);
@@ -692,7 +699,6 @@ class Impressao80mm
             }
         }
 
-        /* ... (O restante do rodapé permanece o mesmo) ... */
         $height += 4;
         $pdf->setY($height); $pdf->setX(2);
         $pdf->SetFont('Arial','',8);

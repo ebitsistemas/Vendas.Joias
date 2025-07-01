@@ -116,7 +116,7 @@
                                         </td>
                                         <td>{{ $fatura->nome_cliente ?? '' }}</td>
                                         <td>
-                                            R$ {{ number_format($fatura->valor_subtotal, 2, ',', '.') }}
+                                            R$ {{ number_format($fatura->valor_recebido, 2, ',', '.') }}
                                         </td>
                                         <td>{{ date('d/m/Y', strtotime($fatura->created_at)) }}</td>
                                         <td>{!! $fatura->situacaoFatura->label ?? ' -- ' !!}</td>

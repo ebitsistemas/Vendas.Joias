@@ -114,7 +114,7 @@
                                         <td>
                                             {{ str($fatura->id)->padLeft(6,0) }}
                                         </td>
-                                        <td>{{ $fatura->nome ?? '' }}</td>
+                                        <td>{{ $fatura->nome_cliente ?? '' }}</td>
                                         <td>
                                             R$ {{ number_format($fatura->valor_subtotal, 2, ',', '.') }}
                                         </td>

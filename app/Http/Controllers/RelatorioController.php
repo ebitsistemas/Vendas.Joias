@@ -53,15 +53,24 @@ class RelatorioController extends Controller
         $clientes = Cliente::all();
         $situacoes = FaturaSituacao::all();
 
+        $faturas = null; // Inicializa a variável para garantir que ela exista
+
         if (!empty($request->has('_token'))) {
-            $model = FaturaItem::select('*');
+            // SOLUÇÃO: Seja explícito nas colunas que você quer selecionar.
+            $model = FaturaItem::select(
+                'faturas_itens.*', // Seleciona todas as colunas da tabela principal
+                'clientes.nome as nome_cliente' // Seleciona a coluna 'nome' da tabela de clientes com um alias
+            );
+
             $model->leftjoin('vendas', 'vendas.id', '=', 'faturas_itens.venda_id');
             $model->leftjoin('clientes', 'clientes.id', '=', 'vendas.cliente_id');
-            if (!empty($request->data_inicial) AND !empty($request->data_final)) {
+
+            if (!empty($request->data_inicial) && !empty($request->data_final)) {
                 $inicio = Carbon::parse($request->data_inicial)->format('Y-m-d');
                 $fim = Carbon::parse($request->data_final)->format('Y-m-d');
                 if ($request->tipo_data == 1) {
-                    $model->whereBetween('faturas_itens.created_at', [$inicio, $fim]);
+                    // É uma boa prática especificar a tabela na cláusula WHERE para evitar ambiguidade
+                    $model->whereBetween('faturas_itens.created_at', [$inicio . ' 00:00:00', $fim . ' 23:59:59']);
                 } else if ($request->tipo_data == 2) {
                     $model->whereBetween('faturas_itens.data_vencimento', [$inicio, $fim]);
                 } else if ($request->tipo_data == 3) {
@@ -77,7 +86,7 @@ class RelatorioController extends Controller
             $faturas = $model->get();
         }
 
-        return view('relatorio.financeiro')->with(['faturas' => $faturas ?? null, 'clientes' => $clientes, 'situacoes' => $situacoes, 'request' => $request]);
+        return view('relatorio.financeiro')->with(['faturas' => $faturas, 'clientes' => $clientes, 'situacoes' => $situacoes, 'request' => $request]);
     }
 
     public function periodo(Request $request)

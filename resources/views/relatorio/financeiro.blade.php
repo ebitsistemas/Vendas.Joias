@@ -109,7 +109,7 @@
                                 <tbody>
                                 @php($total = 0)
                                 @foreach($faturas as $fatura)
-                                    @php($total = $total + $fatura->valor_subtotal)
+                                    @php($total = $total + $fatura->valor_recebido)
                                     <tr>
                                         <td>
                                             {{ str($fatura->id)->padLeft(6,0) }}

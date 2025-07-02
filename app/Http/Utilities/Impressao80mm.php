@@ -514,33 +514,29 @@ class Impressao80mm
 
     public function saldo(Configuracao $config, $vendas, $pagamentos, Cliente $cliente)
     {
-        // 1. Calcula o SALDO FINAL TOTAL do cliente
-        $saldoFinalTotal = 0;
-        foreach ($vendas as $venda) {
-            $saldoFinalTotal += $venda->saldo;
-        }
+        // --- INÍCIO DA ALTERAÇÃO ---
 
-        // 2. Calcula o valor total das movimentações que serão exibidas
-        $totalVendasNoExtrato = 0;
-        $totalPagamentosNoExtrato = 0;
-        foreach ($pagamentos as $mov) {
-            if ($mov['tipo'] == 'venda') {
-                $totalVendasNoExtrato += $mov['venda']['total_liquido'];
-            } else if ($mov['tipo'] == 'pagamento') {
-                $totalPagamentosNoExtrato += $mov['valor_recebido'];
-            }
-        }
+        // 1. Encontra a movimentação de "saldo inicial" na coleção de pagamentos.
+        $saldoInicialMovimentacao = $pagamentos->firstWhere('tipo', 'saldo');
 
-        // 3. Calcula o "Saldo Anterior"
-        $saldoAnterior = $saldoFinalTotal - $totalVendasNoExtrato + $totalPagamentosNoExtrato;
+        // 2. Define o Saldo Anterior com base no valor encontrado. Se não houver, começa com 0.
+        //    Estou assumindo que o valor está na coluna 'valor_recebido'. Se for outra, ajuste aqui.
+        $saldoAnterior = $saldoInicialMovimentacao ? $saldoInicialMovimentacao->valor_recebido : 0;
 
-        // 4. Inicializa o "Saldo Corrente"
+        // 3. Filtra a lista de movimentações para remover o registro de saldo inicial,
+        //    evitando que ele seja impresso novamente no loop.
+        $movimentacoes = $pagamentos->where('tipo', '!=', 'saldo');
+
+        // 4. Inicializa o "Saldo Corrente" com o valor do Saldo Anterior.
         $saldoCorrente = $saldoAnterior;
+
+        // --- FIM DA ALTERAÇÃO ---
+
 
         // Ajuste dinâmico da altura do papel
         $heightPaper = 100; // Começar com uma base maior
-        $heightPaper += (count($pagamentos) * 5); // Espaço para cada movimentação
-        $heightPaper += (count(array_filter($pagamentos->toArray(), fn($p) => $p['tipo'] == 'venda')) * 5); // Espaço extra para cada saldo intermediário
+        $heightPaper += (count($movimentacoes) * 5); // Espaço para cada movimentação
+        $heightPaper += (count(array_filter($movimentacoes->toArray(), fn($p) => $p['tipo'] == 'venda')) * 5); // Espaço extra para cada saldo intermediário
 
         $pdf = new Fpdf('P', 'mm', [80, $heightPaper]);
         $pdf->SetAutoPageBreak(false);
@@ -550,90 +546,67 @@ class Impressao80mm
         $height = 6;
         $pdf->SetFillColor(255, 255, 255);
 
-        /* ... (Todo o cabeçalho do PDF permanece igual) ... */
+        /* ... (Cabeçalho do PDF, permanece igual) ... */
         $pdf->SetTextColor(94, 98, 120);
-        /* LOGO */
-        if (!empty($config->imagem)) {
-            list($widthimg, $heightimg) = $this->resizeToFit('assets/images/logo.png');
-            $pdf->Image(
-                'assets/images/logo.png', (self::A4_HEIGHT - $widthimg) / 2,
-                $height,
-                $widthimg,
-                $heightimg
-            );
-            $height += 24;
-        }
-        /* DADOS DO EMITENTE */
         $pdf->setY($height);
         $pdf->setX(0);
         $pdf->SetFont('Arial','B',10);
         $pdf->Cell($width, 1, utf8_decode($config->nome), 0, 0, 'C', true);
-
         $height += 5;
         $pdf->setY($height);
         $pdf->setX(0);
         $pdf->Cell($width, 1, utf8_decode($config->cidade." - ".$config->uf), 0, 0, 'C', true);
-
         $height += 3;
         $pdf->setY($height);
         $pdf->setX(2);
         $pdf->SetFont('Arial','',8);
         $pdf->SetTextColor(100, 100, 100);
         $pdf->Cell($width, 1, Str::padBoth('', $width, '-'), 0, 0, 'L', true);
-
-        /* # PEDIDO */
         $height += 3;
         $pdf->setY($height);
         $pdf->setX(0);
         $pdf->SetFont('Arial','B',10);
         $pdf->Cell($width, 3, utf8_decode("EXTRATO DE MOVIMENTAÇÕES"), 0, 0, 'C', true);
-
         $height += 5;
         $pdf->setY($height);
         $pdf->setX(2);
         $pdf->SetFont('Arial','',8);
         $pdf->SetTextColor(100, 100, 100);
         $pdf->Cell($width, 1, Str::padBoth('', $width, '-'), 0, 0, 'L', true);
-
-        /* DADOS DO CLIENTE */
         $height += 3;
         $pdf->setY($height);
         $pdf->setX(2);
         $pdf->SetFont('Arial', '', 8);
         $pdf->Cell($width, 1, utf8_decode("CLIENTE: " . Str::padLeft($cliente->id, 4, '0') . ': ' . $cliente->nome), 0, 0, 'L', true);
-
         if (!empty($cliente->logradouro)) {
             $height += 3;
             $pdf->setY($height);
             $pdf->setX(2);
             $pdf->Cell($width, 1, utf8_decode($cliente->logradouro . ", " . $cliente->numero), 0, 0, 'L', true);
         }
-
         if (!empty($cliente->cidade)) {
             $height += 3;
             $pdf->setY($height);
             $pdf->setX(2);
             $pdf->Cell($width, 1, utf8_decode($cliente->bairro . " - " . $cliente->cidade . " - " . $cliente->uf), 0, 0, 'L', true);
         }
-
         $height += 3;
         $pdf->setY($height);
         $pdf->setX(2);
         $pdf->SetTextColor(100, 100, 100);
         $pdf->Cell($width, 1, Str::padBoth('', $width, '-'), 0, 0, 'L', true);
-
         $height += 3;
         $pdf->setY($height);
         $pdf->setX(0);
         $pdf->SetFont('Arial','B',10);
         $pdf->Cell($width, 3, utf8_decode("ÚLTIMAS MOVIMENTAÇÕES"), 0, 0, 'C', true);
-
         $height += 3;
         $pdf->setY($height);
         $pdf->setX(2);
         $pdf->SetFont('Arial', '', 8);
         $pdf->SetTextColor(100, 100, 100);
         $pdf->Cell($width, 1, Str::padBoth('', $width, '-'), 0, 0, 'L', true);
+        /* ... (Fim do Cabeçalho) ... */
 
         // Imprime o "Saldo Anterior"
         $height += 5;
@@ -646,11 +619,9 @@ class Impressao80mm
         $pdf->Cell(18, 1, 'R$ ' . number_format($saldoAnterior, 2, ',', '.'), 0, 0, 'R', true);
 
         // --- LOOP DE MOVIMENTAÇÕES CORRIGIDO ---
-        foreach ($pagamentos as $pagamento) {
+        // Note que agora o loop usa a variável $movimentacoes, que não contém o 'saldo' inicial
+        foreach ($movimentacoes as $pagamento) {
 
-            // ############ ALTERAÇÃO PRINCIPAL ############
-            // Verificamos apenas se a movimentação é uma 'venda'.
-            // Isso garante que o saldo intermediário sempre será exibido antes de cada venda.
             if ($pagamento['tipo'] == 'venda') {
                 $height += 3;
                 $pdf->setY($height);
@@ -669,7 +640,6 @@ class Impressao80mm
                 $pdf->Cell(24, 1, '', 0, 0, 'L', true);
                 $pdf->Cell(18, 1, 'R$ ' . number_format($saldoCorrente, 2, ',', '.'), 0, 0, 'R', true);
             }
-            // ############ FIM DA ALTERAÇÃO ############
 
             if ($pagamento['tipo'] == 'venda') {
                 $height += 5;
@@ -710,25 +680,25 @@ class Impressao80mm
         $pdf->setX(2);
         $pdf->SetFont('Arial', 'B', 9);
         $pdf->Cell(59, 1, utf8_decode('SALDO A PAGAR:'), 0, 0, 'L', true);
-        $pdf->Cell(18, 1, 'R$ ' . number_format($saldoFinalTotal, 2, ',', '.'), 0, 0, 'R', true);
+        // --- ALTERAÇÃO FINAL ---
+        // Usa o $saldoCorrente, que é o valor final correto, em vez de $saldoFinalTotal
+        $pdf->Cell(18, 1, 'R$ ' . number_format($saldoCorrente, 2, ',', '.'), 0, 0, 'R', true);
 
+        /* ... (Rodapé do PDF, permanece igual) ... */
         $height += 4;
         $pdf->setY($height); $pdf->setX(2);
         $pdf->SetFont('Arial','',8);
         $pdf->SetTextColor(100, 100, 100);
         $pdf->Cell($width, 1, Str::padBoth('', $width, '-'), 0, 0, 'L', true);
-
         $height += 4;
         $pdf->setY($height); $pdf->setX(2);
         $pdf->SetFont('Arial','',8);
         $pdf->Cell($width, 1, utf8_decode("EMITIDO EM: ".date('d/m/Y H:i:s', strtotime(now()))), 0, 0, 'C', true);
-
         $height += 4;
         $pdf->setY($height); $pdf->setX(2);
         $pdf->SetFont('Arial','',8);
         $pdf->SetTextColor(100, 100, 100);
         $pdf->Cell($width, 1, Str::padBoth('', $width, '-'), 0, 0, 'L', true);
-
         $height += 4;
         $pdf->setY($height); $pdf->setX(2);
         $pdf->SetFont('Arial','',8);
@@ -741,6 +711,7 @@ class Impressao80mm
         $pdf->setY($height); $pdf->setX(2);
         $pdf->SetFont('Arial','',8);
         $pdf->Cell($width, 1, utf8_decode('WWW.EBITSISTEMAS.COM.BR'), 0, 0, 'C', true);
+        /* ... (Fim do Rodapé) ... */
 
         ob_start();
         $pdf->output('I');

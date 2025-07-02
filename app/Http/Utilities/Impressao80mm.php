@@ -599,9 +599,7 @@ class Impressao80mm
         $pdf->Cell($width, 1, Str::padBoth('', $width, '-'), 0, 0, 'L', true);
         /* ... (Fim do Cabeçalho) ... */
 
-
-        // --- INÍCIO DA ALTERAÇÃO 1 ---
-        // A linha "SALDO ANTERIOR" só será impressa se o valor for maior que zero.
+        // Imprime a linha "SALDO ANTERIOR" apenas se o valor for maior que zero.
         if ($saldoAnterior > 0) {
             $height += 5;
             $pdf->setY($height);
@@ -612,22 +610,27 @@ class Impressao80mm
             $pdf->Cell(24, 1, '', 0, 0, 'L', true);
             $pdf->Cell(18, 1, 'R$ ' . number_format($saldoAnterior, 2, ',', '.'), 0, 0, 'R', true);
         }
-        // --- FIM DA ALTERAÇÃO 1 ---
 
-
-        // --- INÍCIO DA ALTERAÇÃO 2 ---
-        // Flag para controlar se a primeira venda já foi processada no loop.
-        $primeiraVendaProcessada = false;
-        // --- FIM DA ALTERAÇÃO 2 ---
+        // --- INÍCIO DA ALTERAÇÃO ---
+        // Novas flags para um controle mais preciso da exibição do saldo.
+        $houvePagamentoDesdeUltimaVenda = false;
+        $primeiraVendaDoLoop = true;
+        // --- FIM DA ALTERAÇÃO ---
 
         foreach ($movimentacoes as $pagamento) {
 
             if ($pagamento['tipo'] == 'venda') {
-                // --- INÍCIO DA ALTERAÇÃO 3 ---
-                // A linha de "SALDO" intermediário só será impressa se:
-                // 1. Já tiver passado da primeira venda OU
-                // 2. Se houver um saldo anterior maior que zero.
-                if ($primeiraVendaProcessada || $saldoAnterior > 0) {
+                // --- LÓGICA DE EXIBIÇÃO DO SALDO REFINADA ---
+                // Define a condição para imprimir o saldo intermediário.
+                $imprimirSaldo = false;
+                if ($houvePagamentoDesdeUltimaVenda) {
+                    $imprimirSaldo = true;
+                } else if ($primeiraVendaDoLoop && $saldoAnterior > 0) {
+                    // Imprime também se for a primeira venda, mas havia um saldo anterior.
+                    $imprimirSaldo = true;
+                }
+
+                if ($imprimirSaldo) {
                     $height += 3;
                     $pdf->setY($height);
                     $pdf->setX(2);
@@ -644,12 +647,13 @@ class Impressao80mm
                     $pdf->Cell(24, 1, '', 0, 0, 'L', true);
                     $pdf->Cell(18, 1, 'R$ ' . number_format($saldoCorrente, 2, ',', '.'), 0, 0, 'R', true);
                 }
-                // Marca que a primeira venda já foi processada para as próximas iterações.
-                $primeiraVendaProcessada = true;
-                // --- FIM DA ALTERAÇÃO 3 ---
+
+                // Reseta as flags para a próxima iteração
+                $houvePagamentoDesdeUltimaVenda = false;
+                $primeiraVendaDoLoop = false;
             }
 
-            // Lógica para imprimir as linhas de VENDA e PAGAMENTO (sem alterações)
+            // Lógica para imprimir as linhas de VENDA e PAGAMENTO
             if ($pagamento['tipo'] == 'venda') {
                 $height += 5;
                 $pdf->setY($height);
@@ -660,6 +664,7 @@ class Impressao80mm
                 $pdf->Cell(24, 1, date('d/m/Y', strtotime($pagamento['venda']['data_venda'])), 0, 0, 'L', true);
                 $pdf->Cell(18, 1, 'R$ ' . number_format($pagamento['venda']['total_liquido'], 2, ',', '.'), 0, 0, 'R', true);
                 $saldoCorrente += $pagamento['venda']['total_liquido'];
+
             } else if ($pagamento['tipo'] == 'pagamento' && $pagamento['valor_recebido'] > 0) {
                 $height += 5;
                 $pdf->setY($height);
@@ -670,6 +675,10 @@ class Impressao80mm
                 $pdf->Cell(24, 1, date('d/m/Y', strtotime($pagamento['data_pagamento'])), 0, 0, 'L', true);
                 $pdf->Cell(18, 1, ' - R$ ' . number_format($pagamento['valor_recebido'], 2, ',', '.'), 0, 0, 'R', true);
                 $saldoCorrente -= $pagamento['valor_recebido'];
+
+                // --- ATUALIZAÇÃO DA FLAG ---
+                // Marca que um pagamento ocorreu.
+                $houvePagamentoDesdeUltimaVenda = true;
             }
         }
 
@@ -691,23 +700,28 @@ class Impressao80mm
         $pdf->SetTextColor(100, 100, 100);
         $pdf->Cell($width, 1, Str::padBoth('', $width, '-'), 0, 0, 'L', true);
         $height += 4;
-        $pdf->setY($height); $pdf->setX(2);
+        $pdf->setY($height);
+        $pdf->setX(2);
         $pdf->SetFont('Arial','',8);
         $pdf->Cell($width, 1, utf8_decode("EMITIDO EM: ".date('d/m/Y H:i:s', strtotime(now()))), 0, 0, 'C', true);
         $height += 4;
-        $pdf->setY($height); $pdf->setX(2);
+        $pdf->setY($height);
+        $pdf->setX(2);
         $pdf->SetFont('Arial','',8);
         $pdf->SetTextColor(100, 100, 100);
         $pdf->Cell($width, 1, Str::padBoth('', $width, '-'), 0, 0, 'L', true);
         $height += 4;
-        $pdf->setY($height); $pdf->setX(2);
+        $pdf->setY($height);
+        $pdf->setX(2);
         $pdf->SetFont('Arial','',8);
         $pdf->Cell($width, 1, utf8_decode('DESENVOLVIDO POR EBIT SISTEMAS'), 0, 0, 'C', true);
         $height += 4;
-        $pdf->setY($height); $pdf->setX(2);
+        $pdf->setY($height);
+        $pdf->setX(2);
         $pdf->Cell($width, 1, utf8_decode('(41) 99890-0800 - CASCAVEL/PR'), 0, 0, 'C', true);
         $height += 4;
-        $pdf->setY($height); $pdf->setX(2);
+        $pdf->setY($height);
+        $pdf->setX(2);
         $pdf->Cell($width, 1, utf8_decode('WWW.EBITSISTEMAS.COM.BR'), 0, 0, 'C', true);
 
         ob_start();

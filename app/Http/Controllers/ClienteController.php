@@ -225,7 +225,7 @@ class ClienteController extends Controller
         $todasAsMovimentacoes = VendaPagamento::with('venda')
             ->where('cliente_id', $request->id)
             ->where('situacao', '!=', 3)
-            ->where('created_at', '>=', date('2025-02-08'))
+            ->where('created_at', '>=', date('2025-02-07'))
             ->get();
 
         $funcaoOrdenadora = function ($mov) {

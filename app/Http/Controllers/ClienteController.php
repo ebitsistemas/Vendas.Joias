@@ -212,15 +212,8 @@ class ClienteController extends Controller
 
     public function imprimir(Request $request)
     {
-        // --- PARTE 1: BUSCA DE DADOS ---
         $config = Configuracao::first();
-        $cliente = Cliente::find($request->id);
 
-        if (!$cliente) {
-            abort(404, 'Cliente não encontrado');
-        }
-
-        // 1. Busca TODAS as movimentações do cliente.
         $todasAsMovimentacoes = VendaPagamento::with('venda')
             ->where('cliente_id', $request->id)
             ->where('situacao', '!=', 3)
@@ -228,54 +221,26 @@ class ClienteController extends Controller
             ->get();
 
         $funcaoOrdenadora = function ($mov) {
-            $dataPrincipal = optional($mov->venda)->data_venda ?? $mov->data_pagamento;
-            return $dataPrincipal . '_' . $mov->id;
+            $dataPrincipal = ($mov->tipo == 'venda' && $mov->venda)
+                ? $mov->venda->data_venda
+                : $mov->data_pagamento;
+
+            // O desempate pelo ID funcionará, pois o Laravel verá que as datas são iguais.
+            return [$dataPrincipal, $mov->id];
         };
 
-        // --- PARTE 2: LÓGICA DE CÁLCULO E SEPARAÇÃO ---
+        $ultimasMovimentacoes = $todasAsMovimentacoes
+            ->sortByDesc($funcaoOrdenadora);
+        $movimentacoesOrdenadas = $ultimasMovimentacoes->sortBy($funcaoOrdenadora);
 
-        // 2. Ordena TODAS as movimentações da mais antiga para a mais nova.
-        $movimentacoesOrdenadas = $todasAsMovimentacoes->sortBy($funcaoOrdenadora);
+        $cliente = Cliente::find($request->id);
 
-        $saldoAnteriorMais20 = 0.00;
-        $movimentacoesParaImprimir = collect();
-
-        // 3. Verifica se o total excede 20 para então separar os grupos.
-        if ($movimentacoesOrdenadas->count() > 20) {
-
-            // Separa as mais antigas (todas exceto as últimas 20).
-            $movimentacoesAntigas = $movimentacoesOrdenadas->slice(0, -20);
-
-            // Separa as mais recentes (as últimas 20) que serão listadas.
-            $movimentacoesParaImprimir = $movimentacoesOrdenadas->slice(-20);
-
-            // 4. CALCULA O SALDO das movimentações antigas.
-            foreach ($movimentacoesAntigas as $mov) {
-                // Regra: Venda aumenta a dívida, Pagamento diminui.
-                if ($mov->tipo == 'venda') {
-                    $saldoAnteriorMais20 += optional($mov->venda)->total_liquido ?? 0;
-                } else {
-                    $saldoAnteriorMais20 -= $mov->valor_recebido ?? 0;
-                }
-            }
-
-        } else {
-            // Se houver 20 ou menos, não há saldo anterior e todas serão impressas.
-            $saldoAnteriorMais20 = 0.00;
-            $movimentacoesParaImprimir = $movimentacoesOrdenadas;
+        if (!$cliente) {
+            exit('Cliente não encontrado');
         }
 
-
-        // --- PARTE 3: GERAR O PDF ---
         $impressao = new Impressao80mm();
-
-        // 5. Passa o saldo calculado e a lista das 20 para a impressão.
-        $pdf = $impressao->saldo(
-            $config,
-            $movimentacoesParaImprimir,
-            $cliente,
-            $saldoAnteriorMais20 // O resultado do cálculo das mais antigas.
-        );
+        $pdf = $impressao->saldo($config, $movimentacoesOrdenadas, $cliente);
 
         return response($pdf)->header('Content-Type', 'application/pdf')->header('filename', 'inline');
     }

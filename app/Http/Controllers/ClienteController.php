@@ -237,7 +237,7 @@ class ClienteController extends Controller
         // 2. Ordena TODAS as movimentações da mais antiga para a mais nova.
         $movimentacoesOrdenadas = $todasAsMovimentacoes->sortBy($funcaoOrdenadora);
 
-        $saldoAnterior = 0.00;
+        $saldoAnteriorMais20 = 0.00;
         $movimentacoesParaImprimir = collect();
 
         // 3. Verifica se o total excede 20 para então separar os grupos.
@@ -253,15 +253,15 @@ class ClienteController extends Controller
             foreach ($movimentacoesAntigas as $mov) {
                 // Regra: Venda aumenta a dívida, Pagamento diminui.
                 if ($mov->tipo == 'venda') {
-                    $saldoAnterior += optional($mov->venda)->total_liquido ?? 0;
+                    $saldoAnteriorMais20 += optional($mov->venda)->total_liquido ?? 0;
                 } else {
-                    $saldoAnterior -= $mov->valor_recebido ?? 0;
+                    $saldoAnteriorMais20 -= $mov->valor_recebido ?? 0;
                 }
             }
 
         } else {
             // Se houver 20 ou menos, não há saldo anterior e todas serão impressas.
-            $saldoAnterior = 0.00;
+            $saldoAnteriorMais20 = 0.00;
             $movimentacoesParaImprimir = $movimentacoesOrdenadas;
         }
 
@@ -274,7 +274,7 @@ class ClienteController extends Controller
             $config,
             $movimentacoesParaImprimir,
             $cliente,
-            $saldoAnterior // O resultado do cálculo das mais antigas.
+            $saldoAnteriorMais20 // O resultado do cálculo das mais antigas.
         );
 
         return response($pdf)->header('Content-Type', 'application/pdf')->header('filename', 'inline');

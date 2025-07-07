@@ -212,7 +212,7 @@ class ClienteController extends Controller
 
     public function imprimir(Request $request)
     {
-        // --- PARTE 1: BUSCA DE DADOS ---
+        // --- PARTE 1: BUSCA DE DADOS (Inalterada) ---
         $config = Configuracao::first();
         $cliente = Cliente::find($request->id);
 
@@ -223,6 +223,8 @@ class ClienteController extends Controller
         $todasAsMovimentacoes = VendaPagamento::with('venda')
             ->where('cliente_id', $request->id)
             ->where('situacao', '!=', 3)
+            // ATENÇÃO: A data de corte é 2025. Isso pode estar impactando seus testes.
+            // Verifique se existem movimentações após 07/02/2025.
             ->where('created_at', '>=', date('2025-02-07'))
             ->get();
 
@@ -231,65 +233,68 @@ class ClienteController extends Controller
             return $dataPrincipal . '_' . $mov->id;
         };
 
-        // --- PARTE 2: LÓGICA DE CÁLCULO DINÂMICO DO CORTE ---
+        // --- PARTE 2: LÓGICA DE CÁLCULO REVISADA E MAIS SEGURA ---
 
-        // 1. Ordena TODAS as movimentações da mais antiga para a mais nova.
         $movimentacoesOrdenadas = $todasAsMovimentacoes->sortBy($funcaoOrdenadora);
         $totalMovimentacoes = $movimentacoesOrdenadas->count();
 
         $saldoAnterior = 0.00;
+        $movimentacoesAntigas = collect();
         $movimentacoesParaImprimir = collect();
 
-        // 2. Se houver 20 ou menos, a lógica é simples.
         if ($totalMovimentacoes <= 20) {
-            $saldoAnterior = 0.00;
             $movimentacoesParaImprimir = $movimentacoesOrdenadas;
-
         } else {
-            // 3. Se houver mais de 20, aplicamos a nova regra.
-
-            // Primeiro, calculamos o saldo acumulado após cada transação.
+            // Lógica para encontrar o ponto de corte dinâmico
             $saldosParciais = [];
             $saldoCorrente = 0;
             foreach ($movimentacoesOrdenadas as $mov) {
-                if ($mov->tipo == 'venda') {
-                    $saldoCorrente += optional($mov->venda)->total_liquido ?? 0;
-                } else {
-                    $saldoCorrente -= $mov->valor_recebido ?? 0;
-                }
+                $saldoCorrente += ($mov->tipo == 'venda')
+                    ? (optional($mov->venda)->total_liquido ?? 0)
+                    : -($mov->valor_recebido ?? 0);
                 $saldosParciais[] = $saldoCorrente;
             }
 
-            // 4. Encontra o ponto de corte ideal.
-            // Começamos no ponto padrão (antes das últimas 20) e voltamos se o saldo for negativo.
-            // O índice é N-21 porque queremos o saldo ANTES do item N-20.
             $indiceDeCorte = $totalMovimentacoes - 21;
-
             while ($indiceDeCorte >= 0 && $saldosParciais[$indiceDeCorte] < 0) {
                 $indiceDeCorte--;
             }
 
-            // 5. Com o índice de corte definido, separamos os grupos.
             if ($indiceDeCorte < 0) {
-                // Se todo o histórico resultar em crédito, o relatório começa do zero.
-                $saldoAnterior = 0.00;
                 $movimentacoesParaImprimir = $movimentacoesOrdenadas;
             } else {
-                // O Saldo Anterior é o saldo no ponto de corte.
-                $saldoAnterior = $saldosParciais[$indiceDeCorte];
-                // As movimentações para imprimir são todas após o ponto de corte.
+                // Separa os grupos de forma mais explícita
+                $movimentacoesAntigas = $movimentacoesOrdenadas->slice(0, $indiceDeCorte + 1);
                 $movimentacoesParaImprimir = $movimentacoesOrdenadas->slice($indiceDeCorte + 1);
             }
         }
 
-        // --- PARTE 3: GERAR O PDF (Esta parte não muda) ---
+        // Recalcula o saldo anterior a partir do grupo separado para garantir 100% de consistência
+        $saldoAnteriorFinal = 0;
+        foreach($movimentacoesAntigas as $mov) {
+            $saldoAnteriorFinal += ($mov->tipo == 'venda')
+                ? (optional($mov->venda)->total_liquido ?? 0)
+                : -($mov->valor_recebido ?? 0);
+        }
+
+        // --- PONTO DE DEPURAÇÃO ---
+        // Descomente a linha abaixo para ver exatamente o que está sendo enviado para a impressão.
+        // dd([
+        //     'SALDO ANTERIOR A SER ENVIADO' => $saldoAnteriorFinal,
+        //     'QTD ITENS ANTIGOS' => $movimentacoesAntigas->count(),
+        //     'QTD ITENS PARA IMPRIMIR' => $movimentacoesParaImprimir->count(),
+        //     'ITENS PARA IMPRIMIR' => $movimentacoesParaImprimir
+        // ]);
+
+
+        // --- PARTE 3: GERAR O PDF ---
         $impressao = new Impressao80mm();
 
         $pdf = $impressao->saldo(
             $config,
             $movimentacoesParaImprimir,
             $cliente,
-            $saldoAnterior
+            $saldoAnteriorFinal // Usamos a variável final e recalculada
         );
 
         return response($pdf)->header('Content-Type', 'application/pdf')->header('filename', 'inline');

@@ -220,6 +220,7 @@ class ClienteController extends Controller
             abort(404, 'Cliente não encontrado');
         }
 
+        // Garante que estamos pegando todas as movimentações para o cálculo correto
         $todasAsMovimentacoes = VendaPagamento::with('venda')
             ->where('cliente_id', $request->id)
             ->where('situacao', '!=', 3)
@@ -230,7 +231,7 @@ class ClienteController extends Controller
             return $dataPrincipal . '_' . $mov->id;
         };
 
-        // --- PARTE 2: LÓGICA DE CÁLCULO CORRIGIDA ---
+        // --- PARTE 2: LÓGICA DE CÁLCULO FINAL E CORRETA ---
         $movimentacoesOrdenadas = $todasAsMovimentacoes->sortBy($funcaoOrdenadora);
         $totalMovimentacoes = $movimentacoesOrdenadas->count();
 
@@ -241,18 +242,13 @@ class ClienteController extends Controller
             $movimentacoesAntigas = $movimentacoesOrdenadas->slice(0, -20);
             $movimentacoesParaImprimir = $movimentacoesOrdenadas->slice(-20);
 
-            // Calcula o saldo SOMENTE dos itens antigos com a lógica invertida
+            // Calcula o saldo dos itens antigos com a LÓGICA CORRETA
             foreach ($movimentacoesAntigas as $mov) {
-                // LÓGICA CORRIGIDA AQUI:
                 if ($mov->tipo == 'venda') {
                     $saldoAnteriorFinal -= optional($mov->venda)->total_liquido ?? 0; // Venda SUBTRAI
                 } else {
                     $saldoAnteriorFinal += $mov->valor_recebido ?? 0; // Pagamento SOMA
                 }
-            }
-
-            if ($saldoAnteriorFinal < 0) {
-                $saldoAnteriorFinal = 0.00;
             }
 
         } else {

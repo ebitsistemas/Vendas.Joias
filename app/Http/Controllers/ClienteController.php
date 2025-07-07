@@ -211,7 +211,6 @@ class ClienteController extends Controller
 
     public function imprimir(Request $request)
     {
-        // --- PASSO 1: CALCULAR O SALDO TOTAL CORRETO (usando a sua lógica) ---
         $saldoTotalReal = 0;
         $vendasDoCliente = Venda::where('cliente_id', $request->id)
             ->where('status', '!=', 3)
@@ -220,9 +219,6 @@ class ClienteController extends Controller
         foreach ($vendasDoCliente as $venda) {
             $saldoTotalReal += $venda->saldo;
         }
-        // A variável $saldoTotalReal agora contém o valor correto: R$ 1.532,00
-
-        // --- PASSO 2: OBTER A LISTA DAS ÚLTIMAS MOVIMENTAÇÕES PARA EXIBIR ---
         $todasAsMovimentacoes = VendaPagamento::with('venda')
             ->where('cliente_id', $request->id)
             ->where('situacao', '!=', 3)
@@ -238,19 +234,14 @@ class ClienteController extends Controller
         $movimentacoesParaImprimir = ($movimentacoesOrdenadas->count() > 20)
             ? $movimentacoesOrdenadas->slice(-20)
             : $movimentacoesOrdenadas;
-
-        // --- PASSO 3: CALCULAR O SALDO APENAS DESTAS MOVIMENTAÇÕES EXIBIDAS ---
         $saldoDosItensImpressos = 0;
-        // A lógica aqui DEVE ser Vendas(+) e Pagamentos(-)
         foreach ($movimentacoesParaImprimir as $mov) {
             if ($mov->tipo == 'venda') {
-                $saldoDosItensImpressos += optional($mov->venda)->valor_recebido ?? 0;
+                $saldoDosItensImpressos += optional($mov->venda)->total_liquido ?? 0;
             } else {
                 $saldoDosItensImpressos -= $mov->valor_recebido ?? 0;
             }
         }
-
-        // --- PASSO 4: DETERMINAR O SALDO ANTERIOR POR DIFERENÇA ---
         $saldoAnteriorFinal = $saldoTotalReal - $saldoDosItensImpressos;
 
         dd([

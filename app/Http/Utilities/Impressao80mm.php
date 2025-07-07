@@ -600,16 +600,7 @@ class Impressao80mm
         /* ... (Fim do Cabeçalho) ... */
 
         // Imprime a linha "SALDO ANTERIOR" apenas se o valor for maior que zero.
-        if ($saldoAnteior20 > 0) {
-            $height += 5;
-            $pdf->setY($height);
-            $pdf->setX(2);
-            $pdf->SetTextColor(0, 0, 0);
-            $pdf->SetFont('Arial', '', 8);
-            $pdf->Cell(35, 1, utf8_decode('SALDO ANTERIOR'), 0, 0, 'L', true);
-            $pdf->Cell(24, 1, '', 0, 0, 'L', true);
-            $pdf->Cell(18, 1, 'R$ ' . number_format($saldoAnteior20, 2, ',', '.'), 0, 0, 'R', true);
-        } elseif ($saldoAnterior > 0) {
+        if ($saldoAnterior > 0) {
             $height += 5;
             $pdf->setY($height);
             $pdf->setX(2);

@@ -219,7 +219,19 @@ class ClienteController extends Controller
             abort(404, 'Cliente não encontrado');
         }
 
-        // Garante que estamos pegando todas as movimentações para o cálculo correto
+        // --- PASSO 1: CALCULAR O SALDO TOTAL CORRETO (usando a sua lógica) ---
+        $saldoTotalReal = 0;
+        $vendasDoCliente = Venda::where('cliente_id', $request->id)
+            ->where('status', '!=', 3)
+            ->get();
+
+        foreach ($vendasDoCliente as $venda) {
+            $saldoTotalReal += $venda->saldo;
+        }
+        // A variável $saldoTotalReal agora contém o valor correto: R$ 1.532,00
+
+
+        // --- PASSO 2: OBTER A LISTA DAS ÚLTIMAS 20 MOVIMENTAÇÕES PARA EXIBIR NO PDF ---
         $todasAsMovimentacoes = VendaPagamento::with('venda')
             ->where('cliente_id', $request->id)
             ->where('situacao', '!=', 3)
@@ -230,39 +242,38 @@ class ClienteController extends Controller
             return $dataPrincipal . '_' . $mov->id;
         };
 
-        // --- PARTE 2: LÓGICA DE CÁLCULO FINAL E CORRETA ---
         $movimentacoesOrdenadas = $todasAsMovimentacoes->sortBy($funcaoOrdenadora);
-        $totalMovimentacoes = $movimentacoesOrdenadas->count();
 
-        $saldoAnteriorFinal = 0.00;
-        $movimentacoesParaImprimir = collect();
+        // Pega apenas as últimas 20 para a lista
+        $movimentacoesParaImprimir = ($movimentacoesOrdenadas->count() > 20)
+            ? $movimentacoesOrdenadas->slice(-20)
+            : $movimentacoesOrdenadas;
 
-        if ($totalMovimentacoes > 20) {
-            $movimentacoesAntigas = $movimentacoesOrdenadas->slice(0, -20);
-            $movimentacoesParaImprimir = $movimentacoesOrdenadas->slice(-20);
 
-            // Calcula o saldo dos itens antigos com a LÓGICA CORRETA
-            foreach ($movimentacoesAntigas as $mov) {
-                if ($mov->tipo == 'venda') {
-                    $saldoAnteriorFinal -= $mov->valor_recebido ?? 0;
-                } else {
-                    $saldoAnteriorFinal += $mov->valor_recebido ?? 0; // Pagamento SOMA
-                }
+        // --- PASSO 3: CALCULAR O SALDO APENAS DESTAS 20 MOVIMENTAÇÕES ---
+        $saldoDosItensImpressos = 0;
+        foreach ($movimentacoesParaImprimir as $mov) {
+            if ($mov->tipo == 'venda') {
+                $saldoDosItensImpressos += optional($mov->venda)->total_liquido ?? 0;
+            } else {
+                $saldoDosItensImpressos -= $mov->valor_recebido ?? 0;
             }
-
-        } else {
-            $saldoAnteriorFinal = 0.00;
-            $movimentacoesParaImprimir = $movimentacoesOrdenadas;
         }
 
-        // --- PARTE 3: GERAR O PDF ---
+
+        // --- PASSO 4: DETERMINAR O SALDO ANTERIOR POR DIFERENÇA ---
+        // Saldo Anterior = Saldo Total Verdadeiro - Saldo dos Itens que Serão Impressos
+        $saldoAnteriorFinal = $saldoTotalReal - $saldoDosItensImpressos;
+
+
+        // --- PARTE FINAL: GERAR O PDF ---
         $impressao = new Impressao80mm();
 
         $pdf = $impressao->saldo(
             $config,
             $movimentacoesParaImprimir,
             $cliente,
-            $saldoAnteriorFinal
+            $saldoAnteriorFinal // Passa o saldo anterior calculado corretamente
         );
 
         return response($pdf)->header('Content-Type', 'application/pdf')->header('filename', 'inline');

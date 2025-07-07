@@ -244,7 +244,7 @@ class ClienteController extends Controller
         // A lógica aqui DEVE ser Vendas(+) e Pagamentos(-)
         foreach ($movimentacoesParaImprimir as $mov) {
             if ($mov->tipo == 'venda') {
-                $saldoDosItensImpressos += optional($mov->venda)->total_liquido ?? 0;
+                $saldoDosItensImpressos += optional($mov->venda)->valor_recebido ?? 0;
             } else {
                 $saldoDosItensImpressos -= $mov->valor_recebido ?? 0;
             }

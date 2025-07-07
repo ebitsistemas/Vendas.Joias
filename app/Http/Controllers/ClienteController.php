@@ -151,14 +151,11 @@ class ClienteController extends Controller
         $totais['vendas'] = 0;
         $totais['faturas'] = 0;
         $vendasTotal = Venda::where('cliente_id', $id)->get();
-        $somaFaturas = VendaPagamento::where('cliente_id', $id)
-            ->where('tipo', 'pagamento')
-            ->sum('valor_recebido');
-        $totais['faturas'] += $somaFaturas;
         foreach ($vendasTotal as $venda) {
             if ($venda->status != 3) {
                 $totais['saldo'] += $venda->saldo;
                 $totais['vendas'] += $venda->total_liquido;
+                $totais['faturas'] += ($venda->total_liquido - $venda->saldo);
             }
         }
         self::disable();

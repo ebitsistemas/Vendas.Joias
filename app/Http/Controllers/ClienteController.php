@@ -223,14 +223,14 @@ class ClienteController extends Controller
         $todasAsMovimentacoes = VendaPagamento::with('venda')
             ->where('cliente_id', $request->id)
             ->where('situacao', '!=', 3)
-            ->get(); // REMOVI O FILTRO DE DATA PARA GARANTIR QUE TODOS OS DADOS SEJAM PROCESSADOS
+            ->get();
 
         $funcaoOrdenadora = function ($mov) {
             $dataPrincipal = optional($mov->venda)->data_venda ?? $mov->data_pagamento;
             return $dataPrincipal . '_' . $mov->id;
         };
 
-        // --- PARTE 2: LÓGICA DE CÁLCULO DIRETA E SIMPLES ---
+        // --- PARTE 2: LÓGICA DE CÁLCULO CORRIGIDA ---
         $movimentacoesOrdenadas = $todasAsMovimentacoes->sortBy($funcaoOrdenadora);
         $totalMovimentacoes = $movimentacoesOrdenadas->count();
 
@@ -238,28 +238,24 @@ class ClienteController extends Controller
         $movimentacoesParaImprimir = collect();
 
         if ($totalMovimentacoes > 20) {
-            // Separa estritamente: tudo exceto os últimos 20
             $movimentacoesAntigas = $movimentacoesOrdenadas->slice(0, -20);
-
-            // Separa estritamente: apenas os últimos 20
             $movimentacoesParaImprimir = $movimentacoesOrdenadas->slice(-20);
 
-            // Calcula o saldo SOMENTE dos itens antigos
+            // Calcula o saldo SOMENTE dos itens antigos com a lógica invertida
             foreach ($movimentacoesAntigas as $mov) {
+                // LÓGICA CORRIGIDA AQUI:
                 if ($mov->tipo == 'venda') {
-                    $saldoAnteriorFinal += optional($mov->venda)->total_liquido ?? 0;
+                    $saldoAnteriorFinal -= optional($mov->venda)->total_liquido ?? 0; // Venda SUBTRAI
                 } else {
-                    $saldoAnteriorFinal -= $mov->valor_recebido ?? 0;
+                    $saldoAnteriorFinal += $mov->valor_recebido ?? 0; // Pagamento SOMA
                 }
             }
 
-            // APLICA A REGRA: O saldo anterior para impressão não pode ser negativo.
             if ($saldoAnteriorFinal < 0) {
                 $saldoAnteriorFinal = 0.00;
             }
 
         } else {
-            // Se tiver 20 ou menos, não há saldo anterior e imprime tudo.
             $saldoAnteriorFinal = 0.00;
             $movimentacoesParaImprimir = $movimentacoesOrdenadas;
         }
@@ -269,9 +265,9 @@ class ClienteController extends Controller
 
         $pdf = $impressao->saldo(
             $config,
-            $movimentacoesParaImprimir, // A lista contém exatamente 20 itens (ou menos)
+            $movimentacoesParaImprimir,
             $cliente,
-            $saldoAnteriorFinal // O valor é o saldo dos itens antigos, zerado se for negativo
+            $saldoAnteriorFinal
         );
 
         return response($pdf)->header('Content-Type', 'application/pdf')->header('filename', 'inline');

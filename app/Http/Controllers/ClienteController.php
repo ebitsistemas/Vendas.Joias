@@ -231,7 +231,7 @@ class ClienteController extends Controller
 
         $ultimasMovimentacoes = $todasAsMovimentacoes
             ->sortByDesc($funcaoOrdenadora)
-            ->take(40);
+            ->take(100);
         $movimentacoesOrdenadas = $ultimasMovimentacoes->sortBy($funcaoOrdenadora);
 
         $cliente = Cliente::find($request->id);

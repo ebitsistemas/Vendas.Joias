@@ -212,7 +212,7 @@ class ClienteController extends Controller
 
     public function imprimir(Request $request)
     {
-        // --- PARTE 1: BUSCA DE DADOS (Inalterada) ---
+        // --- PARTE 1: BUSCA DE DADOS ---
         $config = Configuracao::first();
         $cliente = Cliente::find($request->id);
 
@@ -223,78 +223,55 @@ class ClienteController extends Controller
         $todasAsMovimentacoes = VendaPagamento::with('venda')
             ->where('cliente_id', $request->id)
             ->where('situacao', '!=', 3)
-            // ATENÇÃO: A data de corte é 2025. Isso pode estar impactando seus testes.
-            // Verifique se existem movimentações após 07/02/2025.
-            ->where('created_at', '>=', date('2025-02-07'))
-            ->get();
+            ->get(); // REMOVI O FILTRO DE DATA PARA GARANTIR QUE TODOS OS DADOS SEJAM PROCESSADOS
 
         $funcaoOrdenadora = function ($mov) {
             $dataPrincipal = optional($mov->venda)->data_venda ?? $mov->data_pagamento;
             return $dataPrincipal . '_' . $mov->id;
         };
 
-        // --- PARTE 2: LÓGICA DE CÁLCULO REVISADA E MAIS SEGURA ---
-
+        // --- PARTE 2: LÓGICA DE CÁLCULO DIRETA E SIMPLES ---
         $movimentacoesOrdenadas = $todasAsMovimentacoes->sortBy($funcaoOrdenadora);
         $totalMovimentacoes = $movimentacoesOrdenadas->count();
 
-        $saldoAnterior = 0.00;
-        $movimentacoesAntigas = collect();
+        $saldoAnteriorFinal = 0.00;
         $movimentacoesParaImprimir = collect();
 
-        if ($totalMovimentacoes <= 20) {
-            $movimentacoesParaImprimir = $movimentacoesOrdenadas;
+        if ($totalMovimentacoes > 20) {
+            // Separa estritamente: tudo exceto os últimos 20
+            $movimentacoesAntigas = $movimentacoesOrdenadas->slice(0, -20);
+
+            // Separa estritamente: apenas os últimos 20
+            $movimentacoesParaImprimir = $movimentacoesOrdenadas->slice(-20);
+
+            // Calcula o saldo SOMENTE dos itens antigos
+            foreach ($movimentacoesAntigas as $mov) {
+                if ($mov->tipo == 'venda') {
+                    $saldoAnteriorFinal += optional($mov->venda)->total_liquido ?? 0;
+                } else {
+                    $saldoAnteriorFinal -= $mov->valor_recebido ?? 0;
+                }
+            }
+
+            // APLICA A REGRA: O saldo anterior para impressão não pode ser negativo.
+            if ($saldoAnteriorFinal < 0) {
+                $saldoAnteriorFinal = 0.00;
+            }
+
         } else {
-            // Lógica para encontrar o ponto de corte dinâmico
-            $saldosParciais = [];
-            $saldoCorrente = 0;
-            foreach ($movimentacoesOrdenadas as $mov) {
-                $saldoCorrente += ($mov->tipo == 'venda')
-                    ? (optional($mov->venda)->total_liquido ?? 0)
-                    : -($mov->valor_recebido ?? 0);
-                $saldosParciais[] = $saldoCorrente;
-            }
-
-            $indiceDeCorte = $totalMovimentacoes - 21;
-            while ($indiceDeCorte >= 0 && $saldosParciais[$indiceDeCorte] < 0) {
-                $indiceDeCorte--;
-            }
-
-            if ($indiceDeCorte < 0) {
-                $movimentacoesParaImprimir = $movimentacoesOrdenadas;
-            } else {
-                // Separa os grupos de forma mais explícita
-                $movimentacoesAntigas = $movimentacoesOrdenadas->slice(0, $indiceDeCorte + 1);
-                $movimentacoesParaImprimir = $movimentacoesOrdenadas->slice($indiceDeCorte + 1);
-            }
+            // Se tiver 20 ou menos, não há saldo anterior e imprime tudo.
+            $saldoAnteriorFinal = 0.00;
+            $movimentacoesParaImprimir = $movimentacoesOrdenadas;
         }
-
-        // Recalcula o saldo anterior a partir do grupo separado para garantir 100% de consistência
-        $saldoAnteriorFinal = 0;
-        foreach($movimentacoesAntigas as $mov) {
-            $saldoAnteriorFinal += ($mov->tipo == 'venda')
-                ? (optional($mov->venda)->total_liquido ?? 0)
-                : -($mov->valor_recebido ?? 0);
-        }
-
-        // --- PONTO DE DEPURAÇÃO ---
-        // Descomente a linha abaixo para ver exatamente o que está sendo enviado para a impressão.
-         dd([
-             'SALDO ANTERIOR A SER ENVIADO' => $saldoAnteriorFinal,
-             'QTD ITENS ANTIGOS' => $movimentacoesAntigas->count(),
-             'QTD ITENS PARA IMPRIMIR' => $movimentacoesParaImprimir->count(),
-             'ITENS PARA IMPRIMIR' => $movimentacoesParaImprimir
-         ]);
-
 
         // --- PARTE 3: GERAR O PDF ---
         $impressao = new Impressao80mm();
 
         $pdf = $impressao->saldo(
             $config,
-            $movimentacoesParaImprimir,
+            $movimentacoesParaImprimir, // A lista contém exatamente 20 itens (ou menos)
             $cliente,
-            $saldoAnteriorFinal // Usamos a variável final e recalculada
+            $saldoAnteriorFinal // O valor é o saldo dos itens antigos, zerado se for negativo
         );
 
         return response($pdf)->header('Content-Type', 'application/pdf')->header('filename', 'inline');

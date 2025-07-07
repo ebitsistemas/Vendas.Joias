@@ -281,8 +281,7 @@ class ClienteController extends Controller
         $pdf = $impressao->saldo(
             $config,
             $movimentacoesParaImprimir,
-            $cliente,
-            $saldoAnterior
+            $cliente
         );
 
         return response($pdf)

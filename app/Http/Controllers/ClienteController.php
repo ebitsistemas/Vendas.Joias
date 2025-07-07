@@ -277,9 +277,7 @@ class ClienteController extends Controller
             $saldoAnterior // O resultado do cálculo das mais antigas.
         );
 
-        return response($pdf)
-            ->header('Content-Type', 'application/pdf')
-            ->header('Content-Disposition', 'inline; filename="extrato_cliente.pdf"');
+        return response($pdf)->header('Content-Type', 'application/pdf')->header('filename', 'inline');
     }
 
     /* */

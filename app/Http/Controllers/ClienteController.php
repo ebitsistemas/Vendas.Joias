@@ -245,7 +245,7 @@ class ClienteController extends Controller
             // Calcula o saldo dos itens antigos com a LÓGICA CORRETA
             foreach ($movimentacoesAntigas as $mov) {
                 if ($mov->tipo == 'venda') {
-                    $saldoAnteriorFinal -= optional($mov->venda)->total_liquido ?? 0; // Venda SUBTRAI
+                    $saldoAnteriorFinal -= $mov->valor_recebido ?? 0;
                 } else {
                     $saldoAnteriorFinal += $mov->valor_recebido ?? 0; // Pagamento SOMA
                 }

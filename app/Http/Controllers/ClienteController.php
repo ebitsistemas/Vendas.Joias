@@ -287,7 +287,6 @@ class ClienteController extends Controller
         // Passamos a nova variável $saldoAnterior para a função
         $pdf = $impressao->saldo(
             $config,
-            $vendas,
             $movimentacoesParaImprimir,
             $cliente,
             $saldoAnterior

@@ -212,36 +212,76 @@ class ClienteController extends Controller
 
     public function imprimir(Request $request)
     {
+        // --- PARTE 1: BUSCA DE DADOS (praticamente inalterada) ---
         $config = Configuracao::first();
+        $cliente = Cliente::find($request->id);
 
+        if (!$cliente) {
+            // Usar abort() é uma prática melhor no Laravel do que exit()
+            abort(404, 'Cliente não encontrado');
+        }
+
+        // Busca TODAS as movimentações do cliente. Isso está correto.
         $todasAsMovimentacoes = VendaPagamento::with('venda')
             ->where('cliente_id', $request->id)
             ->where('situacao', '!=', 3)
             ->where('created_at', '>=', date('2025-02-07'))
             ->get();
 
+        // Sua função de ordenação está ótima.
         $funcaoOrdenadora = function ($mov) {
-            $dataPrincipal = ($mov->tipo == 'venda' && $mov->venda)
-                ? $mov->venda->data_venda
-                : $mov->data_pagamento;
-
-            // O desempate pelo ID funcionará, pois o Laravel verá que as datas são iguais.
-            return [$dataPrincipal, $mov->id];
+            $dataPrincipal = optional($mov->venda)->data_venda ?? $mov->data_pagamento;
+            return $dataPrincipal . '_' . $mov->id; // Usar um separador e o ID para desempate
         };
 
-        $ultimasMovimentacoes = $todasAsMovimentacoes
-            ->sortByDesc($funcaoOrdenadora)
-            ->take(20);
-        $movimentacoesOrdenadas = $ultimasMovimentacoes->sortBy($funcaoOrdenadora);
+        // --- PARTE 2: NOVA LÓGICA DE CÁLCULO E SEPARAÇÃO ---
 
-        $cliente = Cliente::find($request->id);
+        // Primeiro, ordena TODAS as movimentações da mais antiga para a mais nova.
+        $movimentacoesOrdenadas = $todasAsMovimentacoes->sortBy($funcaoOrdenadora);
 
-        if (!$cliente) {
-            exit('Cliente não encontrado');
+        // Inicializa as variáveis que vamos usar.
+        $saldoAnterior = 0.00;
+        $movimentacoesParaImprimir = collect(); // Inicia uma coleção vazia.
+
+        // Verifica se o total de movimentações excede o limite de 20.
+        if ($movimentacoesOrdenadas->count() > 20) {
+
+            // Se for maior, separamos os grupos:
+            // 1. As mais antigas (todas exceto as últimas 20) para calcular o saldo.
+            $movimentacoesAntigas = $movimentacoesOrdenadas->slice(0, -20);
+
+            // 2. As mais recentes (as últimas 20) que serão listadas no PDF.
+            $movimentacoesParaImprimir = $movimentacoesOrdenadas->slice(-20);
+
+            // Agora, calculamos o saldo das movimentações antigas.
+            foreach ($movimentacoesAntigas as $mov) {
+                // ATENÇÃO: Lógica de Saldo. Verifique se está de acordo com sua regra de negócio.
+                // Supondo que Venda aumenta a dívida (débito) e Pagamento diminui (crédito).
+                if ($mov->tipo == 'venda') {
+                    $saldoAnterior += optional($mov->venda)->total_liquido ?? 0; // Soma o valor da venda
+                } else {
+                    $saldoAnterior -= $mov->valor_recebido ?? 0; // Subtrai o valor do pagamento
+                }
+            }
+
+        } else {
+            // Se houver 20 ou menos movimentações, não há saldo anterior...
+            $saldoAnterior = 0.00;
+            // ...e todas as movimentações serão impressas.
+            $movimentacoesParaImprimir = $movimentacoesOrdenadas;
         }
 
+
+        // --- PARTE 3: GERAR O PDF (com o novo parâmetro) ---
         $impressao = new Impressao80mm();
-        $pdf = $impressao->saldo($config, $movimentacoesOrdenadas, $cliente);
+
+        // ATENÇÃO: A chamada agora inclui a variável $saldoAnterior no final.
+        $pdf = $impressao->saldo(
+            $config,
+            $movimentacoesParaImprimir, // Passa apenas as movimentações que devem ser listadas
+            $cliente,
+            $saldoAnterior           // NOVO PARÂMETRO!
+        );
 
         return response($pdf)->header('Content-Type', 'application/pdf')->header('filename', 'inline');
     }

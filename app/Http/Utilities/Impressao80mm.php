@@ -512,7 +512,7 @@ class Impressao80mm
         return response($pdf);
     }
 
-    public function saldo(Configuracao $config, $pagamentos, Cliente $cliente, $saldoAnteior20)
+    public function saldo(Configuracao $config, $pagamentos, Cliente $cliente, $saldoAnterior20 = 0)
     {
         // 1. Busca o registro de saldo inicial.
         $saldoInicialMovimentacao = $pagamentos->firstWhere('tipo', 'saldo');

@@ -512,11 +512,11 @@ class Impressao80mm
         return response($pdf);
     }
 
-    public function saldo(Configuracao $config, $pagamentos, Cliente $cliente, $saldoMais20)
+    public function saldo(Configuracao $config, $pagamentos, Cliente $cliente, $saldoAnterior)
     {
         // 1. Busca o registro de saldo inicial.
-        $saldoInicialMovimentacao = $pagamentos->firstWhere('tipo', 'saldo');
-        $saldoAnterior = $saldoInicialMovimentacao ? $saldoInicialMovimentacao->valor_recebido : 0;
+        //$saldoInicialMovimentacao = $pagamentos->firstWhere('tipo', 'saldo');
+       // $saldoAnterior = $saldoInicialMovimentacao ? $saldoInicialMovimentacao->valor_recebido : 0;
 
         // 2. Remove o registro de saldo da lista de movimentações.
         $movimentacoes = $pagamentos->where('tipo', '!=', 'saldo');

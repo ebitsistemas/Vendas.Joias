@@ -253,6 +253,13 @@ class ClienteController extends Controller
         // --- PASSO 4: DETERMINAR O SALDO ANTERIOR POR DIFERENÇA ---
         $saldoAnteriorFinal = $saldoTotalReal - $saldoDosItensImpressos;
 
+        dd([
+            'A) SALDO TOTAL REAL (deveria ser 289,00)' => $saldoTotalReal,
+            'B) SALDO DOS ITENS IMPRESSOS (deveria ser -198,00)' => $saldoDosItensImpressos,
+            'C) SALDO ANTERIOR FINAL (A - B) (deveria ser 487,00)' => $saldoAnteriorFinal,
+            'MOVIMENTAÇÕES PARA IMPRIMIR' => $movimentacoesParaImprimir
+        ]);
+
         // --- PASSO FINAL: GERAR O PDF ---
         $impressao = new Impressao80mm();
         $pdf = $impressao->saldo(

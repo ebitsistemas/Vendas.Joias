@@ -247,8 +247,8 @@ class ClienteController extends Controller
         $movimentacoesOrdenadas = $todasAsMovimentacoes->sortBy($funcaoOrdenadora);
 
         // Separa apenas as últimas 20 movimentações para a impressão.
-        $movimentacoesParaImprimir = ($movimentacoesOrdenadas->count() > 20)
-            ? $movimentacoesOrdenadas->slice(-20) // Pega os últimos 20 itens
+        $movimentacoesParaImprimir = ($movimentacoesOrdenadas->count() > 15)
+            ? $movimentacoesOrdenadas->slice(-15) // Pega os últimos 20 itens
             : $movimentacoesOrdenadas; // Ou pega todos, se houver 20 ou menos
 
 

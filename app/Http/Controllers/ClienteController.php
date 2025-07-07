@@ -211,14 +211,6 @@ class ClienteController extends Controller
 
     public function imprimir(Request $request)
     {
-        // --- PARTE 1: BUSCA DE DADOS ---
-        $config = Configuracao::first();
-        $cliente = Cliente::find($request->id);
-
-        if (!$cliente) {
-            abort(404, 'Cliente não encontrado');
-        }
-
         // --- PASSO 1: CALCULAR O SALDO TOTAL CORRETO (usando a sua lógica) ---
         $saldoTotalReal = 0;
         $vendasDoCliente = Venda::where('cliente_id', $request->id)
@@ -230,8 +222,7 @@ class ClienteController extends Controller
         }
         // A variável $saldoTotalReal agora contém o valor correto: R$ 1.532,00
 
-
-        // --- PASSO 2: OBTER A LISTA DAS ÚLTIMAS 20 MOVIMENTAÇÕES PARA EXIBIR NO PDF ---
+        // --- PASSO 2: OBTER A LISTA DAS ÚLTIMAS MOVIMENTAÇÕES PARA EXIBIR ---
         $todasAsMovimentacoes = VendaPagamento::with('venda')
             ->where('cliente_id', $request->id)
             ->where('situacao', '!=', 3)
@@ -244,14 +235,13 @@ class ClienteController extends Controller
 
         $movimentacoesOrdenadas = $todasAsMovimentacoes->sortBy($funcaoOrdenadora);
 
-        // Pega apenas as últimas 20 para a lista
         $movimentacoesParaImprimir = ($movimentacoesOrdenadas->count() > 20)
             ? $movimentacoesOrdenadas->slice(-20)
             : $movimentacoesOrdenadas;
 
-
-        // --- PASSO 3: CALCULAR O SALDO APENAS DESTAS 20 MOVIMENTAÇÕES ---
+        // --- PASSO 3: CALCULAR O SALDO APENAS DESTAS MOVIMENTAÇÕES EXIBIDAS ---
         $saldoDosItensImpressos = 0;
+        // A lógica aqui DEVE ser Vendas(+) e Pagamentos(-)
         foreach ($movimentacoesParaImprimir as $mov) {
             if ($mov->tipo == 'venda') {
                 $saldoDosItensImpressos += optional($mov->venda)->total_liquido ?? 0;
@@ -260,21 +250,18 @@ class ClienteController extends Controller
             }
         }
 
-
         // --- PASSO 4: DETERMINAR O SALDO ANTERIOR POR DIFERENÇA ---
-        // Saldo Anterior = Saldo Total Verdadeiro - Saldo dos Itens que Serão Impressos
         $saldoAnteriorFinal = $saldoTotalReal - $saldoDosItensImpressos;
 
-
-        // --- PARTE FINAL: GERAR O PDF ---
+        // --- PASSO FINAL: GERAR O PDF ---
         $impressao = new Impressao80mm();
-
         $pdf = $impressao->saldo(
-            $config,
+            Configuracao::first(),
             $movimentacoesParaImprimir,
-            $cliente,
-            $saldoAnteriorFinal // Passa o saldo anterior calculado corretamente
+            Cliente::find($request->id),
+            $saldoAnteriorFinal
         );
+
 
         return response($pdf)->header('Content-Type', 'application/pdf')->header('filename', 'inline');
     }

@@ -212,81 +212,44 @@ class ClienteController extends Controller
 
     public function imprimir(Request $request)
     {
-        // --- Parte 1: Busca de dados (praticamente inalterada) ---
         $config = Configuracao::first();
-        $cliente = Cliente::find($request->id);
 
-        if (!$cliente) {
-            // É melhor usar abort() ou redirect() em vez de exit() no Laravel
-            abort(404, 'Cliente não encontrado');
-        }
+        $model = Venda::with([
+            'itens',
+            'faturas',
+            'situacao',
+        ]);
 
-        // Busca TODAS as movimentações para o cálculo completo
         $todasAsMovimentacoes = VendaPagamento::with('venda')
             ->where('cliente_id', $request->id)
             ->where('situacao', '!=', 3)
-            // A data inicial é importante para o ponto de partida do saldo
             ->where('created_at', '>=', date('2025-02-07'))
             ->get();
 
-        // A sua função de ordenação está ótima.
         $funcaoOrdenadora = function ($mov) {
-            // Usar a data da venda se for uma movimentação de venda, senão a data do pagamento
-            $dataPrincipal = optional($mov->venda)->data_venda ?? $mov->data_pagamento;
-            return $dataPrincipal . '_' . $mov->id; // Concatenar com ID para desempate
+            $dataPrincipal = ($mov->tipo == 'venda' && $mov->venda)
+                ? $mov->venda->data_venda
+                : $mov->data_pagamento;
+
+            // O desempate pelo ID funcionará, pois o Laravel verá que as datas são iguais.
+            return [$dataPrincipal, $mov->id];
         };
 
+        $ultimasMovimentacoes = $todasAsMovimentacoes
+            ->sortByDesc($funcaoOrdenadora)
+            ->take(20);
+        $movimentacoesOrdenadas = $ultimasMovimentacoes->sortBy($funcaoOrdenadora);
 
-        // --- Parte 2: Lógica do Saldo Anterior e Seleção das Movimentações ---
+        $cliente = Cliente::find($request->id);
 
-        $saldoAnterior = 0;
-        $movimentacoesParaImprimir = collect(); // Inicia uma coleção vazia
-
-        // Ordena todas as movimentações da mais antiga para a mais nova
-        $movimentacoesOrdenadas = $todasAsMovimentacoes->sortBy($funcaoOrdenadora);
-
-        // Verifica se o total de movimentações excede o limite de 20
-        if ($movimentacoesOrdenadas->count() > 20) {
-
-            // Pega as últimas 20 para imprimir
-            $movimentacoesParaImprimir = $movimentacoesOrdenadas->slice(-20);
-
-            // Pega todas as outras (as mais antigas) para calcular o saldo anterior
-            $movimentacoesAntigas = $movimentacoesOrdenadas->slice(0, -20);
-
-            // Calcula o saldo das movimentações que não serão exibidas
-            foreach ($movimentacoesAntigas as $mov) {
-                // ATENÇÃO: Lógica de crédito/débito
-                // Supondo que 'tipo' == 'venda' é um débito (subtrai do saldo)
-                // e outros tipos (pagamentos) são créditos (somam ao saldo).
-                // Ajuste conforme a sua regra de negócio.
-                if ($mov->tipo == 'venda' && $mov->venda) {
-                    $saldoAnterior -= $mov->venda->valor_total; // Débito
-                } else {
-                    $saldoAnterior += $mov->valor; // Crédito
-                }
-            }
-
-        } else {
-            // Se houver 20 ou menos movimentações, não há saldo anterior
-            // e todas serão impressas.
-            $movimentacoesParaImprimir = $movimentacoesOrdenadas;
+        if (!$cliente) {
+            exit('Cliente não encontrado');
         }
 
-        // --- Parte 3: Geração do PDF ---
-
-        // A classe Impressao80mm precisa ser ajustada para receber o saldo anterior.
         $impressao = new Impressao80mm();
+        $pdf = $impressao->saldo($config, $movimentacoesOrdenadas, $cliente);
 
-        $pdf = $impressao->saldo(
-            $config,
-            $movimentacoesParaImprimir,
-            $cliente
-        );
-
-        return response($pdf)
-            ->header('Content-Type', 'application/pdf')
-            ->header('Content-Disposition', 'inline; filename="relatorio_saldo.pdf"'); // Corrigido 'filename' para 'Content-Disposition'
+        return response($pdf)->header('Content-Type', 'application/pdf')->header('filename', 'inline');
     }
 
     /* */

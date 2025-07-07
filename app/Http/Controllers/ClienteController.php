@@ -279,12 +279,12 @@ class ClienteController extends Controller
 
         // --- PONTO DE DEPURAÇÃO ---
         // Descomente a linha abaixo para ver exatamente o que está sendo enviado para a impressão.
-        // dd([
-        //     'SALDO ANTERIOR A SER ENVIADO' => $saldoAnteriorFinal,
-        //     'QTD ITENS ANTIGOS' => $movimentacoesAntigas->count(),
-        //     'QTD ITENS PARA IMPRIMIR' => $movimentacoesParaImprimir->count(),
-        //     'ITENS PARA IMPRIMIR' => $movimentacoesParaImprimir
-        // ]);
+         dd([
+             'SALDO ANTERIOR A SER ENVIADO' => $saldoAnteriorFinal,
+             'QTD ITENS ANTIGOS' => $movimentacoesAntigas->count(),
+             'QTD ITENS PARA IMPRIMIR' => $movimentacoesParaImprimir->count(),
+             'ITENS PARA IMPRIMIR' => $movimentacoesParaImprimir
+         ]);
 
 
         // --- PARTE 3: GERAR O PDF ---

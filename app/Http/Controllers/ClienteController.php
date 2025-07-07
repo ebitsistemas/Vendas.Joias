@@ -211,19 +211,34 @@ class ClienteController extends Controller
 
     public function imprimir(Request $request)
     {
+        // --- PASSO 1: BUSCA DOS DADOS INICIAIS ---
+        $config = Configuracao::first();
+        $cliente = Cliente::find($request->id);
+
+        if (!$cliente) {
+            abort(404, 'Cliente não encontrado');
+        }
+
+        // --- PASSO 2: CALCULAR O SALDO TOTAL REAL (A "VERDADE ABSOLUTA") ---
+        // Esta é a lógica que o seu painel de sistema usa e que provou ser a correta.
         $saldoTotalReal = 0;
         $vendasDoCliente = Venda::where('cliente_id', $request->id)
-            ->where('status', '!=', 3)
+            ->where('status', '!=', 3) // Ignora vendas canceladas
             ->get();
 
         foreach ($vendasDoCliente as $venda) {
             $saldoTotalReal += $venda->saldo;
         }
+        // A variável $saldoTotalReal agora contém o valor final correto da conta do cliente.
+
+        // --- PASSO 3: OBTER A LISTA DE MOVIMENTAÇÕES PARA EXIBIR NO PDF ---
+        // Pega a lista cronológica de todas as movimentações (vendas e pagamentos).
         $todasAsMovimentacoes = VendaPagamento::with('venda')
             ->where('cliente_id', $request->id)
-            ->where('situacao', '!=', 3)
+            ->where('situacao', '!=', 3) // Ignora pagamentos de vendas canceladas
             ->get();
 
+        // Ordena a lista pela data correta.
         $funcaoOrdenadora = function ($mov) {
             $dataPrincipal = optional($mov->venda)->data_venda ?? $mov->data_pagamento;
             return $dataPrincipal . '_' . $mov->id;
@@ -231,51 +246,38 @@ class ClienteController extends Controller
 
         $movimentacoesOrdenadas = $todasAsMovimentacoes->sortBy($funcaoOrdenadora);
 
+        // Separa apenas as últimas 20 movimentações para a impressão.
         $movimentacoesParaImprimir = ($movimentacoesOrdenadas->count() > 20)
-            ? $movimentacoesOrdenadas->slice(-20)
-            : $movimentacoesOrdenadas;
-        $debugInfo = []; // Array para guardar as informações de cada passo
+            ? $movimentacoesOrdenadas->slice(-20) // Pega os últimos 20 itens
+            : $movimentacoesOrdenadas; // Ou pega todos, se houver 20 ou menos
+
+
+        // --- PASSO 4: CALCULAR O SALDO APENAS DESTAS MOVIMENTAÇÕES EXIBIDAS ---
+        // Este loop calcula o balanço apenas dos itens que aparecerão na lista do PDF.
         $saldoDosItensImpressos = 0;
-
         foreach ($movimentacoesParaImprimir as $mov) {
-            $tipo = $mov->tipo;
-            $valorVenda = 0;
-            $valorPagamento = 0;
-            $saldoAntes = $saldoDosItensImpressos;
-
-            // Esta é a mesma lógica correta que definimos antes
-            if ($tipo == 'venda') {
-                $valorVenda = optional($mov->venda)->total_liquido ?? 0;
-                $saldoDosItensImpressos += $valorVenda;
-            } else {
-                $valorPagamento = $mov->valor_recebido ?? 0;
-                $saldoDosItensImpressos -= $valorPagamento;
+            // Lógica final e corrigida, que ignora tipos inesperados como "saldo".
+            if ($mov->tipo == 'venda') {
+                $saldoDosItensImpressos += optional($mov->venda)->total_liquido ?? 0;
+            } elseif ($mov->tipo == 'pagamento') {
+                $saldoDosItensImpressos -= $mov->valor_recebido ?? 0;
             }
-
-            // Guarda um "snapshot" (uma foto) do que aconteceu nesta iteração
-            $debugInfo[] = [
-                'TIPO_PROCESSADO' => $tipo,
-                'VALOR_VENDA_LIDO' => $valorVenda,
-                'VALOR_PAGAMENTO_LIDO' => $valorPagamento,
-                'SALDO_ANTES_DO_CALCULO' => $saldoAntes,
-                'SALDO_DEPOIS_DO_CALCULO' => $saldoDosItensImpressos,
-                // Adicionando o objeto para inspeção completa
-                'OBJETO_MOVIMENTACAO' => $mov->toArray()
-            ];
         }
 
-// Agora, usamos o dd() para ver o log completo de todos os passos
-        dd($debugInfo);
+        // --- PASSO 5: DETERMINAR O SALDO ANTERIOR POR DIFERENÇA ---
+        // A mágica final: o saldo anterior é a diferença entre o total real e o saldo da lista.
+        $saldoAnteriorFinal = $saldoTotalReal - $saldoDosItensImpressos;
+
 
         // --- PASSO FINAL: GERAR O PDF ---
+        // Envia os dados corretos para a classe de impressão.
         $impressao = new Impressao80mm();
         $pdf = $impressao->saldo(
-            Configuracao::first(),
-            $movimentacoesParaImprimir,
-            Cliente::find($request->id),
-            $saldoAnteriorFinal
+            $config,
+            $movimentacoesParaImprimir, // A lista das últimas 20 movimentações
+            $cliente,
+            $saldoAnteriorFinal        // O saldo anterior calculado para a conta fechar
         );
-
 
         return response($pdf)->header('Content-Type', 'application/pdf')->header('filename', 'inline');
     }

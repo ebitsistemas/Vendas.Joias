@@ -617,67 +617,50 @@ class Impressao80mm
         $primeiraVendaDoLoop = true;
         // --- FIM DA ALTERAÇÃO ---
 
-        foreach ($movimentacoes as $pagamento) {
-            if ($pagamento['tipo'] == 'venda') {
-                // --- LÓGICA DE EXIBIÇÃO DO SALDO REFINADA ---
-                // Define a condição para imprimir o saldo intermediário.
-                $imprimirSaldo = false;
-                if ($houvePagamentoDesdeUltimaVenda) {
-                    $imprimirSaldo = true;
-                } else if ($primeiraVendaDoLoop && $saldoAnterior > 0) {
-                    // Imprime também se for a primeira venda, mas havia um saldo anterior.
-                    $imprimirSaldo = true;
-                }
+        foreach ($movimentacoes as $mov) {
+            $height += 4; // Incrementa a altura para a nova linha
+            $pdf->setY($height);
+            $pdf->setX(2);
+            $pdf->SetFont('Arial','',8);
 
-                if ($imprimirSaldo) {
-                    $height += 3;
-                    $pdf->setY($height);
-                    $pdf->setX(2);
-                    $pdf->SetFont('Arial','',8);
-                    $pdf->SetTextColor(100, 100, 100);
-                    $pdf->Cell($width, 1, Str::padBoth('', $width, '-'), 0, 0, 'L', true);
+            $descricao = '';
+            $data = '';
+            $valor = 0;
 
-                    $height += 3;
-                    $pdf->setY($height);
-                    $pdf->setX(2);
-                    $pdf->SetTextColor(0, 0, 128);
-                    $pdf->SetFont('Arial', 'BI', 8);
-                    $pdf->Cell(35, 1, utf8_decode('SALDO'), 0, 0, 'L', true);
-                    $pdf->Cell(24, 1, '', 0, 0, 'L', true);
-                    $pdf->Cell(18, 1, 'R$ ' . number_format($saldoCorrente, 2, ',', '.'), 0, 0, 'R', true);
-                }
+            // Processa a VENDA
+            if ($mov['tipo'] == 'venda' && isset($mov['venda'])) {
+                $pdf->SetTextColor(0, 0, 0); // Cor preta para vendas
 
-                // Reseta as flags para a próxima iteração
-                $houvePagamentoDesdeUltimaVenda = false;
-                $primeiraVendaDoLoop = false;
+                // Atualiza o saldo PRIMEIRO
+                $valor = $mov['venda']['total_liquido'] ?? 0;
+                $saldoCorrente += $valor;
+
+                // Define as variáveis para impressão
+                $descricao = utf8_decode('VENDA ' . $mov['venda']['id']);
+                $data = date('d/m/Y', strtotime($mov['venda']['data_venda']));
+                $valorFormatado = number_format($valor, 2, ',', '.');
+
+                // Processa o PAGAMENTO
+            } else if ($mov['tipo'] == 'pagamento' && $mov['valor_recebido'] > 0) {
+                $pdf->SetTextColor(200, 0, 0); // Cor vermelha para pagamentos
+
+                // Atualiza o saldo PRIMEIRO
+                $valor = $mov['valor_recebido'] ?? 0;
+                $saldoCorrente -= $valor;
+
+                // Define as variáveis para impressão
+                $descricao = utf8_decode('PAGAMENTO');
+                $data = date('d/m/Y', strtotime($mov['data_pagamento']));
+                $valorFormatado = '- ' . number_format($valor, 2, ',', '.');
             }
 
-            // Lógica para imprimir as linhas de VENDA e PAGAMENTO
-            if ($pagamento['tipo'] == 'venda') {
-                $height += 5;
-                $pdf->setY($height);
-                $pdf->setX(2);
-                $pdf->SetTextColor(0, 0, 0);
-                $pdf->SetFont('Arial', '', 8);
-                $pdf->Cell(35, 1, utf8_decode('VENDA ' . $pagamento['venda']['id']), 0, 0, 'L', true);
-                $pdf->Cell(24, 1, date('d/m/Y', strtotime($pagamento['venda']['data_venda'])), 0, 0, 'L', true);
-                $pdf->Cell(18, 1, 'R$ ' . number_format($pagamento['venda']['total_liquido'], 2, ',', '.'), 0, 0, 'R', true);
-                $saldoCorrente += $pagamento['venda']['total_liquido'];
-
-            } else if ($pagamento['tipo'] == 'pagamento' && $pagamento['valor_recebido'] > 0) {
-                $height += 5;
-                $pdf->setY($height);
-                $pdf->setX(2);
-                $pdf->SetTextColor(255, 0, 0);
-                $pdf->SetFont('Arial', '', 8);
-                $pdf->Cell(35, 1, utf8_decode('PAGAMENTO'), 0, 0, 'L', true);
-                $pdf->Cell(24, 1, date('d/m/Y', strtotime($pagamento['data_pagamento'])), 0, 0, 'L', true);
-                $pdf->Cell(18, 1, ' - R$ ' . number_format($pagamento['valor_recebido'], 2, ',', '.'), 0, 0, 'R', true);
-                $saldoCorrente -= $pagamento['valor_recebido'];
-
-                // --- ATUALIZAÇÃO DA FLAG ---
-                // Marca que um pagamento ocorreu.
-                $houvePagamentoDesdeUltimaVenda = true;
+            // Imprime a linha completa com os dados processados
+            // A borda 'LR' (Left/Right) dá a aparência de tabela
+            if ($valor > 0) {
+                $pdf->Cell(25, 4, $descricao, 'LR', 0, 'L');
+                $pdf->Cell(18, 4, $data, 'R', 0, 'C');
+                $pdf->Cell(18, 4, $valorFormatado, 'R', 0, 'R');
+                $pdf->Cell(15, 4, number_format($saldoCorrente, 2, ',', '.'), 'R', 1, 'R');
             }
         }
 

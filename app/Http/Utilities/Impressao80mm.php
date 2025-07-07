@@ -724,7 +724,7 @@ class Impressao80mm
         $pdf->Cell($width, 1, utf8_decode('WWW.EBITSISTEMAS.COM.BR'), 0, 0, 'C', true);
 
         ob_start();
-        $pdf->output('I');
+        $pdf->output('S');
         $pdf = ob_get_clean();
 
         return $pdf;

@@ -234,22 +234,38 @@ class ClienteController extends Controller
         $movimentacoesParaImprimir = ($movimentacoesOrdenadas->count() > 20)
             ? $movimentacoesOrdenadas->slice(-20)
             : $movimentacoesOrdenadas;
+        $debugInfo = []; // Array para guardar as informações de cada passo
         $saldoDosItensImpressos = 0;
-        foreach ($movimentacoesParaImprimir as $mov) {
-            if ($mov->tipo == 'venda') {
-                $saldoDosItensImpressos += optional($mov->venda)->total_liquido ?? 0;
-            } else {
-                $saldoDosItensImpressos -= $mov->valor_recebido ?? 0;
-            }
-        }
-        $saldoAnteriorFinal = $saldoTotalReal - $saldoDosItensImpressos;
 
-        dd([
-            'A) SALDO TOTAL REAL (deveria ser 289,00)' => $saldoTotalReal,
-            'B) SALDO DOS ITENS IMPRESSOS (deveria ser -198,00)' => $saldoDosItensImpressos,
-            'C) SALDO ANTERIOR FINAL (A - B) (deveria ser 487,00)' => $saldoAnteriorFinal,
-            'MOVIMENTAÇÕES PARA IMPRIMIR' => $movimentacoesParaImprimir
-        ]);
+        foreach ($movimentacoesParaImprimir as $mov) {
+            $tipo = $mov->tipo;
+            $valorVenda = 0;
+            $valorPagamento = 0;
+            $saldoAntes = $saldoDosItensImpressos;
+
+            // Esta é a mesma lógica correta que definimos antes
+            if ($tipo == 'venda') {
+                $valorVenda = optional($mov->venda)->total_liquido ?? 0;
+                $saldoDosItensImpressos += $valorVenda;
+            } else {
+                $valorPagamento = $mov->valor_recebido ?? 0;
+                $saldoDosItensImpressos -= $valorPagamento;
+            }
+
+            // Guarda um "snapshot" (uma foto) do que aconteceu nesta iteração
+            $debugInfo[] = [
+                'TIPO_PROCESSADO' => $tipo,
+                'VALOR_VENDA_LIDO' => $valorVenda,
+                'VALOR_PAGAMENTO_LIDO' => $valorPagamento,
+                'SALDO_ANTES_DO_CALCULO' => $saldoAntes,
+                'SALDO_DEPOIS_DO_CALCULO' => $saldoDosItensImpressos,
+                // Adicionando o objeto para inspeção completa
+                'OBJETO_MOVIMENTACAO' => $mov->toArray()
+            ];
+        }
+
+// Agora, usamos o dd() para ver o log completo de todos os passos
+        dd($debugInfo);
 
         // --- PASSO FINAL: GERAR O PDF ---
         $impressao = new Impressao80mm();

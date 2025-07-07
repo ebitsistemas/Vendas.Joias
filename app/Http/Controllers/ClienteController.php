@@ -221,12 +221,6 @@ class ClienteController extends Controller
             abort(404, 'Cliente não encontrado');
         }
 
-        // A busca de $vendas parece não ser usada para o cálculo do saldo,
-        // mas pode ser usada dentro da classe de impressão. Vamos mantê-la.
-        $vendas = Venda::with(['itens', 'faturas', 'situacao'])
-            ->where('cliente_id', $request->id)
-            ->get();
-
         // Busca TODAS as movimentações para o cálculo completo
         $todasAsMovimentacoes = VendaPagamento::with('venda')
             ->where('cliente_id', $request->id)
@@ -245,7 +239,7 @@ class ClienteController extends Controller
 
         // --- Parte 2: Lógica do Saldo Anterior e Seleção das Movimentações ---
 
-        $saldoAnterior = 0.00;
+        $saldoAnterior = 0;
         $movimentacoesParaImprimir = collect(); // Inicia uma coleção vazia
 
         // Ordena todas as movimentações da mais antiga para a mais nova
@@ -284,7 +278,6 @@ class ClienteController extends Controller
         // A classe Impressao80mm precisa ser ajustada para receber o saldo anterior.
         $impressao = new Impressao80mm();
 
-        // Passamos a nova variável $saldoAnterior para a função
         $pdf = $impressao->saldo(
             $config,
             $movimentacoesParaImprimir,

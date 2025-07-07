@@ -220,7 +220,6 @@ class ClienteController extends Controller
             abort(404, 'Cliente não encontrado');
         }
 
-        // 1. Busca TODAS as movimentações do cliente.
         $todasAsMovimentacoes = VendaPagamento::with('venda')
             ->where('cliente_id', $request->id)
             ->where('situacao', '!=', 3)
@@ -232,50 +231,65 @@ class ClienteController extends Controller
             return $dataPrincipal . '_' . $mov->id;
         };
 
-        // --- PARTE 2: LÓGICA DE CÁLCULO E SEPARAÇÃO ---
+        // --- PARTE 2: LÓGICA DE CÁLCULO DINÂMICO DO CORTE ---
 
-        // 2. Ordena TODAS as movimentações da mais antiga para a mais nova.
+        // 1. Ordena TODAS as movimentações da mais antiga para a mais nova.
         $movimentacoesOrdenadas = $todasAsMovimentacoes->sortBy($funcaoOrdenadora);
+        $totalMovimentacoes = $movimentacoesOrdenadas->count();
 
         $saldoAnterior = 0.00;
         $movimentacoesParaImprimir = collect();
 
-        // 3. Verifica se o total excede 20 para então separar os grupos.
-        if ($movimentacoesOrdenadas->count() > 20) {
-
-            // Separa as mais antigas (todas exceto as últimas 20).
-            $movimentacoesAntigas = $movimentacoesOrdenadas->slice(0, -20);
-
-            // Separa as mais recentes (as últimas 20) que serão listadas.
-            $movimentacoesParaImprimir = $movimentacoesOrdenadas->slice(-20);
-
-            // 4. CALCULA O SALDO das movimentações antigas.
-            foreach ($movimentacoesAntigas as $mov) {
-                // Regra: Venda aumenta a dívida, Pagamento diminui.
-                if ($mov->tipo == 'venda') {
-                    $saldoAnterior += optional($mov->venda)->total_liquido ?? 0;
-                } else {
-                    $saldoAnterior -= $mov->valor_recebido ?? 0;
-                }
-            }
-
-        } else {
-            // Se houver 20 ou menos, não há saldo anterior e todas serão impressas.
+        // 2. Se houver 20 ou menos, a lógica é simples.
+        if ($totalMovimentacoes <= 20) {
             $saldoAnterior = 0.00;
             $movimentacoesParaImprimir = $movimentacoesOrdenadas;
+
+        } else {
+            // 3. Se houver mais de 20, aplicamos a nova regra.
+
+            // Primeiro, calculamos o saldo acumulado após cada transação.
+            $saldosParciais = [];
+            $saldoCorrente = 0;
+            foreach ($movimentacoesOrdenadas as $mov) {
+                if ($mov->tipo == 'venda') {
+                    $saldoCorrente += optional($mov->venda)->total_liquido ?? 0;
+                } else {
+                    $saldoCorrente -= $mov->valor_recebido ?? 0;
+                }
+                $saldosParciais[] = $saldoCorrente;
+            }
+
+            // 4. Encontra o ponto de corte ideal.
+            // Começamos no ponto padrão (antes das últimas 20) e voltamos se o saldo for negativo.
+            // O índice é N-21 porque queremos o saldo ANTES do item N-20.
+            $indiceDeCorte = $totalMovimentacoes - 21;
+
+            while ($indiceDeCorte >= 0 && $saldosParciais[$indiceDeCorte] < 0) {
+                $indiceDeCorte--;
+            }
+
+            // 5. Com o índice de corte definido, separamos os grupos.
+            if ($indiceDeCorte < 0) {
+                // Se todo o histórico resultar em crédito, o relatório começa do zero.
+                $saldoAnterior = 0.00;
+                $movimentacoesParaImprimir = $movimentacoesOrdenadas;
+            } else {
+                // O Saldo Anterior é o saldo no ponto de corte.
+                $saldoAnterior = $saldosParciais[$indiceDeCorte];
+                // As movimentações para imprimir são todas após o ponto de corte.
+                $movimentacoesParaImprimir = $movimentacoesOrdenadas->slice($indiceDeCorte + 1);
+            }
         }
 
-        Helper::print($saldoAnterior);
-
-        // --- PARTE 3: GERAR O PDF ---
+        // --- PARTE 3: GERAR O PDF (Esta parte não muda) ---
         $impressao = new Impressao80mm();
 
-        // 5. Passa o saldo calculado e a lista das 20 para a impressão.
         $pdf = $impressao->saldo(
             $config,
             $movimentacoesParaImprimir,
             $cliente,
-            $saldoAnterior // O resultado do cálculo das mais antigas.
+            $saldoAnterior
         );
 
         return response($pdf)->header('Content-Type', 'application/pdf')->header('filename', 'inline');

@@ -214,12 +214,6 @@ class ClienteController extends Controller
     {
         $config = Configuracao::first();
 
-        $model = Venda::with([
-            'itens',
-            'faturas',
-            'situacao',
-        ]);
-
         $todasAsMovimentacoes = VendaPagamento::with('venda')
             ->where('cliente_id', $request->id)
             ->where('situacao', '!=', 3)

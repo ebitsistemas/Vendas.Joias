@@ -271,9 +271,6 @@ class ClienteController extends Controller
             $movimentacoesParaImprimir = $movimentacoesOrdenadas;
         }
 
-        Helper::print($saldoAnterior);
-
-
         // --- PARTE 3: GERAR O PDF (com o novo parâmetro) ---
         $impressao = new Impressao80mm();
 

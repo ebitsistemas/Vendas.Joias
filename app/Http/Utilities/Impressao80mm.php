@@ -600,7 +600,7 @@ class Impressao80mm
         /* ... (Fim do Cabeçalho) ... */
 
         // Imprime a linha "SALDO ANTERIOR" apenas se o valor for maior que zero.
-        if ($saldoAnteriorMais20 > 0) {
+        if ($saldoAnteriorMais20 != 0) {
             $height += 5;
             $pdf->setY($height);
             $pdf->setX(2);

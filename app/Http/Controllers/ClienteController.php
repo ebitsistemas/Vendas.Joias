@@ -294,5 +294,13 @@ class ClienteController extends Controller
                 $cliente->update(['status' => '2']);
             }
         }
+        self::atualizarStatusVendasQuitadas();
+    }
+
+    public static function atualizarStatusVendasQuitadas()
+    {
+        Venda::where('saldo', 0)
+            ->where('status', '!=', '4')
+            ->update(['status' => '4']);
     }
 }

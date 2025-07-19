@@ -300,7 +300,7 @@ class ClienteController extends Controller
     public static function atualizarStatusVendasQuitadas()
     {
         Venda::where('saldo', 0)
-            ->where('status', '!=', '4')
-            ->update(['status' => '4']);
+            ->where('status', '!=', '1')
+            ->update(['status' => '1']);
     }
 }

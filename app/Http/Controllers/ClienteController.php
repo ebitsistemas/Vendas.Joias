@@ -285,16 +285,13 @@ class ClienteController extends Controller
     /* */
     public static function disable()
     {
-        $clientes = Cliente::where('status', '1')->get();
+        $clientesAtivos = Cliente::where('status', '1')->get();
 
-        foreach ($clientes as $cliente) {
-            $vendas = Venda::where('cliente_id', $cliente->id)
-                ->where('status', 0)
-                ->first();
+        foreach ($clientesAtivos as $cliente) {
+            $saldoVendas = Venda::where('cliente_id', $cliente->id)->sum('valor');
 
-            if (empty($vendas)) {
-                $modelCliente = Cliente::find($cliente->id);
-                $modelCliente->update(['status' => '2']);
+            if ($saldoVendas == 0) {
+                $cliente->update(['status' => '2']);
             }
         }
     }

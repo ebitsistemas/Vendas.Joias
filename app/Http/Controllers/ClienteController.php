@@ -288,7 +288,7 @@ class ClienteController extends Controller
         $clientesAtivos = Cliente::where('status', '1')->get();
 
         foreach ($clientesAtivos as $cliente) {
-            $saldoVendas = Venda::where('cliente_id', $cliente->id)->sum('valor');
+            $saldoVendas = Venda::where('cliente_id', $cliente->id)->sum('saldo');
 
             if ($saldoVendas == 0) {
                 $cliente->update(['status' => '2']);

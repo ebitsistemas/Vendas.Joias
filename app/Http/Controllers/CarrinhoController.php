@@ -248,6 +248,15 @@ class CarrinhoController extends Controller
 
             $venda = Venda::find($request->venda_id);
 
+            if ($request->filled('data_pagamento')) {
+                $dataFormatada = \Carbon\Carbon::createFromFormat('d/m/Y', $request->input('data_pagamento'))
+                    ->format('Y-m-d');
+
+                $request->merge([
+                    'data_pagamento' => $dataFormatada
+                ]);
+            }
+
             $dataPagamento = empty($request->data_pagamento) ? date('Y-m-d') : $request->data_pagamento;
 
             $data = [

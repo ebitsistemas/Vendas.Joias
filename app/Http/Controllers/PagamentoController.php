@@ -43,9 +43,13 @@ class PagamentoController extends Controller
             $valorFormatado = str_replace(',', '.', $valorFormatado); // Substitui a vírgula (,) por ponto (.)
             $request->merge(['valor_recebido' => $valorFormatado]);
         }
-        if ($request->has('data_pagamento')) {
-            $dataFormatada = date('Y-m-d', strtotime($request->input('data_pagamento')));
-            $request->merge(['data_pagamento' => $dataFormatada]);
+        if ($request->filled('data_pagamento')) {
+            $dataFormatada = \Carbon\Carbon::parse($request->input('data_pagamento'))
+                ->format('Y-m-d');
+
+            $request->merge([
+                'data_pagamento' => $dataFormatada
+            ]);
         }
 
         // 1. Validação dos dados de entrada do formulário (agora com o valor já formatado)

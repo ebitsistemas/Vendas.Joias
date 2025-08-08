@@ -43,8 +43,9 @@ class PagamentoController extends Controller
             $valorFormatado = str_replace(',', '.', $valorFormatado); // Substitui a vírgula (,) por ponto (.)
             $request->merge(['valor_recebido' => $valorFormatado]);
         }
+
         if ($request->filled('data_pagamento')) {
-            $dataFormatada = \Carbon\Carbon::parse($request->input('data_pagamento'))
+            $dataFormatada = \Carbon\Carbon::createFromFormat('d/m/Y', $request->input('data_pagamento'))
                 ->format('Y-m-d');
 
             $request->merge([
